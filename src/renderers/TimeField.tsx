@@ -10,18 +10,20 @@ export const TimeRenderer = ({
   path,
   label,
   enabled,
-}: ControlProps) => (
-  <StyledTimePicker
-    value={data ? new Date(`1970-01-01T${data}`) : undefined}
-    onChange={(value) => {
-      handleChange(path, value ? formatTime(value) : undefined);
-    }}
-    label={label}
-    error={errors}
-    showError={false}
-    disabled={!enabled}
-  />
-);
+}: ControlProps) => {
+  return (
+    <StyledTimePicker
+      value={data ? new Date(`1970-01-01T${data.slice(0, data.length - 1)}`) : undefined}
+      onChange={(value) => {
+        handleChange(path, value ? formatTime(value) : undefined);
+      }}
+      label={label}
+      error={errors}
+      showError={false}
+      disabled={!enabled}
+    />
+  );
+};
 
 const StyledTimePicker = styled(TimePicker)`
   .react-datepicker--time-only {

@@ -5,7 +5,7 @@ import { routes } from '../utils/routes';
 import Avatar from './Avatar';
 import Icon, { IconName } from './Icons';
 import Logo from './Logo';
-import { UserContext, UserContextType } from './UserProdiver';
+import { UserContext, UserContextType } from './UserProvider';
 
 interface MobileHeaderInterface {
   className?: string;

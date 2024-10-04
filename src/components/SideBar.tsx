@@ -2,13 +2,10 @@ import { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from '../utils/routes';
-//import { useLogoutMutation } from '../../utils/hooks';
-//import { slugs, useFilteredRoutes } from '../../utils/routes';
 import Avatar from './Avatar';
 import Icon, { IconName } from './Icons';
 import Logo from './Logo';
-import { UserContext, UserContextType } from './UserProdiver';
-//import ProfilesDropdown from './ProfileDropdown';
+import { UserContext, UserContextType } from './UserProvider';
 
 interface ModuleMenuProps {
   className?: string;

@@ -3,6 +3,7 @@ import Form from '../Pages/Form';
 
 export const slugs = {
   certificates: `/sertifikatai`,
+  profile: '/profilis',
   certificate: (form: string, requestId: string) => `/sertifikatai/${form}/${requestId}`,
   cantLogin: '/negalima-jungtis',
   login: '/prisijungimas',

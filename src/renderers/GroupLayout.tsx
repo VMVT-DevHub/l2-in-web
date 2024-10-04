@@ -68,5 +68,3 @@ const GroupContainer = styled.div`
     grid-template-columns: 1fr;
   }
 `;
-
-const StyledSimpleContainer = styled(SimpleContainer)``;

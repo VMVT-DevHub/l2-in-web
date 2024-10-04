@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DefaultLayout from './components/DefaultLayout';
 import FullscreenLoader from './components/FullscreenLoader';
 import LoginLayout from './components/LoginLayout';
-import { UserContext, UserContextType } from './components/UserProdiver';
+import { UserContext, UserContextType } from './components/UserProvider';
 import Login from './Pages/Login';
 import { routes, slugs } from './utils/routes';
 
