@@ -78,10 +78,10 @@
   resolved "https://registry.yarnpkg.com/@aplinkosministerija/biip-prettier-config/-/biip-prettier-config-1.1.0.tgz#f62b0dde76107ab3f646cce2d54d02bd783ce388"
   integrity sha512-DxWGfBY2KuK8OgP2KUb96ieGlqE5gYuxI22Yt1FfoIldlDENW5I8kXj+YFB4iG65i7e1neXPZd9RGHmxxDxxSQ==
 
-"@aplinkosministerija/design-system@^0.0.84":
-  version "0.0.84"
-  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-0.0.84.tgz#637e23521772134d64fed083d4addecd3c18034b"
-  integrity sha512-8poSrZt81cmEqBJyuyqdw10DX433syWGZHYVooZY17yy7ZzYfZzauHs8WkOXmpDZ9eVF3cnkaZm4JgpdJEwsnQ==
+"@aplinkosministerija/design-system@^0.0.95":
+  version "0.0.95"
+  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-0.0.95.tgz#2f7c4b05bd24d0f6dbd9e92f617d00c66b30bf08"
+  integrity sha512-LbleKD4W+CH4fUVu/g/hXFhSC0HXzOqjTr+PzWH9+6elGpj4/r6p5L9IiAwPfliEy8IddJDE0Ftl45b1cqtrQQ==
   dependencies:
     "@mapbox/mapbox-gl-draw" "^1.4.3"
     "@mapbox/mapbox-gl-draw-static-mode" "^1.0.1"

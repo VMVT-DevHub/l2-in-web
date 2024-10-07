@@ -38,3 +38,5 @@ export interface Request {
   tenant: any;
   data: any;
 }
+
+export type ProfileId = 'freelancer' | number;

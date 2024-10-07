@@ -11,7 +11,7 @@ const LoginLayout = ({ children }: LoginLayoutProps) => {
     <Div100vh>
       <Container>
         <ImageContainer>
-          <Image src="/g9Background.webp" />
+          <Image src="/vmvtlogin.png" />
         </ImageContainer>
         <Content>{children}</Content>
       </Container>
@@ -47,23 +47,16 @@ const Container = styled.div`
 
 const Content = styled.div`
   overflow-y: auto;
-  background-color: #ffffff;
-  box-shadow: 0px 18px 41px #121a5529;
-  border-radius: 8px;
-  width: 430px;
-  padding: 40px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   max-height: 100%;
   @media ${device.mobileL} {
-    padding: 32px 16px 32px 16px;
     width: 100%;
-    height: 100%;
-    border-radius: 0px;
   }
 `;
 

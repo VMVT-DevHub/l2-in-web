@@ -1,6 +1,5 @@
-import { SelectField, TextField } from '@aplinkosministerija/design-system';
+import { CombinedField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
-import styled from 'styled-components';
 
 export const CombinedInput = ({
   data,
@@ -10,48 +9,41 @@ export const CombinedInput = ({
   visible,
   label,
   uischema,
-
   schema,
-  ...rest
 }: ControlProps) => {
   if (!visible) return <></>;
 
+  const schemaProperties = schema?.properties || {};
+  const inputKey = uischema.options?.inputKey;
+  const optionKey = uischema.options?.optionKey;
+
+  const options = schemaProperties?.[optionKey]?.enum || [];
+
+  const value = {
+    input: data?.[inputKey]?.toString() || '',
+    option: data?.[optionKey] || options[0] || '',
+  };
+
+  const isNumeric = schemaProperties[inputKey].type === 'number';
+
+  const handleValue = (val) => {
+    const newValue = {
+      [inputKey]: val.input ? (isNumeric ? Number(val.input) : val.input) : undefined,
+      [optionKey]: val.option || undefined,
+    };
+
+    handleChange(path, newValue);
+  };
+
   return (
-    <RelativeContainer>
-      <StyledTextField
-        value={data}
-        onChange={(value) => handleChange(path, value)}
-        label={label}
-        error={errors}
-        name={label}
-        right={
-          <StyledSelectField
-            onChange={() => {}}
-            options={['test', 'test']}
-            getOptionLabel={(item) => item}
-          />
-        }
-        showError={false}
-      />
-    </RelativeContainer>
+    <CombinedField
+      label={label}
+      value={value}
+      options={options}
+      numeric={isNumeric}
+      onChange={handleValue}
+      error={errors}
+      showError={false}
+    />
   );
 };
-
-const StyledSelectField = styled(SelectField)`
-  position: absolute;
-  div {
-    border: none;
-  }
-  width: 100px;
-  right: 0px;
-  z-index: 0;
-`;
-
-const StyledTextField = styled(TextField)`
-  z-index: 1;
-`;
-
-const RelativeContainer = styled.div`
-  position: relative;
-  z-index: 1;
-`;

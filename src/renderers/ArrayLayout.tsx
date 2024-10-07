@@ -1,4 +1,4 @@
-import { Button, CreatableMultiSelect, device, Modal } from '@aplinkosministerija/design-system';
+import { Button, device, Modal } from '@aplinkosministerija/design-system';
 import {
   ArrayLayoutProps,
   composePaths,
@@ -7,10 +7,10 @@ import {
   toDataPath,
 } from '@jsonforms/core';
 import { JsonForms, JsonFormsDispatch, useJsonForms } from '@jsonforms/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import AddButton from '../components/AddButton';
-import Icon, { IconName } from '../components/Icons';
+import { default as Icon, default as Icons, IconName } from '../components/Icons';
 
 export const ArrayLayout = ({
   uischema,
@@ -26,7 +26,6 @@ export const ArrayLayout = ({
   handleChange,
   label,
   removeItems,
-  translations,
   enabled,
   ...rest
 }: ArrayLayoutProps) => {
@@ -37,7 +36,8 @@ export const ArrayLayout = ({
   const ctx = useJsonForms();
   const formData = resolveData(ctx.core?.data, path);
 
-  if (!visible) return null;
+  if (!visible) return <></>;
+
   const cardInfo = uischema?.options?.card;
   const { detail, display, addLabel } = uischema.options || {};
 
@@ -45,7 +45,6 @@ export const ArrayLayout = ({
 
   const isCategorization = detail?.type === 'Categorization';
   const isModal = display === 'modal';
-  const isCreatableMultiSelect = display === 'creatableMultiSelect';
 
   const handleAddItem = () => {
     setCurrentIndex(formData?.length || 0);
@@ -57,117 +56,116 @@ export const ArrayLayout = ({
     removeItems?.(path, [index])();
   };
 
-  const renderFormElements = (composePath: string) => (
-    <>
-      {elements.map((element, index) => (
-        <JsonFormsDispatch
-          key={index}
-          uischema={element}
-          enabled={enabled}
-          path={composePath}
-          schema={schema}
-          cells={cells}
-          renderers={renderers}
-          {...rest}
-        />
-      ))}
-    </>
-  );
-
   const renderModalContent = () => (
     <>
-      <CardContainer>
-        {formData?.map((item, i) => {
-          const title = resolveData(item, toDataPath(cardInfo?.title?.scope));
-          const code = cardInfo?.code ? resolveData(item, toDataPath(cardInfo?.code?.scope)) : '';
-          const rightTop = cardInfo.right
-            ? resolveData(item, toDataPath(cardInfo?.right?.scope))
-            : '';
-          const rightTopInfix = cardInfo?.right?.dynamicInfix
-            ? resolveData(item, toDataPath(cardInfo?.right?.dynamicInfix.scope))
-            : '';
-          const rightTopLabel = cardInfo?.right?.label || '';
+      {formData?.length > 0 ? (
+        <CardContainer>
+          {formData?.map((item, i) => {
+            const title = resolveData(item, toDataPath(cardInfo?.title?.scope));
+            const code = cardInfo?.code ? resolveData(item, toDataPath(cardInfo?.code?.scope)) : '';
+            const rightTop = cardInfo.right
+              ? resolveData(item, toDataPath(cardInfo?.right?.scope))
+              : '';
+            const rightTopInfix = cardInfo?.right?.dynamicInfix
+              ? resolveData(item, toDataPath(cardInfo?.right?.dynamicInfix.scope))
+              : '';
+            const rightTopLabel = cardInfo?.right?.label || '';
 
-          return (
-            <Card
-              key={i}
-              onClick={() => {
-                setCurrentIndex(i);
-                setValues(formData[i] || {});
-                setShowModal(true);
-              }}
-            >
-              <CardTopRow>
-                <CardInnerRow>
-                  <CardTitle>
-                    {title}
-                    {code && <CardCode> #{code}</CardCode>}
-                  </CardTitle>
-                  {cardInfo.top && (
+            return (
+              <CardRow>
+                <Card
+                  key={i}
+                  onClick={() => {
+                    setCurrentIndex(i);
+                    setValues(formData[i] || {});
+                    setShowModal(true);
+                  }}
+                >
+                  <CardTopRow>
+                    <CardInnerRow>
+                      <CardTitle>
+                        {title}
+                        {code && <CardCode> #{code}</CardCode>}
+                      </CardTitle>
+                      {cardInfo.top && (
+                        <Row>
+                          {cardInfo.top.map((info) => {
+                            const svg = info?.svg;
+                            const value = resolveData(item, toDataPath(info?.scope));
+
+                            const infix = info?.infix
+                              ? info.infix
+                              : info?.dynamicInfix
+                              ? resolveData(item, toDataPath(info.dynamicInfix.scope))
+                              : '';
+
+                            if (!value) return <></>;
+
+                            return (
+                              <CardTopItem>
+                                <ItemIcon src={`data:image/svg+xml;base64,${btoa(svg)}`} />
+                                <CardTopItemLabel>
+                                  {value} {infix}
+                                </CardTopItemLabel>
+                              </CardTopItem>
+                            );
+                          })}
+                        </Row>
+                      )}
+                    </CardInnerRow>
+
+                    {rightTop && (
+                      <CardTopRightItem>
+                        <CardTopRight>
+                          {rightTop}
+                          {rightTopInfix}
+                        </CardTopRight>
+                        <CardBottomItemLabel>{rightTopLabel}</CardBottomItemLabel>
+                      </CardTopRightItem>
+                    )}
+                  </CardTopRow>
+
+                  {cardInfo.top && <Line />}
+
+                  {cardInfo.bottom && (
                     <Row>
-                      {cardInfo.top.map((info) => {
-                        const svg = info?.svg;
+                      {cardInfo.bottom.map((info) => {
                         const value = resolveData(item, toDataPath(info?.scope));
-
-                        const infix = info?.infix
-                          ? info.infix
-                          : info?.dynamicInfix
-                          ? resolveData(item, toDataPath(info.dynamicInfix.scope))
-                          : '';
+                        const label = info.label;
 
                         if (!value) return <></>;
 
                         return (
-                          <CardTopItem>
-                            <ItemIcon src={`data:image/svg+xml;base64,${btoa(svg)}`} />
-                            <CardTopItemLabel>
-                              {value} {infix}
-                            </CardTopItemLabel>
-                          </CardTopItem>
+                          <CardBottomItem>
+                            <CardBottomItemLabel>{label}</CardBottomItemLabel>
+                            <CardBottomItemValue>{value}</CardBottomItemValue>
+                          </CardBottomItem>
                         );
                       })}
                     </Row>
                   )}
-                </CardInnerRow>
-
-                {rightTop && (
-                  <CardTopRightItem>
-                    <CardTopRight>
-                      {rightTop}
-                      {rightTopInfix}
-                    </CardTopRight>
-                    <CardBottomItemLabel>{rightTopLabel}</CardBottomItemLabel>
-                  </CardTopRightItem>
+                </Card>
+                {enabled ? (
+                  <IconContainer onClick={() => handleRemoveItem(i)}>
+                    <StyledIcon name={IconName.deleteItem} />
+                  </IconContainer>
+                ) : (
+                  <div />
                 )}
-              </CardTopRow>
-
-              {cardInfo.top && <Line />}
-
-              {cardInfo.bottom && (
-                <Row>
-                  {cardInfo.bottom.map((info) => {
-                    const value = resolveData(item, toDataPath(info?.scope));
-                    const label = info.label;
-
-                    if (!value) return <></>;
-
-                    return (
-                      <CardBottomItem>
-                        <CardBottomItemLabel>{label}</CardBottomItemLabel>
-                        <CardBottomItemValue>{value}</CardBottomItemValue>
-                      </CardBottomItem>
-                    );
-                  })}
-                </Row>
-              )}
-            </Card>
-          );
-        })}
-      </CardContainer>
+              </CardRow>
+            );
+          })}
+        </CardContainer>
+      ) : null}
 
       <Modal onClose={() => setShowModal(false)} visible={showModal}>
         <PopupContainer>
-          <PopupTitle>{addLabel}</PopupTitle>
+          <PopupTopRow>
+            <PopupTitle>{addLabel}</PopupTitle>
+            <PopupCloseWrapper onClick={() => setShowModal(false)}>
+              <CloseIcon name={IconName.close} />
+            </PopupCloseWrapper>
+          </PopupTopRow>
           {isCategorization ? (
             <JsonForms
               config={{
@@ -181,8 +179,7 @@ export const ArrayLayout = ({
                   setShowModal(false);
                 },
               }}
-              onChange={({ data, errors }) => {
-                console.log(errors, 'errors');
+              onChange={({ data }) => {
                 setValues(data);
               }}
               uischema={detail}
@@ -230,12 +227,23 @@ export const ArrayLayout = ({
   );
 
   const renderItems = () => (
-    <Container columns={elements.length}>
+    <Column>
       {formData?.map((_, i) => {
         const composePath = composePaths(path, `${i}`);
         return (
-          <React.Fragment key={i}>
-            {renderFormElements(composePath)}
+          <Container key={i}>
+            {elements.map((element, index) => (
+              <JsonFormsDispatch
+                key={index}
+                uischema={element}
+                enabled={enabled}
+                path={composePath}
+                schema={schema}
+                cells={cells}
+                renderers={renderers}
+                {...rest}
+              />
+            ))}
             {enabled ? (
               <IconContainer onClick={() => handleRemoveItem(i)}>
                 <StyledIcon name={IconName.deleteItem} />
@@ -243,25 +251,14 @@ export const ArrayLayout = ({
             ) : (
               <div />
             )}
-          </React.Fragment>
+          </Container>
         );
       })}
-    </Container>
+    </Column>
   );
 
-  if (isCreatableMultiSelect) {
-    return (
-      <CreatableMultiSelect
-        disabled={!enabled}
-        label={label}
-        onChange={(values) => handleChange(path, values)}
-        values={formData || []}
-      />
-    );
-  }
-
   return (
-    <>
+    <MainContainer>
       {isModal ? renderModalContent() : renderItems()}
       {enabled && (
         <AddButton
@@ -272,7 +269,7 @@ export const ArrayLayout = ({
           + {addLabel}
         </AddButton>
       )}
-    </>
+    </MainContainer>
   );
 };
 
@@ -296,6 +293,17 @@ const PopupContainer = styled.div<{ width?: string }>`
     border-radius: 0px;
   }
 `;
+
+const PopupTopRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const PopupCloseWrapper = styled.div`
+  padding: 3px;
+  cursor: pointer;
+`;
+
 const PopupTitle = styled.div`
   font-size: 1.4rem;
   font-weight: 600;
@@ -381,15 +389,25 @@ const CardCode = styled.span`
   color: #636a7a;
 `;
 
-const Container = styled.div<{ columns: number }>`
-  display: grid;
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 16px;
-  grid-template-columns: repeat(${({ columns }) => columns}, 1fr) 40px;
+  width: 100%;
 
-  @media ${device.mobileL} {
-    grid-template-columns: 1fr;
+  [tabindex='-1'] {
+    flex: 1;
   }
+  @media ${device.mobileL} {
+    flex-direction: column;
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
 `;
 
 const IconContainer = styled.div`
@@ -397,6 +415,11 @@ const IconContainer = styled.div`
   height: 40px;
   display: flex;
   cursor: pointer;
+`;
+
+const CloseIcon = styled(Icons)`
+  width: 25px;
+  height: 25px;
 `;
 
 const CardInnerRow = styled.div`
@@ -415,8 +438,20 @@ const Card = styled.div`
   gap: 8px;
 `;
 
+const CardRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(1, 1fr) 20px;
+  gap: 8px;
+`;
+
 const CardContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const MainContainer = styled.div`
+  display: grid;
   flex-direction: column;
   gap: 16px;
 `;

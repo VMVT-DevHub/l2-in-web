@@ -5,7 +5,6 @@ const AddButton = ({ onClick, children }) => {
 };
 
 const Button = styled.button<{ $color?: string }>`
-  margin-top: 16px;
   display: flex;
   flex-direction: row;
   border: none;

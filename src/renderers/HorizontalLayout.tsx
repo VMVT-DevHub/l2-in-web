@@ -10,10 +10,12 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
     return <></>;
   }
 
-  const elementsLength = uischema.elements.filter((element) => {
-    if (!core?.ajv) return false;
-    return isVisible(element, core?.data, '', core?.ajv);
-  }).length;
+  const elementsLength =
+    uischema?.options?.columns ||
+    uischema.elements.filter((element) => {
+      if (!core?.ajv) return false;
+      return isVisible(element, core?.data, '', core?.ajv);
+    }).length;
 
   const renderElements = () => {
     return uischema.elements.map((element: any, index: number) => (

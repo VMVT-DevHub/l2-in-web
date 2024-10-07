@@ -1,8 +1,12 @@
 import { TableData, TableRow } from '@aplinkosministerija/design-system';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import Cookies from 'universal-cookie';
+import { UserContext, UserContextType } from '../components/UserProvider';
 import { intersectionObserverConfig } from './configs';
 import { handleError } from './functions';
+
+const cookies = new Cookies();
 
 export const useInfinityLoad = (
   queryKey: string,
@@ -86,4 +90,11 @@ export const useTableData = ({
   });
 
   return { tableData, loading: isFetching };
+};
+
+export const useGetCurrentProfile = () => {
+  const { user } = useContext<UserContextType>(UserContext);
+  const profileId = cookies.get('profileId');
+  const currentProfile = user?.profiles?.find((profile) => profile.id == profileId);
+  return currentProfile;
 };

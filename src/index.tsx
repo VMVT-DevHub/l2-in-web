@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import App from './App';
-import { UserProvider } from './components/UserProdiver';
+import { UserProvider } from './components/UserProvider';
 import { GlobalStyle, theme } from './styles/index';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
