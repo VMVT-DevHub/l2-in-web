@@ -18,20 +18,21 @@ import {
 } from '@jsonforms/core';
 import { withJsonFormsArrayLayoutProps, withJsonFormsControlProps } from '@jsonforms/react';
 import { ArrayLayout } from './ArrayLayout';
+import { ButtonGroupRenderer } from './ButtonGroup';
 import { CategorizationLayout } from './Categorization';
 import { CategoryLayout } from './CategoryLayout';
 import { CheckBoxRenderer } from './Checkbox';
 import { CombinedInput } from './CombinedInput';
 import CreatableMultiSelectRerender from './CreatableMultiSelect';
 import { DateRenderer } from './DateField';
-import { EnumRenderer } from './EnumField';
 import { GroupLayout } from './GroupLayout';
 import { HorizontalLayout } from './HorizontalLayout';
 import { CustomNumberRenderer } from './NumberField';
-import { SpaceRenderer } from './Space';
+import { SelectFieldRenderer } from './SelectField';
 import { TextareaRenderer } from './Textarea';
 import { CustomTextRenderer } from './TextInput';
 import { TimeRenderer } from './TimeField';
+import { TreeFieldRenderer } from './TreeField';
 import { UploadRenderer } from './Upload';
 
 export const customRenderers = [
@@ -68,8 +69,16 @@ export const customRenderers = [
   },
 
   {
-    tester: rankWith(100, isEnumControl),
-    renderer: withJsonFormsControlProps(EnumRenderer),
+    tester: rankWith(3, isEnumControl),
+    renderer: withJsonFormsControlProps(SelectFieldRenderer),
+  },
+  {
+    tester: rankWith(4, and(isEnumControl, optionIs('display', 'tree'))),
+    renderer: withJsonFormsControlProps(TreeFieldRenderer),
+  },
+  {
+    tester: rankWith(4, and(isEnumControl, optionIs('display', 'buttonGroup'))),
+    renderer: withJsonFormsControlProps(ButtonGroupRenderer),
   },
   {
     tester: rankWith(5, uiTypeIs('Categorization')),
@@ -77,39 +86,35 @@ export const customRenderers = [
   },
 
   {
-    tester: rankWith(200, uiTypeIs('Group')),
+    tester: rankWith(2, uiTypeIs('Group')),
     renderer: withJsonFormsControlProps(GroupLayout),
   },
   {
-    tester: rankWith(200, uiTypeIs('HorizontalLayout')),
+    tester: rankWith(2, uiTypeIs('HorizontalLayout')),
     renderer: withJsonFormsControlProps(HorizontalLayout),
   },
   {
-    tester: rankWith(200, and(isObjectControl, optionIs('display', 'combinedInput'))),
+    tester: rankWith(2, and(isObjectControl, optionIs('display', 'combinedInput'))),
     renderer: withJsonFormsControlProps(CombinedInput),
   },
   {
-    tester: rankWith(200, and(isObjectControl, optionIs('display', 'upload'))),
+    tester: rankWith(2, and(isObjectControl, optionIs('display', 'upload'))),
     renderer: withJsonFormsControlProps(UploadRenderer),
   },
   {
-    tester: rankWith(200, uiTypeIs('Textarea')),
+    tester: rankWith(2, uiTypeIs('Textarea')),
     renderer: withJsonFormsControlProps(TextareaRenderer),
   },
   {
-    tester: rankWith(200, isArrayObjectControl),
+    tester: rankWith(2, isArrayObjectControl),
     renderer: withJsonFormsArrayLayoutProps(ArrayLayout),
   },
   {
-    tester: rankWith(201, and(isArrayObjectControl, optionIs('display', 'upload'))),
+    tester: rankWith(3, and(isArrayObjectControl, optionIs('display', 'upload'))),
     renderer: withJsonFormsControlProps(UploadRenderer),
   },
   {
-    tester: rankWith(
-      200,
-      and(isPrimitiveArrayControl, optionIs('display', 'creatableMultiSelect')),
-    ),
+    tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'creatableMultiSelect'))),
     renderer: withJsonFormsArrayLayoutProps(CreatableMultiSelectRerender),
   },
-  { tester: () => 1, renderer: withJsonFormsArrayLayoutProps(SpaceRenderer) },
 ];

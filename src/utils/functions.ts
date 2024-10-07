@@ -25,3 +25,12 @@ export const handleSelectProfile = (profileId: ProfileId) => {
 
   window.location.reload();
 };
+
+export const formatLabel = (data: any, format?: string) => {
+  if (!format || !data) return data;
+
+  return Object.keys(data).reduce((formattedLabel, key) => {
+    const placeholder = new RegExp(`\\$\\{${key}\\}`, 'g');
+    return formattedLabel.replace(placeholder, data[key] || '');
+  }, format);
+};

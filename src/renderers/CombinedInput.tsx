@@ -1,4 +1,4 @@
-import { CombinedField, SelectField, TextField } from '@aplinkosministerija/design-system';
+import { CombinedField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 
 export const CombinedInput = ({

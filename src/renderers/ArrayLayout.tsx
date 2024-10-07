@@ -26,7 +26,6 @@ export const ArrayLayout = ({
   handleChange,
   label,
   removeItems,
-  translations,
   enabled,
   ...rest
 }: ArrayLayoutProps) => {
@@ -37,7 +36,8 @@ export const ArrayLayout = ({
   const ctx = useJsonForms();
   const formData = resolveData(ctx.core?.data, path);
 
-  if (!visible) return null;
+  if (!visible) return <></>;
+
   const cardInfo = uischema?.options?.card;
   const { detail, display, addLabel } = uischema.options || {};
 
@@ -72,78 +72,87 @@ export const ArrayLayout = ({
             const rightTopLabel = cardInfo?.right?.label || '';
 
             return (
-              <Card
-                key={i}
-                onClick={() => {
-                  setCurrentIndex(i);
-                  setValues(formData[i] || {});
-                  setShowModal(true);
-                }}
-              >
-                <CardTopRow>
-                  <CardInnerRow>
-                    <CardTitle>
-                      {title}
-                      {code && <CardCode> #{code}</CardCode>}
-                    </CardTitle>
-                    {cardInfo.top && (
-                      <Row>
-                        {cardInfo.top.map((info) => {
-                          const svg = info?.svg;
-                          const value = resolveData(item, toDataPath(info?.scope));
+              <CardRow>
+                <Card
+                  key={i}
+                  onClick={() => {
+                    setCurrentIndex(i);
+                    setValues(formData[i] || {});
+                    setShowModal(true);
+                  }}
+                >
+                  <CardTopRow>
+                    <CardInnerRow>
+                      <CardTitle>
+                        {title}
+                        {code && <CardCode> #{code}</CardCode>}
+                      </CardTitle>
+                      {cardInfo.top && (
+                        <Row>
+                          {cardInfo.top.map((info) => {
+                            const svg = info?.svg;
+                            const value = resolveData(item, toDataPath(info?.scope));
 
-                          const infix = info?.infix
-                            ? info.infix
-                            : info?.dynamicInfix
-                            ? resolveData(item, toDataPath(info.dynamicInfix.scope))
-                            : '';
+                            const infix = info?.infix
+                              ? info.infix
+                              : info?.dynamicInfix
+                              ? resolveData(item, toDataPath(info.dynamicInfix.scope))
+                              : '';
 
-                          if (!value) return <></>;
+                            if (!value) return <></>;
 
-                          return (
-                            <CardTopItem>
-                              <ItemIcon src={`data:image/svg+xml;base64,${btoa(svg)}`} />
-                              <CardTopItemLabel>
-                                {value} {infix}
-                              </CardTopItemLabel>
-                            </CardTopItem>
-                          );
-                        })}
-                      </Row>
+                            return (
+                              <CardTopItem>
+                                <ItemIcon src={`data:image/svg+xml;base64,${btoa(svg)}`} />
+                                <CardTopItemLabel>
+                                  {value} {infix}
+                                </CardTopItemLabel>
+                              </CardTopItem>
+                            );
+                          })}
+                        </Row>
+                      )}
+                    </CardInnerRow>
+
+                    {rightTop && (
+                      <CardTopRightItem>
+                        <CardTopRight>
+                          {rightTop}
+                          {rightTopInfix}
+                        </CardTopRight>
+                        <CardBottomItemLabel>{rightTopLabel}</CardBottomItemLabel>
+                      </CardTopRightItem>
                     )}
-                  </CardInnerRow>
+                  </CardTopRow>
 
-                  {rightTop && (
-                    <CardTopRightItem>
-                      <CardTopRight>
-                        {rightTop}
-                        {rightTopInfix}
-                      </CardTopRight>
-                      <CardBottomItemLabel>{rightTopLabel}</CardBottomItemLabel>
-                    </CardTopRightItem>
+                  {cardInfo.top && <Line />}
+
+                  {cardInfo.bottom && (
+                    <Row>
+                      {cardInfo.bottom.map((info) => {
+                        const value = resolveData(item, toDataPath(info?.scope));
+                        const label = info.label;
+
+                        if (!value) return <></>;
+
+                        return (
+                          <CardBottomItem>
+                            <CardBottomItemLabel>{label}</CardBottomItemLabel>
+                            <CardBottomItemValue>{value}</CardBottomItemValue>
+                          </CardBottomItem>
+                        );
+                      })}
+                    </Row>
                   )}
-                </CardTopRow>
-
-                {cardInfo.top && <Line />}
-
-                {cardInfo.bottom && (
-                  <Row>
-                    {cardInfo.bottom.map((info) => {
-                      const value = resolveData(item, toDataPath(info?.scope));
-                      const label = info.label;
-
-                      if (!value) return <></>;
-
-                      return (
-                        <CardBottomItem>
-                          <CardBottomItemLabel>{label}</CardBottomItemLabel>
-                          <CardBottomItemValue>{value}</CardBottomItemValue>
-                        </CardBottomItem>
-                      );
-                    })}
-                  </Row>
+                </Card>
+                {enabled ? (
+                  <IconContainer onClick={() => handleRemoveItem(i)}>
+                    <StyledIcon name={IconName.deleteItem} />
+                  </IconContainer>
+                ) : (
+                  <div />
                 )}
-              </Card>
+              </CardRow>
             );
           })}
         </CardContainer>
@@ -170,8 +179,7 @@ export const ArrayLayout = ({
                   setShowModal(false);
                 },
               }}
-              onChange={({ data, errors }) => {
-                console.log(errors, 'errors');
+              onChange={({ data }) => {
                 setValues(data);
               }}
               uischema={detail}
@@ -427,6 +435,12 @@ const Card = styled.div`
   border: 1px solid #eaeaef;
   display: flex;
   flex-direction: column;
+  gap: 8px;
+`;
+
+const CardRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(1, 1fr) 20px;
   gap: 8px;
 `;
 

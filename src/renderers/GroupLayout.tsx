@@ -1,4 +1,4 @@
-import { device, SimpleContainer } from '@aplinkosministerija/design-system';
+import { SimpleContainer } from '@aplinkosministerija/design-system';
 import { MaterialLayoutRenderer } from '@jsonforms/material-renderers';
 import styled from 'styled-components';
 
@@ -64,7 +64,8 @@ const GroupContainer = styled.div`
   gap: 32px;
   grid-template-columns: 240px 1fr;
   margin-bottom: 16px;
-  @media ${device.mobileL} {
+  @media (max-width: 1130px) {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 `;
