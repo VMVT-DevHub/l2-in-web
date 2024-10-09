@@ -393,7 +393,6 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  width: 100%;
 
   [tabindex='-1'] {
     flex: 1;

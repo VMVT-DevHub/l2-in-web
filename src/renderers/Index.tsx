@@ -23,15 +23,20 @@ import { CategorizationLayout } from './Categorization';
 import { CategoryLayout } from './CategoryLayout';
 import { CheckBoxRenderer } from './Checkbox';
 import { CombinedInput } from './CombinedInput';
+import { CountryFieldRenderer } from './CountryField';
 import CreatableMultiSelectRerender from './CreatableMultiSelect';
 import { DateRenderer } from './DateField';
 import { GroupLayout } from './GroupLayout';
+import { GroupTimelineLayout } from './GroupTimelineLayout';
 import { HorizontalLayout } from './HorizontalLayout';
 import { CustomNumberRenderer } from './NumberField';
 import { SelectFieldRenderer } from './SelectField';
 import { TextareaRenderer } from './Textarea';
 import { CustomTextRenderer } from './TextInput';
 import { TimeRenderer } from './TimeField';
+import { TimelineCountryEndRenderer } from './TimelineCountryEnd';
+import { TimelineCountryStartRenderer } from './TimelineCountryStart';
+import { TimelineCountryStepRenderer } from './TimelineCountryStep';
 import { TreeFieldRenderer } from './TreeField';
 import { UploadRenderer } from './Upload';
 
@@ -72,6 +77,24 @@ export const customRenderers = [
     tester: rankWith(3, isEnumControl),
     renderer: withJsonFormsControlProps(SelectFieldRenderer),
   },
+
+  {
+    tester: rankWith(4, and(isEnumControl, optionIs('display', 'countrySelect'))),
+    renderer: withJsonFormsControlProps(CountryFieldRenderer),
+  },
+  {
+    tester: rankWith(5, and(isEnumControl, optionIs('display', 'timelineCountryStart'))),
+    renderer: withJsonFormsControlProps(TimelineCountryStartRenderer),
+  },
+  {
+    tester: rankWith(5, and(isEnumControl, optionIs('display', 'timelineCountryStep'))),
+    renderer: withJsonFormsControlProps(TimelineCountryStepRenderer),
+  },
+  {
+    tester: rankWith(5, and(isEnumControl, optionIs('display', 'timelineCountryEnd'))),
+    renderer: withJsonFormsControlProps(TimelineCountryEndRenderer),
+  },
+
   {
     tester: rankWith(4, and(isEnumControl, optionIs('display', 'tree'))),
     renderer: withJsonFormsControlProps(TreeFieldRenderer),
@@ -88,6 +111,10 @@ export const customRenderers = [
   {
     tester: rankWith(2, uiTypeIs('Group')),
     renderer: withJsonFormsControlProps(GroupLayout),
+  },
+  {
+    tester: rankWith(3, and(uiTypeIs('Group'), optionIs('display', 'timeline'))),
+    renderer: withJsonFormsControlProps(GroupTimelineLayout),
   },
   {
     tester: rankWith(2, uiTypeIs('HorizontalLayout')),

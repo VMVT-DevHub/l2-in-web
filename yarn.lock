@@ -78,10 +78,10 @@
   resolved "https://registry.yarnpkg.com/@aplinkosministerija/biip-prettier-config/-/biip-prettier-config-1.1.0.tgz#f62b0dde76107ab3f646cce2d54d02bd783ce388"
   integrity sha512-DxWGfBY2KuK8OgP2KUb96ieGlqE5gYuxI22Yt1FfoIldlDENW5I8kXj+YFB4iG65i7e1neXPZd9RGHmxxDxxSQ==
 
-"@aplinkosministerija/design-system@^0.0.95":
-  version "0.0.95"
-  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-0.0.95.tgz#2f7c4b05bd24d0f6dbd9e92f617d00c66b30bf08"
-  integrity sha512-LbleKD4W+CH4fUVu/g/hXFhSC0HXzOqjTr+PzWH9+6elGpj4/r6p5L9IiAwPfliEy8IddJDE0Ftl45b1cqtrQQ==
+"@aplinkosministerija/design-system@^0.0.98":
+  version "0.0.98"
+  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-0.0.98.tgz#ac3d3e9c9845b6f897a8dcfdb0848349b4930bc0"
+  integrity sha512-zIgXXREOAQ+OE9kt/3cs6MLqm9XV4UT+9/aPhUsM8O4o/cM59TJ70xsowaS+B/ETvcfalVgRTOxejiIi3Dftvg==
   dependencies:
     "@mapbox/mapbox-gl-draw" "^1.4.3"
     "@mapbox/mapbox-gl-draw-static-mode" "^1.0.1"
@@ -2636,6 +2636,11 @@ find-up@^5.0.0:
   dependencies:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
+
+flag-icons@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/flag-icons/-/flag-icons-7.2.3.tgz#b67f379fa0ef28c4e605319a78035131bdd8ced7"
+  integrity sha512-X2gUdteNuqdNqob2KKTJTS+ZCvyWeLCtDz9Ty8uJP17Y4o82Y+U/Vd4JNrdwTAjagYsRznOn9DZ+E/Q52qbmqg==
 
 flat-cache@^3.0.4:
   version "3.2.0"

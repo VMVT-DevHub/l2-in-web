@@ -4,7 +4,7 @@
   "private": true,
   "prettier": "@aplinkosministerija/biip-prettier-config",
   "dependencies": {
-    "@aplinkosministerija/design-system": "^0.0.95",
+    "@aplinkosministerija/design-system": "^0.0.98",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@jsonforms/core": "^3.3.0",
@@ -24,6 +24,7 @@
     "axios": "^1.7.4",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
+    "flag-icons": "^7.2.3",
     "jsonpath": "^1.1.1",
     "react": "^18.0.0",
     "react-datepicker": "^7.3.0",
