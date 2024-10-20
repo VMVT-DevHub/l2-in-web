@@ -4,7 +4,7 @@
   "private": true,
   "prettier": "@aplinkosministerija/biip-prettier-config",
   "dependencies": {
-    "@aplinkosministerija/design-system": "^0.0.98",
+    "@aplinkosministerija/design-system": "^0.0.103",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@jsonforms/core": "^3.3.0",
@@ -25,7 +25,9 @@
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
     "flag-icons": "^7.2.3",
+    "json-schema-ref-parser": "^9.0.9",
     "jsonpath": "^1.1.1",
+    "openapi-fetch": "^0.12.2",
     "react": "^18.0.0",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.0.0",
@@ -45,7 +47,8 @@
     "serve": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:sarif": "set SARIF_ESLINT_EMBED=true && yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "openapi-ts:boundaries": "openapi-ts -f openapi-ts.boundaries.config.ts"
   },
   "eslintConfig": {
     "extends": "@aplinkosministerija/eslint-config-biip-react"
@@ -66,6 +69,7 @@
     "@aplinkosministerija/biip-prettier-config": "^1.1.0",
     "@aplinkosministerija/eslint-config-biip-react": "^1.0.0",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@hey-api/openapi-ts": "^0.53.8",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/styled-components": "^5.1.25",
     "eslint-config-prettier": "^8.5.0",
@@ -73,6 +77,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
+    "openapi-typescript": "^7.4.1",
     "prettier": "^2.6.2"
   },
   "engines": {

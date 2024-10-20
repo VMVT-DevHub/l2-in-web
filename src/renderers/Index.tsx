@@ -39,12 +39,22 @@ import { TimelineCountryStartRenderer } from './TimelineCountryStart';
 import { TimelineCountryStepRenderer } from './TimelineCountryStep';
 import { TreeFieldRenderer } from './TreeField';
 import { UploadRenderer } from './Upload';
+import { ButtonMultiSelectRerender } from './ButtonMultiSelect';
+import { AddMoreLayout } from './AddMoreLayout';
+import { BoundariesSelect } from './BoundarySelect';
+import { CustomAthFieldRenderer } from './AuthField';
+
+function BoundariesSelectRerender() {}
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
   {
     tester: rankWith(3, and(isStringControl, optionIs('display', 'textarea'))),
     renderer: withJsonFormsControlProps(TextareaRenderer),
+  },
+  {
+    tester: rankWith(4, and(isStringControl, optionIs('display', 'authField'))),
+    renderer: withJsonFormsControlProps(CustomAthFieldRenderer),
   },
   { tester: rankWith(5, isBooleanControl), renderer: withJsonFormsControlProps(CheckBoxRenderer) },
   {
@@ -137,11 +147,28 @@ export const customRenderers = [
     renderer: withJsonFormsArrayLayoutProps(ArrayLayout),
   },
   {
+    tester: rankWith(6, and(isArrayObjectControl, optionIs('display', 'addMore'))),
+    renderer: withJsonFormsControlProps(AddMoreLayout),
+  },
+  {
+    tester: rankWith(6, and(isPrimitiveArrayControl, optionIs('display', 'addMore'))),
+    renderer: withJsonFormsControlProps(AddMoreLayout),
+  },
+  {
     tester: rankWith(3, and(isArrayObjectControl, optionIs('display', 'upload'))),
     renderer: withJsonFormsControlProps(UploadRenderer),
   },
+
   {
     tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'creatableMultiSelect'))),
     renderer: withJsonFormsArrayLayoutProps(CreatableMultiSelectRerender),
+  },
+  {
+    tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'buttonMultiSelect'))),
+    renderer: withJsonFormsArrayLayoutProps(ButtonMultiSelectRerender),
+  },
+  {
+    tester: rankWith(10, and(isNumberControl, optionIs('display', 'boundariesSelect'))),
+    renderer: withJsonFormsControlProps(BoundariesSelect),
   },
 ];

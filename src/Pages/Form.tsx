@@ -14,6 +14,10 @@ import { handleError, isNew } from '../utils/functions';
 import { slugs } from '../utils/routes';
 
 const Form = ({ formType }) => {
+  const backRoutes = {
+    certificates: slugs.certificates,
+    food: slugs.foodRequests,
+  };
   const { form = '', requestId = '' } = useParams();
   const [values, setValues] = useState<any>({});
   const navigate = useNavigate();
@@ -42,10 +46,16 @@ const Form = ({ formType }) => {
         : api.updateRequest(requestId, { data: { ...values }, form, status, formType }),
     {
       onError: handleAlert,
-      onSuccess: () => navigate(slugs.certificates),
+      onSuccess: () => navigate(backRoutes[formType]),
       retry: false,
     },
   );
+
+  const deleteRequest = useMutation(() => api.deleteRequest(requestId), {
+    onError: handleAlert,
+    onSuccess: () => navigate(slugs.certificates),
+    retry: false,
+  });
 
   const shouldShowLoader =
     isFormLoading ||
@@ -55,6 +65,9 @@ const Form = ({ formType }) => {
 
   const showDraftButton = !request?.status || request.status === StatusTypes.DRAFT;
 
+  const showDeleteButton =
+    !isNew(requestId) && (!request?.status || request.status === StatusTypes.DRAFT);
+
   if (shouldShowLoader) {
     return <FullscreenLoader />;
   }
@@ -63,13 +76,17 @@ const Form = ({ formType }) => {
     createOrUpdateRequest.mutateAsync(isDraft ? StatusTypes.DRAFT : StatusTypes.CREATED);
   };
 
+  const handleDelete = () => {
+    deleteRequest.mutateAsync();
+  };
+
   return (
     <Container>
       <InnerContainer>
         <JsonForms
           schema={formData.schema}
           uischema={formData.uiSchema}
-          config={{ submitForm: handleSubmit, showDraftButton }}
+          config={{ submitForm: handleSubmit, showDraftButton, showDeleteButton, handleDelete }}
           data={values}
           renderers={customRenderers}
           cells={materialCells}

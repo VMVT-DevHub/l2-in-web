@@ -4,6 +4,7 @@ import { TreeSelect } from 'antd';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
 import { formatLabel } from '../utils/functions';
+import { useOptions } from '../utils/hooks';
 
 export const TreeFieldRenderer = ({
   data,
@@ -18,7 +19,7 @@ export const TreeFieldRenderer = ({
 }: ControlProps) => {
   if (!visible) return <></>;
 
-  const options = (schema as any)?.options || schema?.enum || [];
+  const options = useOptions({ schema, uischema });
   const valueKey = uischema?.options?.value;
 
   const modifyTreeValues = (options, depth = 0) => {

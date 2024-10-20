@@ -1,61 +1,60 @@
-import { Button, Table } from '@aplinkosministerija/design-system';
+import { Button, Table, TableData } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import FullscreenLoader from '../components/FullscreenLoader';
-
 import { useState } from 'react';
 import FormSelectModal from '../components/FormSelectModal';
-import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
-import { Request } from '../types';
 import api from '../utils/api';
-import { colorsByStatus } from '../utils/constants';
 import { handleError } from '../utils/functions';
-import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
-import { requestStatusLabels } from '../utils/text';
-import { certificateColumns } from '../utils/columns';
+import { foodRequestColumns } from '../utils/columns';
+import { useTableData } from '../utils/hooks';
+import { foodReasonLabels, requestStatusLabels } from '../utils/text';
+import { colorsByStatus } from '../utils/constants';
+import StatusTag from '../components/StatusTag';
+import { format } from 'date-fns';
 
-const Certificates = () => {
+const FoodRequests = () => {
   const [searchParams] = useSearchParams();
   const params = Object.fromEntries([...searchParams]);
   const { page } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const { data, isLoading: isFormLoading } = useQuery(['forms'], () => api.getTableForm(), {
+  const { data, isLoading: isFormLoading } = useQuery(['food'], () => api.getFoodForm(), {
     onError: handleError,
     refetchOnWindowFocus: false,
   });
 
-  const { tableData, loading: isTableLoading } = useTableData({
-    name: 'requests',
-    endpoint: () => api.getRequests({ query: {} }),
-    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [searchParams, page],
-    enabled: !isFormLoading,
-  });
+  const renderStatusTag = (status) =>
+    status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
+
   const mapTableData = (item) => {
     return {
       id: item.id,
       no: `#${item.id}`,
-      form: item?.form,
-      formTitle: item?.formConfig?.title,
-      productNames: item?.productNames?.join(', '),
-      importingCountry: item?.importingCountry,
-      productAmount: item?.productAmount,
+      reason: foodReasonLabels[item.form],
+      date: format(item.createdAt, 'yyyy MM dd'),
+      submitter: `${item.name || ''} ${item.lastName || ''}`,
       status: renderStatusTag(item.status),
+      form: item.form,
     };
   };
 
-  const renderStatusTag = (status) =>
-    status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
+  const { tableData, loading: isTableLoading } = useTableData({
+    name: 'requests',
+    endpoint: () => api.getFoodRequests({ query: {} }),
+    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
+    dependencyArray: [searchParams, page],
+    enabled: !isFormLoading,
+  });
 
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
 
   return (
-    <TableWrapper title={'Sertfikatai'}>
+    <TableWrapper title={'Prašymai maisto tvarkymui'}>
       <TableButtonsRow>
         <TableButtonsInnerRow />
         <Button
@@ -70,15 +69,16 @@ const Certificates = () => {
         loading={isTableLoading}
         notFoundInfo={{ text: 'Nėra sukurtų prašymų', onClick: () => {} }}
         data={tableData}
-        columns={certificateColumns}
+        columns={foodRequestColumns}
         onClick={(item: any) => {
-          navigate(slugs.certificate(item.form, item.id));
+          console.log('item', item);
+          navigate(slugs.foodRequest(item.form, item.id));
         }}
       />
       <FormSelectModal
-        title="Naujas sertifikato prašymas"
+        title="Naujas maisto tvarkymo subjekto prašymas"
         onClick={(form) => {
-          navigate(slugs.certificate(form, 'naujas'));
+          navigate(slugs.foodRequest(form, 'naujas'));
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
@@ -88,7 +88,7 @@ const Certificates = () => {
   );
 };
 
-export default Certificates;
+export default FoodRequests;
 
 const TableButtonsRow = styled.div`
   display: flex;
