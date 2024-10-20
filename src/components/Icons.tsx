@@ -479,11 +479,11 @@ const Icon = ({ name, className }: IconProps) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g clip-path="url(#clip0_1016_612)">
+          <g clipPath="url(#clip0_1016_612)">
             <path
               d="M37.0133 32H25.28L23.04 27.9467L31.1467 15.1467L19.3067 7.25333V29.3333L16.64 32H2.66667L0 29.3333V7.25333H5.33333V26.6667H13.9733V0H18.1333L36.2667 12.16L37.0133 15.7867L30.1867 26.6667H37.0133V32Z"
               fill="white"
-              fill-opacity="0.5"
+              fillOpacity="0.5"
             />
           </g>
           <defs>

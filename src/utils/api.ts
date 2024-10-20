@@ -182,6 +182,10 @@ class Api {
     return this.get({ resource: `formTypes/certificate` });
   };
 
+  getFoodForm = async (): Promise<any> => {
+    return this.get({ resource: `formTypes/food` });
+  };
+
   getFormSchema = async ({ formType, form }: { formType: any; form: any }): Promise<Form> => {
     return this.get({
       resource: `formTypes/${formType}/${form}`,
@@ -191,6 +195,12 @@ class Api {
   getRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/certificate',
+      query,
+    });
+  };
+  getFoodRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
+    return await this.get({
+      resource: 'reports/food',
       query,
     });
   };
@@ -225,6 +235,13 @@ class Api {
     });
   };
 
+  deleteRequest = async (id: string): Promise<Form> => {
+    return await this.delete({
+      resource: 'requests',
+      id,
+    });
+  };
+
   uploadFiles = async (files: File[] = []): Promise<any> => {
     if (!files.length) return [];
 
@@ -250,6 +267,14 @@ class Api {
 
   submitForm = async ({ data }) => {
     return this.post({ resource: 'forms/goods/submit', params: { data } });
+  };
+
+  getOptions = async ({ path, page, input }) => {
+    return this.get({
+      resource: path,
+      page,
+      search: input,
+    });
   };
 }
 

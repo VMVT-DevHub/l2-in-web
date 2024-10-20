@@ -1,5 +1,6 @@
 import { NumericTextField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
+import { useOptions } from '../utils/hooks';
 
 export const CustomNumberRenderer = ({
   data,

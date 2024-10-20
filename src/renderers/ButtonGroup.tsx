@@ -1,6 +1,7 @@
 import { ButtonsGroup } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import { useLayoutEffect } from 'react';
+import { useOptions } from '../utils/hooks';
 
 export const ButtonGroupRenderer = ({
   data,
@@ -10,6 +11,7 @@ export const ButtonGroupRenderer = ({
   schema,
   enabled,
   visible,
+  uischema,
 }: ControlProps) => {
   useLayoutEffect(() => {
     if (!!schema?.default && !data) {
@@ -19,7 +21,7 @@ export const ButtonGroupRenderer = ({
 
   if (!visible) return <></>;
 
-  const options = (schema as any)?.options || schema?.enum || [];
+  const options = useOptions({ schema, uischema });
 
   return (
     <ButtonsGroup

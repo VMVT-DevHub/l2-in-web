@@ -2,6 +2,7 @@ import { SelectField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import styled from 'styled-components';
 import { formatLabel } from '../utils/functions';
+import { useOptions } from '../utils/hooks';
 
 export const CountryFieldRenderer = ({
   data,
@@ -14,7 +15,7 @@ export const CountryFieldRenderer = ({
   enabled,
   visible,
 }: ControlProps) => {
-  const options = (schema as any)?.options || schema?.enum || [];
+  const options = useOptions({ schema, uischema });
   const valueKey = uischema?.options?.value;
   const value = valueKey ? options.find((item) => item[valueKey] === data) : data;
 

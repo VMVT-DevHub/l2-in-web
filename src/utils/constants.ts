@@ -28,6 +28,7 @@ export enum StatusTypes {
 
 export enum FormTypes {
   CERTIFICATES = 'certificates',
+  FOOD = 'food',
 }
 
 export const colorsByStatus = {
@@ -36,4 +37,10 @@ export const colorsByStatus = {
   [StatusTypes.APPROVED]: TagColors.GREEN,
   [StatusTypes.RETURNED]: TagColors.ORANGE,
   [StatusTypes.REJECTED]: TagColors.PINK,
+};
+
+export const FoodForms = {
+  CREATE: 'create',
+  UPDATE: 'update',
+  REMOVE: 'remove',
 };

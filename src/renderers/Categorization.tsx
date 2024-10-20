@@ -1,10 +1,12 @@
-import { Button } from '@aplinkosministerija/design-system';
+import { Button, Popup } from '@aplinkosministerija/design-system';
 import { Categorization, Category, isVisible } from '@jsonforms/core';
 import { MaterialLayoutRenderer } from '@jsonforms/material-renderers';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import BackButton from '../components/BackButton';
+import { ButtonVariants } from '../styles';
+import ConfirmPopup from '../components/ConfirmPopup';
 
 export const CategorizationLayout = ({
   uischema,
@@ -17,12 +19,13 @@ export const CategorizationLayout = ({
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const {
     core,
-    config: { submitForm, showDraftButton },
+    config: { submitForm, showDraftButton, showDeleteButton, handleDelete },
   }: JsonFormsStateContext = useJsonForms();
 
   const { display } = uischema.options || {};
   const errors = core?.errors;
   const isForm = display === 'form';
+  const [popUpVisible, setPopUpVisible] = useState(false);
 
   const categories = uischema.elements.filter((category: Category | Categorization) => {
     if (!core?.ajv) return false;
@@ -83,6 +86,25 @@ export const CategorizationLayout = ({
             <Title>{schema?.title}</Title>
           </InnerRow>
           <InnerRow>
+            {showDeleteButton && (
+              <InnerRow>
+                <Button variant={ButtonVariants.DANGER} onClick={() => setPopUpVisible(true)}>
+                  Ištrinti
+                </Button>
+                <ConfirmPopup
+                  visible={popUpVisible}
+                  onClose={() => setPopUpVisible(false)}
+                  content={{
+                    title: 'Ar tikrai ištrinti?',
+                    confirmButtonTitle: 'Ištrinti',
+                    confirmButtonVariant: ButtonVariants.DANGER,
+                    onConfirm: handleDelete,
+                    onCancel: () => setPopUpVisible(false),
+                    showCancel: true,
+                  }}
+                />
+              </InnerRow>
+            )}
             {showDraftButton && (
               <InnerRow>
                 <Button onClick={() => submitForm({ isDraft: true })}>

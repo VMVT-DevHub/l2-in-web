@@ -16,7 +16,7 @@ export const CombinedInput = ({
   const schemaProperties = schema?.properties || {};
   const inputKey = uischema.options?.inputKey;
   const optionKey = uischema.options?.optionKey;
-
+  const props = uischema.options?.props || {};
   const options = schemaProperties?.[optionKey]?.enum || [];
 
   const value = {
@@ -31,7 +31,6 @@ export const CombinedInput = ({
       [inputKey]: val.input ? (isNumeric ? Number(val.input) : val.input) : undefined,
       [optionKey]: val.option || undefined,
     };
-
     handleChange(path, newValue);
   };
 
@@ -44,6 +43,7 @@ export const CombinedInput = ({
       onChange={handleValue}
       error={errors}
       showError={false}
+      {...props}
     />
   );
 };

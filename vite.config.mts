@@ -8,11 +8,16 @@ export default () => {
     plugins: [react()],
     server: {
       proxy: {
+        '/api/boundaries': {
+          target: env.VITE_BOUNDARIES_URL ?? env.VITE_PROXY_URL+'/boundaries',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/boundaries/, ''),
+        },
         '/api': {
           target: env.VITE_PROXY_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
-        },
+        }
       },
     },
     assetsInclude: ['**/*.png'],

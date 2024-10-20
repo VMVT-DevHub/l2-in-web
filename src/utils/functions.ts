@@ -34,3 +34,13 @@ export const formatLabel = (data: any, format?: string) => {
     return formattedLabel.replace(placeholder, data[key] || '');
   }, format);
 };
+
+export const getDefault = (schema, path) => {
+  if (!path) return;
+  const sections = path.split('.');
+  let subSchema = schema;
+  for (const element of sections) {
+    subSchema = subSchema?.properties?.[element];
+  }
+  return subSchema?.default;
+};

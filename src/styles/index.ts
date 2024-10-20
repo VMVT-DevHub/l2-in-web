@@ -15,85 +15,80 @@ export enum ButtonVariants {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
   TERTIARY = 'tertiary',
+  SUCCESS = 'success',
   DANGER = 'danger',
-  DANGER_OUTLINE = 'dangerOutline',
   TRANSPARENT = 'transparent',
-  ACCENT = 'accent',
+  OUTLINE = 'outline',
 }
 
 export const palette = {
   primary: '#2671D9',
-  secondary: '#006E82',
-  tertiary: '#6EB4BE',
-  accent: '#f89572',
-  red: '#FE5B78',
-  green: '#4FB922',
-  brightBlue: '#13C9E78F',
-  steelBlue: '#7A7E9F',
-  graphite: '#231F20',
-  midnightBlue: '#121A55',
+  secondary: '#C7E6DC',
+  tertiary: '#73DC8C',
+  danger: '#FE5B78',
+  success: '#258800',
+  yellow: '#ffb400',
+  yellowDarker: '#ffd399',
+  purple: '#8a33fe',
+  purpleBrighter: '#b020a2',
   transparent: 'transparent',
   white: '#FFFFFF',
-  charcoalBlue: '#4B5565',
-  ghostWhite: '#F7F8FA',
-  oldLace: '#FDF5EF',
-  aliceBlue: '#EDF1F2',
   background: '#f8fafc',
+  lightblue: '#E5EEFBFF',
+  greyLighter: '#E5E7EB',
+  greyDarker: '#d4d5de',
 };
 
 export const theme: Theme = {
   colors: {
-    primary: palette.primary,
-    secondary: '#C7E6DC',
-    tertiary: '#73DC8C',
-    transparent: 'transparent',
-    label: '#4B5565',
-    danger: '#FE5B78',
-    success: '#258800',
-    powder: '#FFFFFFCC',
-    purple: '#8a33fe',
-    purpleBrighter: '#b020a2',
-    yellow: '#ffb400',
-    yellowDarker: '#ffd399',
-    greyDarker: '#d4d5de',
-    lightSteelBlue: '#cdd5df',
+    ...palette,
+    border: palette.greyLighter,
+    link: palette.primary,
     buttons: {
-      primary: {
+      [ButtonVariants.PRIMARY]: {
         background: palette.primary,
         hover: palette.primary,
-        text: 'white',
+        text: palette.white,
         border: palette.primary,
       },
-      secondary: {
+      [ButtonVariants.SECONDARY]: {
         background: palette.primary,
         text: '#101010',
-        border: 'white',
-        hover: 'white',
+        border: palette.white,
+        hover: palette.white,
       },
-      tertiary: {
+      [ButtonVariants.TERTIARY]: {
         background: '#73DC8C',
         text: 'white',
         border: '#73DC8C',
         hover: '#73DC8C',
       },
-      success: {
+      [ButtonVariants.SUCCESS]: {
         background: '#258800',
         text: 'white',
         border: '#258800',
         hover: '#258800',
       },
-      danger: {
+      [ButtonVariants.DANGER]: {
         background: '#FE5B78',
         text: 'white',
         border: '#FE5B78',
         hover: '#FE5B78',
       },
-      transparent: {
+      [ButtonVariants.TRANSPARENT]: {
         background: 'transparent',
         text: palette.primary,
         border: palette.primary,
         hoverText: palette.primary,
         hover: 'transparent',
+      },
+      [ButtonVariants.OUTLINE]: {
+        background: 'transparent',
+        text: palette.primary,
+        border: palette.greyDarker,
+        checked: palette.lightblue,
+        checkedBorder: palette.primary,
+        checkedText: palette.primary,
       },
     },
     fields: {
@@ -103,7 +98,6 @@ export const theme: Theme = {
       borderFocus: palette.primary,
       background: 'white',
     },
-
     text: {
       primary: '#121926',
       secondary: '#535D6C',
@@ -117,15 +111,12 @@ export const theme: Theme = {
       retroBlack: '#101010',
       royalBlue: '#1121DA',
     },
-    border: '#CDD5DF',
-    background: '#F7F9FB',
-    cardBackground: { primary: '#f7f7f7', success: '#eafbf6' },
-    GREY: '#f7f7f7',
   },
   radius: {
     buttons: 3,
     fields: 0.4,
     multiSelectFieldTag: 0.4,
+    checkBoxButton: 0.4,
   },
   height: {
     fields: 4,
@@ -140,6 +131,9 @@ export const theme: Theme = {
     fields: 0,
     fieldLabels: 0,
     buttons: 0,
+  },
+  padding: {
+    buttonMultiSelect: 0,
   },
 };
 

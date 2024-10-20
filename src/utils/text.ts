@@ -1,4 +1,4 @@
-import { FormTypes, HistoryTypes, StatusTypes } from './constants';
+import { FoodForms, FormTypes, HistoryTypes, StatusTypes } from './constants';
 
 export const requestStatusLabels = {
   [StatusTypes.CREATED]: 'Pateiktas',
@@ -19,4 +19,15 @@ export const requestFormHistoryDescriptions = {
 
 export const formTypeLabels = {
   [FormTypes.CERTIFICATES]: 'Sertifikatai',
+};
+
+export const foodReasonLabels = {
+  [FoodForms.CREATE]: 'Registravimas',
+  [FoodForms.UPDATE]: 'Tikslinimas',
+  [FoodForms.REMOVE]: 'Panaikinimas',
+};
+
+export const buttonLabels = {
+  confirm: 'Patvirtinti',
+  cancel: 'Atšaukti',
 };
