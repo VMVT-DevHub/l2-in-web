@@ -97,10 +97,10 @@
   resolved "https://registry.yarnpkg.com/@aplinkosministerija/biip-prettier-config/-/biip-prettier-config-1.1.0.tgz#f62b0dde76107ab3f646cce2d54d02bd783ce388"
   integrity sha512-DxWGfBY2KuK8OgP2KUb96ieGlqE5gYuxI22Yt1FfoIldlDENW5I8kXj+YFB4iG65i7e1neXPZd9RGHmxxDxxSQ==
 
-"@aplinkosministerija/design-system@^0.0.103":
-  version "0.0.103"
-  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-0.0.103.tgz#e0d6a69cc74a0ad704a81d024581b72885eacf01"
-  integrity sha512-6RAKD3/X/dTFyy6/4HAHFnjpLfuCfkZYv6k3nhNqS40fxC/g/QsXSlOwh96hF5NQWTcmkN7Hx5WC/SJLWHfvbA==
+"@aplinkosministerija/design-system@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-1.0.0.tgz#eb84d51fad26ec1cc0e89510a1487fb8c385228d"
+  integrity sha512-Vo+HblASFefgog79kiRJjp+MJViDfe5FpMM8wlNO6eiKRoBTnRN/a8sXyEPoNJoBdBSIJ7avVgZku2P7906CFw==
   dependencies:
     "@mapbox/mapbox-gl-draw" "^1.4.3"
     "@mapbox/mapbox-gl-draw-static-mode" "^1.0.1"
@@ -118,6 +118,7 @@
     lodash "^4.17.21"
     maplibre-gl "^4.3.2"
     numeral "^2.0.6"
+    openapi-fetch "^0.12.2"
     pmtiles "^3.0.6"
     proj4 "^2.11.0"
     react-datepicker "^6.9.0"

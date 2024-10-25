@@ -1,6 +1,6 @@
 import { Button, CheckBox, device, Popup, PopupType } from '@aplinkosministerija/design-system';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ButtonVariants } from '../styles';
 import { buttonLabels } from '../utils/text';
@@ -16,7 +16,6 @@ interface Props {
     showCancel?: boolean;
     cancelButtonTitle?: string;
     cancelButtonVariant?: ButtonVariants;
-    checkBoxDescription?: string;
     onConfirm?: () => void;
     onCancel?: () => void;
   };
@@ -30,17 +29,12 @@ const ConfirmPopup: React.FC<Props> = ({ content, onClose, visible = false }) =>
     subtitle,
     confirmButtonVariant,
     cancelButtonVariant,
-    checkBoxDescription,
     confirmButtonTitle,
     cancelButtonTitle,
     showCancel,
   } = content;
   const theme = useTheme();
-  const [isChecked, setIsChecked] = useState(!checkBoxDescription);
 
-  useEffect(() => {
-    setIsChecked(!checkBoxDescription);
-  }, [checkBoxDescription]);
   return (
     <Popup type={PopupType.CENTER} visible={visible} onClose={onClose}>
       <Container>
@@ -56,19 +50,10 @@ const ConfirmPopup: React.FC<Props> = ({ content, onClose, visible = false }) =>
           </Title>
         )}
         {subtitle && <Description>{subtitle}</Description>}
-        {checkBoxDescription && (
-          <StyledCheckBox
-            value={isChecked}
-            onChange={(value) => {
-              setIsChecked(value);
-            }}
-            label={checkBoxDescription}
-          />
-        )}
+
         <BottomRow>
           {onConfirm && (
             <Button
-              disabled={!isChecked}
               variant={confirmButtonVariant ?? ButtonVariants.PRIMARY}
               onClick={() => {
                 onClose();
