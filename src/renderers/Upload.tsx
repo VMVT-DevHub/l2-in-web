@@ -45,6 +45,7 @@ export const UploadRenderer = ({
 
   return (
     <DragAndDropUploadField
+      label={label}
       error={errors}
       showError={false}
       disabled={!enabled}

@@ -15,7 +15,7 @@ import { slugs } from '../utils/routes';
 
 const Form = ({ formType }) => {
   const backRoutes = {
-    certificates: slugs.certificates,
+    certificate: slugs.certificates,
     food: slugs.foodRequests,
   };
   const { form = '', requestId = '' } = useParams();
@@ -53,7 +53,7 @@ const Form = ({ formType }) => {
 
   const deleteRequest = useMutation(() => api.deleteRequest(requestId), {
     onError: handleAlert,
-    onSuccess: () => navigate(slugs.certificates),
+    onSuccess: () => navigate(backRoutes[formType]),
     retry: false,
   });
 
@@ -72,12 +72,12 @@ const Form = ({ formType }) => {
     return <FullscreenLoader />;
   }
 
-  const handleSubmit = (isDraft) => {
-    createOrUpdateRequest.mutateAsync(isDraft ? StatusTypes.DRAFT : StatusTypes.CREATED);
+  const handleSubmit = async (isDraft) => {
+    await createOrUpdateRequest.mutateAsync(isDraft ? StatusTypes.DRAFT : StatusTypes.CREATED);
   };
 
-  const handleDelete = () => {
-    deleteRequest.mutateAsync();
+  const handleDelete = async () => {
+    await deleteRequest.mutateAsync();
   };
 
   return (
@@ -86,7 +86,12 @@ const Form = ({ formType }) => {
         <JsonForms
           schema={formData.schema}
           uischema={formData.uiSchema}
-          config={{ submitForm: handleSubmit, showDraftButton, showDeleteButton, handleDelete }}
+          config={{
+            submitForm: handleSubmit,
+            showDraftButton,
+            showDeleteButton,
+            deleteForm: handleDelete,
+          }}
           data={values}
           renderers={customRenderers}
           cells={materialCells}

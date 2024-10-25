@@ -1,12 +1,13 @@
-import { Button, Popup } from '@aplinkosministerija/design-system';
+import { Button } from '@aplinkosministerija/design-system';
 import { Categorization, Category, isVisible } from '@jsonforms/core';
 import { MaterialLayoutRenderer } from '@jsonforms/material-renderers';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import styled from 'styled-components';
 import BackButton from '../components/BackButton';
-import { ButtonVariants } from '../styles';
 import ConfirmPopup from '../components/ConfirmPopup';
+import { ButtonVariants } from '../styles';
 
 export const CategorizationLayout = ({
   uischema,
@@ -19,8 +20,20 @@ export const CategorizationLayout = ({
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const {
     core,
-    config: { submitForm, showDraftButton, showDeleteButton, handleDelete },
+    config: { submitForm, showDraftButton, showDeleteButton, deleteForm },
   }: JsonFormsStateContext = useJsonForms();
+
+  const handleSubmitDraft = useMutation(() => submitForm({ isDraft: true }), {
+    retry: false,
+  });
+
+  const handleSubmit = useMutation(() => submitForm(), {
+    retry: false,
+  });
+
+  const handleDelete = useMutation(() => deleteForm(), {
+    retry: false,
+  });
 
   const { display } = uischema.options || {};
   const errors = core?.errors;
@@ -58,6 +71,9 @@ export const CategorizationLayout = ({
 
   const disabled = !enabled || !!errors?.length;
 
+  const disabledLoading =
+    handleSubmit.isLoading || handleSubmitDraft.isLoading || handleDelete.isLoading;
+
   const renderNavigationButtons = () => (
     <ButtonRow>
       {hasPrevious && (
@@ -70,7 +86,11 @@ export const CategorizationLayout = ({
           {`Kitas: ${categories[selectedTabIndex + 1]?.label}`}
         </Button>
       ) : (
-        <Button disabled={disabled} onClick={() => submitForm()}>
+        <Button
+          loading={handleSubmit.isLoading}
+          disabled={disabled}
+          onClick={() => handleSubmit.mutateAsync()}
+        >
           Pateikti
         </Button>
       )}
@@ -88,7 +108,12 @@ export const CategorizationLayout = ({
           <InnerRow>
             {showDeleteButton && (
               <InnerRow>
-                <Button variant={ButtonVariants.DANGER} onClick={() => setPopUpVisible(true)}>
+                <Button
+                  disabled={disabledLoading}
+                  loading={handleDelete.isLoading}
+                  variant={ButtonVariants.DANGER}
+                  onClick={() => setPopUpVisible(true)}
+                >
                   Ištrinti
                 </Button>
                 <ConfirmPopup
@@ -98,7 +123,7 @@ export const CategorizationLayout = ({
                     title: 'Ar tikrai ištrinti?',
                     confirmButtonTitle: 'Ištrinti',
                     confirmButtonVariant: ButtonVariants.DANGER,
-                    onConfirm: handleDelete,
+                    onConfirm: () => handleDelete.mutateAsync(),
                     onCancel: () => setPopUpVisible(false),
                     showCancel: true,
                   }}
@@ -107,13 +132,21 @@ export const CategorizationLayout = ({
             )}
             {showDraftButton && (
               <InnerRow>
-                <Button onClick={() => submitForm({ isDraft: true })}>
+                <Button
+                  loading={handleSubmitDraft.isLoading}
+                  disabled={disabledLoading}
+                  onClick={() => handleSubmitDraft.mutateAsync()}
+                >
                   Išsaugoti kaip juodraštį
                 </Button>
               </InnerRow>
             )}
             <InnerRow>
-              <Button disabled={disabled} onClick={() => submitForm()}>
+              <Button
+                loading={handleSubmit.isLoading}
+                disabled={disabled || disabledLoading}
+                onClick={() => handleSubmit.mutateAsync()}
+              >
                 Pateikti
               </Button>
             </InnerRow>
