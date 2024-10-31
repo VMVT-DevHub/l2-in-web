@@ -70,7 +70,7 @@ export const TreeFieldRenderer = ({
           onChange={(val: any) => {
             handleChange(path, val.split('_')[0]);
           }}
-          placeholder="Pasirinkite"
+          placeholder={uischema?.options?.placeholder || 'Pasirinkite'}
         />
       </RelativeFieldWrapper>
     </TreeSelectContainer>

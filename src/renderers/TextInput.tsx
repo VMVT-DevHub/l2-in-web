@@ -9,6 +9,7 @@ export const CustomTextRenderer = ({
   visible,
   label,
   enabled,
+  uischema,
 }: ControlProps) => {
   if (!visible) return <></>;
 
@@ -21,6 +22,7 @@ export const CustomTextRenderer = ({
       name={label}
       showError={false}
       disabled={!enabled}
+      placeholder={uischema?.options?.placeholder}
     />
   );
 };
