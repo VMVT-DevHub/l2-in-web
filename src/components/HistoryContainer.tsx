@@ -1,17 +1,25 @@
-import { Button } from '@aplinkosministerija/design-system';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FormHistory } from '../types';
 import api from '../utils/api';
 import { colorsByStatus } from '../utils/constants';
 import { formatDateAndTime } from '../utils/format';
+import { isNew } from '../utils/functions';
 import { useInfinityLoad } from '../utils/hooks';
 import { requestFormHistoryDescriptions, requestStatusLabels } from '../utils/text';
 import FullscreenLoader from './FullscreenLoader';
 import Icon, { IconName } from './Icons';
 import StatusTag from './StatusTag';
 
-const HistoryContainer = ({ open, requestId }: { open: boolean; requestId: any }) => {
+const HistoryContainer = ({
+  open,
+  requestId,
+  errors = [],
+}: {
+  open: boolean;
+  requestId: any;
+  errors: string[];
+}) => {
   const observerRef = useRef(null);
 
   const { data: history, isFetching } = useInfinityLoad(
@@ -19,10 +27,14 @@ const HistoryContainer = ({ open, requestId }: { open: boolean; requestId: any }
     (data) => api.getRequestHistory({ ...data, id: requestId }),
     observerRef,
     {},
-    !!requestId,
+    !isNew(requestId),
   );
 
   const [isOpen, setIsOpen] = useState(open);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
 
   if (!isOpen) {
     return (
@@ -42,45 +54,73 @@ const HistoryContainer = ({ open, requestId }: { open: boolean; requestId: any }
           <ArrowIcon name={IconName.arrowRight} />
         </IconContainer>
       </Row>
+
       <SubTitleRow>
-        <SubTitle>{'Istorija'}</SubTitle>
+        <SubTitle>Klaidos</SubTitle>
         <Line />
       </SubTitleRow>
       <Container>
-        {history?.pages.map((page: { data: FormHistory[] }, pageIndex: number) => {
-          return (
-            <React.Fragment key={`history-${pageIndex}`}>
-              {page?.data.map((history, index) => {
-                const createdBy = `${history?.createdBy?.firstName?.[0]}. ${history?.createdBy?.lastName}`;
-                return (
-                  <Column key={`inner-history-${index}`}>
-                    <HistoryRow>
-                      <DateContainer>{formatDateAndTime(history.createdAt)}</DateContainer>
-                      <StatusTag
-                        label={requestStatusLabels[history.type]}
-                        color={colorsByStatus[history.type]}
-                      />
-                    </HistoryRow>
-                    <Text>
-                      <BoldText>{createdBy}</BoldText>
-                      {requestFormHistoryDescriptions[history.type]}
-                    </Text>
-                    {history?.comment && (
-                      <Comment>
-                        <Text>{history?.comment}</Text>
-                      </Comment>
-                    )}
-                    <Line />
-                  </Column>
-                );
-              })}
-            </React.Fragment>
-          );
-        })}
-
-        {isFetching && <FullscreenLoader />}
-        {observerRef && <div ref={observerRef} />}
+        {errors.length === 0 ? (
+          <Column>
+            <Text>Nėra klaidų</Text>
+          </Column>
+        ) : (
+          errors.map((error, index) => (
+            <Column key={`error-${error}-${index}`}>
+              <ErrorText>{error}</ErrorText>
+              <Line />
+            </Column>
+          ))
+        )}
       </Container>
+
+      {!isNew(requestId) && (
+        <>
+          <SubTitleRow>
+            <SubTitle>Istorija</SubTitle>
+            <Line />
+          </SubTitleRow>
+          <Container>
+            {history?.pages?.length === 0 ? (
+              <Column>
+                <Text>Nėra istorijos</Text>
+              </Column>
+            ) : (
+              history?.pages.map((page: { data: FormHistory[] }, pageIndex: number) => (
+                <React.Fragment key={`history-${pageIndex}`}>
+                  {page?.data.map((history, index) => {
+                    const createdBy = `${history?.createdBy?.firstName?.[0]}. ${history?.createdBy?.lastName}`;
+                    return (
+                      <Column key={`inner-history-${index}`}>
+                        <HistoryRow>
+                          <DateContainer>{formatDateAndTime(history.createdAt)}</DateContainer>
+                          <StatusTag
+                            label={requestStatusLabels[history.type]}
+                            color={colorsByStatus[history.type]}
+                          />
+                        </HistoryRow>
+                        <Text>
+                          <BoldText>{createdBy}</BoldText>
+                          {requestFormHistoryDescriptions[history.type]}
+                        </Text>
+                        {history?.comment && (
+                          <Comment>
+                            <Text>{history.comment}</Text>
+                          </Comment>
+                        )}
+                        <Line />
+                      </Column>
+                    );
+                  })}
+                </React.Fragment>
+              ))
+            )}
+
+            {isFetching && <FullscreenLoader />}
+            {observerRef && <div ref={observerRef} />}
+          </Container>
+        </>
+      )}
     </SideBar>
   );
 };
@@ -89,11 +129,6 @@ const HistoryRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const StyledBUtton = styled(Button)`
-  margin: 16px 0;
-  border-color: ${({ theme }) => theme.colors.primary};
 `;
 
 const DateContainer = styled.div`
@@ -168,6 +203,13 @@ const Text = styled.div`
   color: #4b5565;
 `;
 
+const ErrorText = styled.div`
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.danger};
+`;
+
 const BoldText = styled.span`
   font-weight: 500;
   color: black;
@@ -185,21 +227,6 @@ const Comment = styled.div`
   padding: 8px;
   border-radius: 4px 0px 0px 0px;
   background-color: #f8fafc;
-`;
-
-const StyledIcon = styled(Icon)`
-  font-size: 2rem;
-`;
-
-const ContentRow = styled.div`
-  color: ${({ theme }) => theme.colors.primary};
-  display: grid;
-  cursor: pointer;
-  grid-template-columns: 20px 1fr;
-`;
-
-const BreakWord = styled.div`
-  word-break: break-word;
 `;
 
 export default HistoryContainer;

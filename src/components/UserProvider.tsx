@@ -60,7 +60,6 @@ const handleUpdateTokens = (data: UpdateTokenProps) => {
 
 export const UserProvider = ({ children }: any) => {
   const queryClient = useQueryClient();
-  const { setValue: setIsSubscribed } = useStorage('isSubScribed', false, true);
   const navigate = useNavigate();
   const isOnline = useIsOnline();
 

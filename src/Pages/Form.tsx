@@ -1,7 +1,11 @@
 import { device } from '@aplinkosministerija/design-system';
+import { createAjv, ValidationMode } from '@jsonforms/core';
 import { materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import Ajv from 'ajv';
+import addErrors from 'ajv-errors';
+import addFormats from 'ajv-formats';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,13 +17,22 @@ import { StatusTypes } from '../utils/constants';
 import { handleError, isNew } from '../utils/functions';
 import { slugs } from '../utils/routes';
 
+const ajv = new Ajv({ allErrors: true, useDefaults: true });
+const formAjv = createAjv({ useDefaults: true });
+addErrors(ajv);
+addFormats(ajv);
+
 const Form = ({ formType }) => {
   const backRoutes = {
     certificate: slugs.certificates,
     food: slugs.foodRequests,
+    animal: slugs.animalRequests,
   };
   const { form = '', requestId = '' } = useParams();
   const [values, setValues] = useState<any>({});
+  const [errors, setErrors] = useState<string[]>([]);
+  const [validationMode, setValidationMode] = useState<ValidationMode>('ValidateAndHide');
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const { data: formData, isFetching: isFormLoading } = useQuery(
@@ -57,12 +70,7 @@ const Form = ({ formType }) => {
     retry: false,
   });
 
-  const shouldShowLoader =
-    isFormLoading ||
-    !formData ||
-    isRequestLoading ||
-    (!isNew(requestId) && !Object.keys(values).length);
-
+  const shouldShowLoader = isFormLoading || !formData || isRequestLoading;
   const showDraftButton = !request?.status || request.status === StatusTypes.DRAFT;
 
   const showDeleteButton =
@@ -72,7 +80,27 @@ const Form = ({ formType }) => {
     return <FullscreenLoader />;
   }
 
-  const handleSubmit = async (isDraft) => {
+  const handleSubmit = async ({ isDraft }) => {
+    if (!isDraft) {
+      const validate = ajv.compile(formData.schema);
+      validate(values);
+
+      const errors = validate?.errors;
+
+      if (errors?.length) {
+        // Filter out default errors, keeping only custom error messages, as the ajv-errors library sometimes duplicates messages
+        const customErrorMessages = errors
+          .filter((err: any) => err?.keyword === 'errorMessage')
+          .map((err: any) => err?.message);
+
+        setErrors(customErrorMessages);
+        setValidationMode('ValidateAndShow');
+        setOpen(true);
+
+        return;
+      }
+    }
+
     await createOrUpdateRequest.mutateAsync(isDraft ? StatusTypes.DRAFT : StatusTypes.CREATED);
   };
 
@@ -95,11 +123,15 @@ const Form = ({ formType }) => {
           data={values}
           renderers={customRenderers}
           cells={materialCells}
-          onChange={({ data }) => setValues(data)}
+          onChange={({ data }) => {
+            setValues(data);
+          }}
+          validationMode={validationMode}
+          ajv={formAjv}
           readonly={!!request && !request?.canEdit}
         />
       </InnerContainer>
-      {!showDraftButton && <HistoryContainer open={true} requestId={requestId} />}
+      <HistoryContainer open={open} requestId={requestId} errors={errors} />
     </Container>
   );
 };
@@ -112,6 +144,7 @@ const InnerContainer = styled.div`
   padding: 16px;
   margin: 0 auto;
   width: 100%;
+  overflow-y: auto;
 `;
 
 const Container = styled.div`

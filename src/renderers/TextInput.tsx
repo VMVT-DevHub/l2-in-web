@@ -9,9 +9,11 @@ export const CustomTextRenderer = ({
   visible,
   label,
   enabled,
+  schema,
   uischema,
 }: ControlProps) => {
   if (!visible) return <></>;
+  const type = schema?.type?.toString() || '';
 
   return (
     <TextField
@@ -19,6 +21,7 @@ export const CustomTextRenderer = ({
       onChange={(value) => handleChange(path, value)}
       label={label}
       error={errors}
+      type={type}
       name={label}
       showError={false}
       disabled={!enabled}

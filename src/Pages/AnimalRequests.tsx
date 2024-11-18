@@ -9,21 +9,21 @@ import TableWrapper from '../components/TableWrapper';
 import api from '../utils/api';
 import { handleError } from '../utils/functions';
 import { slugs } from '../utils/routes';
-import { foodRequestColumns } from '../utils/columns';
+import { animalRequestColumns } from '../utils/columns';
 import { useTableData } from '../utils/hooks';
-import { foodReasonLabels, requestStatusLabels } from '../utils/text';
+import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 import { colorsByStatus } from '../utils/constants';
 import StatusTag from '../components/StatusTag';
 import { format } from 'date-fns';
 
-const FoodRequests = () => {
+const AnimalRequests = () => {
   const [searchParams] = useSearchParams();
   const params = Object.fromEntries([...searchParams]);
   const { page } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const { data, isLoading: isFormLoading } = useQuery(['food'], () => api.getFoodForm(), {
+  const { data, isLoading: isFormLoading } = useQuery(['animal'], () => api.getAnimalForm(), {
     onError: handleError,
     refetchOnWindowFocus: false,
   });
@@ -35,7 +35,7 @@ const FoodRequests = () => {
     return {
       id: item.id,
       no: `#${item.id}`,
-      reason: foodReasonLabels[item.form],
+      reason: animalReasonLabels[item.form],
       date: format(item.createdAt, 'yyyy MM dd'),
       submitter: `${item.name || ''} ${item.lastName || ''}`,
       status: renderStatusTag(item.status),
@@ -45,7 +45,7 @@ const FoodRequests = () => {
 
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'requests',
-    endpoint: () => api.getFoodRequests({ query: {} }),
+    endpoint: () => api.getAnimalRequests({ query: {} }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
     dependencyArray: [searchParams, page],
     enabled: !isFormLoading,
@@ -54,7 +54,7 @@ const FoodRequests = () => {
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
 
   return (
-    <TableWrapper title={'Prašymai maisto tvarkymui'}>
+    <TableWrapper title={'Valstybinės veterinarinės kontrolės subjektų prašymai'}>
       <TableButtonsRow>
         <TableButtonsInnerRow />
         <Button
@@ -69,15 +69,16 @@ const FoodRequests = () => {
         loading={isTableLoading}
         notFoundInfo={{ text: 'Nėra sukurtų prašymų', onClick: () => {} }}
         data={tableData}
-        columns={foodRequestColumns}
+        columns={animalRequestColumns}
         onClick={(item: any) => {
-          navigate(slugs.foodRequest(item.form, item.id));
+          console.log('item', item);
+          navigate(slugs.animalRequest(item.form, item.id));
         }}
       />
       <FormSelectModal
-        title="Naujas maisto tvarkymo subjekto prašymas"
+        title="Naujas valstybinės veterinarinės kontrolės subjekto prašymas"
         onClick={(form) => {
-          navigate(slugs.foodRequest(form, 'naujas'));
+          navigate(slugs.animalRequest(form, 'naujas'));
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
@@ -87,7 +88,7 @@ const FoodRequests = () => {
   );
 };
 
-export default FoodRequests;
+export default AnimalRequests;
 
 const TableButtonsRow = styled.div`
   display: flex;

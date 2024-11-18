@@ -1,6 +1,7 @@
 // src/renderers/Components.tsx
 import {
   and,
+  formatIs,
   isArrayObjectControl,
   isBooleanControl,
   isDateControl,
@@ -18,18 +19,26 @@ import {
 } from '@jsonforms/core';
 import { withJsonFormsArrayLayoutProps, withJsonFormsControlProps } from '@jsonforms/react';
 import { ArrayLayout } from './ArrayLayout';
+import { CustomAthFieldRenderer } from './AuthField';
+import { BoundariesSelect } from './BoundarySelect';
 import { ButtonGroupRenderer } from './ButtonGroup';
-import { CategorizationLayout } from './Categorization';
+import { ButtonMultiSelectRerender } from './ButtonMultiSelect';
+import { CategorizationLayout } from './CategorizationLayout';
 import { CategoryLayout } from './CategoryLayout';
 import { CheckBoxRenderer } from './Checkbox';
 import { CombinedInput } from './CombinedInput';
 import { CountryFieldRenderer } from './CountryField';
 import CreatableMultiSelectRerender from './CreatableMultiSelect';
 import { DateRenderer } from './DateField';
+import { EmailFieldRenderer } from './EmailField';
+import { FormCategorizationLayout } from './FormCategorizationLayout';
 import { GroupLayout } from './GroupLayout';
 import { GroupTimelineLayout } from './GroupTimelineLayout';
 import { HorizontalLayout } from './HorizontalLayout';
+import ModalArrayLayout from './ModalArrayLayout';
+import { MultiTreeSelectFieldRenderer } from './MultiTreeSelectFieldRenderer';
 import { CustomNumberRenderer } from './NumberField';
+import PrimitiveArrayLayout from './PrimitiveArrayLayout';
 import { SelectFieldRenderer } from './SelectField';
 import { TextareaRenderer } from './Textarea';
 import { CustomTextRenderer } from './TextInput';
@@ -37,20 +46,18 @@ import { TimeRenderer } from './TimeField';
 import { TimelineCountryEndRenderer } from './TimelineCountryEnd';
 import { TimelineCountryStartRenderer } from './TimelineCountryStart';
 import { TimelineCountryStepRenderer } from './TimelineCountryStep';
-import { TreeFieldRenderer } from './TreeField';
+import { TreeSelectFieldRenderer } from './TreeSelectField';
 import { UploadRenderer } from './Upload';
-import { ButtonMultiSelectRerender } from './ButtonMultiSelect';
-import { AddMoreLayout } from './AddMoreLayout';
-import { BoundariesSelect } from './BoundarySelect';
-import { CustomAthFieldRenderer } from './AuthField';
-
-function BoundariesSelectRerender() {}
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
   {
     tester: rankWith(3, and(isStringControl, optionIs('display', 'textarea'))),
     renderer: withJsonFormsControlProps(TextareaRenderer),
+  },
+  {
+    tester: rankWith(10, and(isStringControl, formatIs('url'))),
+    renderer: withJsonFormsControlProps(EmailFieldRenderer),
   },
   {
     tester: rankWith(4, and(isStringControl, optionIs('display', 'authField'))),
@@ -106,9 +113,15 @@ export const customRenderers = [
   },
 
   {
-    tester: rankWith(4, and(isEnumControl, optionIs('display', 'tree'))),
-    renderer: withJsonFormsControlProps(TreeFieldRenderer),
+    tester: rankWith(4, and(isEnumControl, optionIs('display', 'treeSelect'))),
+    renderer: withJsonFormsControlProps(TreeSelectFieldRenderer),
   },
+
+  {
+    tester: rankWith(4, and(isPrimitiveArrayControl, optionIs('display', 'multiTreeSelect'))),
+    renderer: withJsonFormsControlProps(MultiTreeSelectFieldRenderer),
+  },
+
   {
     tester: rankWith(4, and(isEnumControl, optionIs('display', 'buttonGroup'))),
     renderer: withJsonFormsControlProps(ButtonGroupRenderer),
@@ -117,7 +130,10 @@ export const customRenderers = [
     tester: rankWith(5, uiTypeIs('Categorization')),
     renderer: withJsonFormsControlProps(CategorizationLayout),
   },
-
+  {
+    tester: rankWith(6, and(uiTypeIs('Categorization'), optionIs('display', 'form'))),
+    renderer: withJsonFormsControlProps(FormCategorizationLayout),
+  },
   {
     tester: rankWith(2, uiTypeIs('Group')),
     renderer: withJsonFormsControlProps(GroupLayout),
@@ -147,16 +163,16 @@ export const customRenderers = [
     renderer: withJsonFormsArrayLayoutProps(ArrayLayout),
   },
   {
-    tester: rankWith(6, and(isArrayObjectControl, optionIs('display', 'addMore'))),
-    renderer: withJsonFormsControlProps(AddMoreLayout),
-  },
-  {
-    tester: rankWith(6, and(isPrimitiveArrayControl, optionIs('display', 'addMore'))),
-    renderer: withJsonFormsControlProps(AddMoreLayout),
+    tester: rankWith(3, and(isArrayObjectControl, optionIs('display', 'modal'))),
+    renderer: withJsonFormsArrayLayoutProps(ModalArrayLayout),
   },
   {
     tester: rankWith(3, and(isArrayObjectControl, optionIs('display', 'upload'))),
     renderer: withJsonFormsControlProps(UploadRenderer),
+  },
+  {
+    tester: rankWith(1, isPrimitiveArrayControl),
+    renderer: withJsonFormsArrayLayoutProps(PrimitiveArrayLayout),
   },
 
   {

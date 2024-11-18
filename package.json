@@ -4,7 +4,7 @@
   "private": true,
   "prettier": "@aplinkosministerija/biip-prettier-config",
   "dependencies": {
-    "@aplinkosministerija/design-system": "^1.0.0",
+    "@aplinkosministerija/design-system": "^1.0.9",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@jsonforms/core": "^3.3.0",
@@ -21,6 +21,9 @@
     "@vitejs/plugin-react": "^4.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "@vitejs/plugin-vue": "^4.5.0",
+    "ajv": "^8.12.0",
+    "ajv-errors": "^3.0.0",
+    "ajv-formats": "^3.0.1",
     "axios": "^1.7.4",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",

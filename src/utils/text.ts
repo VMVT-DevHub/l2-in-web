@@ -27,6 +27,12 @@ export const foodReasonLabels = {
   [FoodForms.REMOVE]: 'Panaikinimas',
 };
 
+export const animalReasonLabels = {
+  [FoodForms.CREATE]: 'Registravimas',
+  [FoodForms.UPDATE]: 'Tikslinimas',
+  [FoodForms.REMOVE]: 'Panaikinimas',
+};
+
 export const buttonLabels = {
   confirm: 'Patvirtinti',
   cancel: 'Atšaukti',
