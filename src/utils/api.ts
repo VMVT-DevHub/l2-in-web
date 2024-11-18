@@ -186,6 +186,10 @@ class Api {
     return this.get({ resource: `formTypes/food` });
   };
 
+  getAnimalForm = async (): Promise<any> => {
+    return this.get({ resource: `formTypes/animal` });
+  };
+
   getFormSchema = async ({ formType, form }: { formType: any; form: any }): Promise<Form> => {
     return this.get({
       resource: `formTypes/${formType}/${form}`,
@@ -201,6 +205,12 @@ class Api {
   getFoodRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/food',
+      query,
+    });
+  };
+  getAnimalRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
+    return await this.get({
+      resource: 'reports/animal',
       query,
     });
   };

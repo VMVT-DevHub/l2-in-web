@@ -6,7 +6,7 @@ import Icon, { IconName } from '../components/Icons';
 import { formatLabel } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
 
-export const TreeFieldRenderer = ({
+export const TreeSelectFieldRenderer = ({
   data,
   handleChange,
   path,

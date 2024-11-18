@@ -8,6 +8,7 @@ export const CustomNumberRenderer = ({
   errors,
   path,
   label,
+  uischema,
   enabled,
 }: ControlProps) => {
   return (
@@ -17,6 +18,7 @@ export const CustomNumberRenderer = ({
       label={label}
       error={errors}
       name={label}
+      placeholder={uischema?.options?.placeholder}
       showError={false}
       disabled={!enabled}
     />

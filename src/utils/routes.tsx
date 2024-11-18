@@ -1,6 +1,7 @@
 import Certificates from '../Pages/Certificates';
 import Form from '../Pages/Form';
 import FoodRequests from '../Pages/FoodRequests';
+import AnimalRequests from '../Pages/AnimalRequests';
 
 export const slugs = {
   certificates: `/sertifikatai`,
@@ -8,6 +9,10 @@ export const slugs = {
 
   foodRequests: `/maisto-tvarkymas`,
   foodRequest: (form: string, requestId: string) => `/maisto-tvarkymas/${form}/${requestId}`,
+
+  animalRequests: `/veterinarines-kontroles-objektai`,
+  animalRequest: (form: string, requestId: string) =>
+    `/veterinarines-kontroles-objektai/${form}/${requestId}`,
 
   profile: '/profilis',
   cantLogin: '/negalima-jungtis',
@@ -34,5 +39,15 @@ export const routes = [
   {
     slug: slugs.foodRequest(':form', ':requestId'),
     component: <Form formType={'food'} />,
+  },
+  {
+    title: 'Prašymai veterinarinės kontrolės objektams',
+    slug: slugs.animalRequests,
+    component: <AnimalRequests />,
+    sidebar: true,
+  },
+  {
+    slug: slugs.animalRequest(':form', ':requestId'),
+    component: <Form formType={'animal'} />,
   },
 ];

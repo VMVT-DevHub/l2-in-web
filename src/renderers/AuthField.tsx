@@ -28,6 +28,7 @@ export const CustomAthFieldRenderer = ({
       error={errors}
       name={label}
       showError={false}
+      placeholder={uischema?.options?.placeholder}
       disabled={!enabled}
     />
   );

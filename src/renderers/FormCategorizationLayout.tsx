@@ -9,7 +9,7 @@ import BackButton from '../components/BackButton';
 import ConfirmPopup from '../components/ConfirmPopup';
 import { ButtonVariants } from '../styles';
 
-export const CategorizationLayout = ({
+export const FormCategorizationLayout = ({
   uischema,
   path,
   schema,
@@ -18,6 +18,7 @@ export const CategorizationLayout = ({
   ...rest
 }: any) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
   const {
     core,
     config: { submitForm, showDraftButton, showDeleteButton, deleteForm },
@@ -27,7 +28,7 @@ export const CategorizationLayout = ({
     retry: false,
   });
 
-  const handleSubmit = useMutation(() => submitForm(), {
+  const handleSubmit = useMutation(() => submitForm({ isDraft: false }), {
     retry: false,
   });
 
@@ -35,9 +36,6 @@ export const CategorizationLayout = ({
     retry: false,
   });
 
-  const { display } = uischema.options || {};
-  const errors = core?.errors;
-  const isForm = display === 'form';
   const [popUpVisible, setPopUpVisible] = useState(false);
 
   const categories = uischema.elements.filter((category: Category | Categorization) => {
@@ -69,8 +67,6 @@ export const CategorizationLayout = ({
       </TabButton>
     ));
 
-  const disabled = !enabled || !!errors?.length;
-
   const disabledLoading =
     handleSubmit.isLoading || handleSubmitDraft.isLoading || handleDelete.isLoading;
 
@@ -86,19 +82,21 @@ export const CategorizationLayout = ({
           {`Kitas: ${categories[selectedTabIndex + 1]?.label}`}
         </Button>
       ) : (
-        <Button
-          loading={handleSubmit.isLoading}
-          disabled={disabled}
-          onClick={() => handleSubmit.mutateAsync()}
-        >
-          Pateikti
-        </Button>
+        enabled && (
+          <Button
+            loading={handleSubmit.isLoading}
+            disabled={disabledLoading}
+            onClick={() => handleSubmit.mutateAsync()}
+          >
+            Pateikti
+          </Button>
+        )
       )}
     </ButtonRow>
   );
 
   const renderFormLayout = () => (
-    <>
+    <Container>
       <TitleColumn>
         <BackButton />
         <Row>
@@ -141,39 +139,28 @@ export const CategorizationLayout = ({
                 </Button>
               </InnerRow>
             )}
-            <InnerRow>
-              <Button
-                loading={handleSubmit.isLoading}
-                disabled={disabled || disabledLoading}
-                onClick={() => handleSubmit.mutateAsync()}
-              >
-                Pateikti
-              </Button>
-            </InnerRow>
+            {enabled && (
+              <InnerRow>
+                <Button
+                  loading={handleSubmit.isLoading}
+                  disabled={disabledLoading}
+                  onClick={() => handleSubmit.mutateAsync()}
+                >
+                  Pateikti
+                </Button>
+              </InnerRow>
+            )}
           </InnerRow>
         </Row>
-        <Container>{renderTabButtons()}</Container>
+        <InnerContainer>{renderTabButtons()}</InnerContainer>
       </TitleColumn>
       <MaterialLayoutRenderer {...layoutProps} />
       {renderNavigationButtons()}
-    </>
+    </Container>
   );
 
-  const renderDefaultLayout = () => (
-    <CategorizationContainer>
-      <Container>{renderTabButtons()}</Container>
-      <Gap />
-      <MaterialLayoutRenderer {...layoutProps} />
-      {renderNavigationButtons()}
-    </CategorizationContainer>
-  );
-
-  return isForm ? renderFormLayout() : renderDefaultLayout();
+  return renderFormLayout();
 };
-
-const Gap = styled.div`
-  height: 26px;
-`;
 
 const TitleColumn = styled.div`
   display: flex;
@@ -182,6 +169,10 @@ const TitleColumn = styled.div`
   margin: -16px -16px 50px -16px;
   padding: 16px 16px 0 16px;
   background-color: white;
+`;
+
+const Container = styled.div`
+  margin-bottom: 16px;
 `;
 
 const Row = styled.div`
@@ -212,7 +203,7 @@ const ButtonRow = styled.div`
   margin: 16px 0;
 `;
 
-const Container = styled.div`
+const InnerContainer = styled.div`
   display: flex;
   flex: 1;
   white-space: nowrap;
@@ -234,5 +225,3 @@ const TabLabel = styled.span<{ isActive: boolean }>`
   color: ${({ isActive, theme }) => (isActive ? theme.colors.primary : '#121926')};
   font-size: 1.4rem;
 `;
-
-const CategorizationContainer = styled.div``;

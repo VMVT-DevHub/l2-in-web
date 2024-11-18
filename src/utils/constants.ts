@@ -29,6 +29,7 @@ export enum StatusTypes {
 export enum FormTypes {
   CERTIFICATES = 'certificates',
   FOOD = 'food',
+  ANIMAL = 'animal',
 }
 
 export const colorsByStatus = {
@@ -40,6 +41,12 @@ export const colorsByStatus = {
 };
 
 export const FoodForms = {
+  CREATE: 'create',
+  UPDATE: 'update',
+  REMOVE: 'remove',
+};
+
+export const AnimalForms = {
   CREATE: 'create',
   UPDATE: 'update',
   REMOVE: 'remove',

@@ -2,6 +2,8 @@ import { DragAndDropUploadField } from '@aplinkosministerija/design-system';
 import { ControlProps, resolveData } from '@jsonforms/core';
 import { useJsonForms } from '@jsonforms/react';
 import 'react-datepicker/dist/react-datepicker.css';
+import styled from 'styled-components';
+import Icon, { IconName } from '../components/Icons';
 import api from '../utils/api';
 
 export const UploadRenderer = ({
@@ -53,6 +55,19 @@ export const UploadRenderer = ({
       files={displayData}
       multiple={isMulti}
       onDelete={handleDeleteFile}
+      customDeleteIcon={
+        <IconContainer>
+          <StyledIcon name={IconName.deleteItem} />
+        </IconContainer>
+      }
     />
   );
 };
+
+const StyledIcon = styled(Icon)``;
+
+const IconContainer = styled.div`
+  margin: auto 0 11px 0px;
+  display: flex;
+  cursor: pointer;
+`;

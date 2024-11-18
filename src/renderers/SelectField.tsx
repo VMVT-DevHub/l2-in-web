@@ -22,7 +22,7 @@ export const SelectFieldRenderer = ({
 
   return (
     <SelectField
-      onChange={(value) => {
+      onChange={(value = '') => {
         handleChange(path, valueKey ? value?.[valueKey] : value);
       }}
       label={label}

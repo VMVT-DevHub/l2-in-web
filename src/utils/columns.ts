@@ -15,3 +15,12 @@ export const foodRequestColumns = {
   submitter: { show: true, label: 'Pateikė' },
   status: { show: true, label: 'Būsena' },
 };
+
+export const animalRequestColumns = {
+  no: { show: true, label: 'Prašymo Nr.' },
+  reason: { show: true, label: 'Tikslas' },
+  subject: { show: true, label: 'VKO subjektas' },
+  date: { show: true, label: 'Data' },
+  submitter: { show: true, label: 'Pateikė' },
+  status: { show: true, label: 'Būsena' },
+};
