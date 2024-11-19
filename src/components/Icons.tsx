@@ -74,16 +74,16 @@ const Icon = ({ name, className }: IconProps) => {
           <path
             d="M16.6666 8.33329C16.6666 13.3333 9.99992 18.3333 9.99992 18.3333C9.99992 18.3333 3.33325 13.3333 3.33325 8.33329C3.33325 6.56518 4.03563 4.86949 5.28587 3.61925C6.53612 2.36901 8.23181 1.66663 9.99992 1.66663C11.768 1.66663 13.4637 2.36901 14.714 3.61925C15.9642 4.86949 16.6666 6.56518 16.6666 8.33329Z"
             stroke="#2671D9"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M10 10.8334C11.3807 10.8334 12.5 9.71409 12.5 8.33337C12.5 6.95266 11.3807 5.83337 10 5.83337C8.61929 5.83337 7.5 6.95266 7.5 8.33337C7.5 9.71409 8.61929 10.8334 10 10.8334Z"
             stroke="#2671D9"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       );

@@ -3,7 +3,7 @@ import { createAjv, ValidationMode } from '@jsonforms/core';
 import { materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import Ajv from 'ajv';
+import Ajv, { KeywordDefinition } from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 import { useState } from 'react';
@@ -21,6 +21,83 @@ const ajv = new Ajv({ allErrors: true, useDefaults: true });
 const formAjv = createAjv({ useDefaults: true });
 addErrors(ajv);
 addFormats(ajv);
+
+let EU_COUNTRIES: string[] = [];
+api.getEsCountries().then((res) => {
+  EU_COUNTRIES = res;
+});
+
+const isEU = (country: string) => EU_COUNTRIES.includes(country);
+
+const keyword: KeywordDefinition = {
+  keyword: 'validateEuTransit',
+  type: 'object',
+  errors: true, // Enable custom errors
+  compile: function (_schema: any) {
+    return function validation(data: any) {
+      const errors: any[] = [];
+
+      const flatData: any[] = [];
+
+      flatData.push({
+        message: 'Maršrutas: Eksportuojančios šalies',
+        instancePath: '/marsrutas/eksportuojanti-salis',
+        data: data['eksportuojanti-salis'] || {},
+      });
+
+      for (let i in data['tranzitines-salys']) {
+        flatData.push({
+          message: `Maršrutas: Tranzitinės šalies #${+i + 1}`,
+          instancePath: `/marsrutas/tranzitines-salys/${i}`,
+          data: data['tranzitines-salys'][i] || {},
+        });
+      }
+
+      flatData.push({
+        message: 'Maršrutas: Importuojančios šalies',
+        instancePath: '/marsrutas/importuojanti-salis',
+        data: data['importuojanti-salis'] || {},
+      });
+
+      for (const [index, item] of flatData.entries()) {
+        const prevItem = flatData?.[index - 1];
+
+        if (prevItem?.data?.salis && item.data.salis) {
+          if (
+            (isEU(prevItem.data.salis) && !isEU(item.data.salis)) ||
+            (isEU(item.data.salis) && !isEU(prevItem.data.salis))
+          ) {
+            if (!prevItem.data['pkp-out']) {
+              errors.push({
+                keyword: 'errorMessage',
+                message: `${prevItem.message} "Išvažiavimo PKP" yra privalomas tranzitui tarp EU ir ne EU šalių`,
+                instancePath: `${prevItem.instancePath}/pkp-out`,
+              });
+            }
+            if (!item.data['pkp']) {
+              errors.push({
+                keyword: 'errorMessage',
+                message: `${item.message} "Įvažiavimo PKP" yra privalomas tranzitui tarp EU ir ne EU šalių`,
+                instancePath: `${item.instancePath}/pkp`,
+              });
+            }
+          }
+        }
+      }
+
+      if (errors.length) {
+        // @ts-ignore
+        validation.errors = errors;
+        return false;
+      }
+
+      return true;
+    };
+  },
+};
+
+ajv.addKeyword(keyword);
+formAjv.addKeyword(keyword);
 
 const Form = ({ formType }) => {
   const backRoutes = {

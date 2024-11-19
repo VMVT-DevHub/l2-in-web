@@ -174,6 +174,10 @@ class Api {
     return this.getAll({ resource: 'forms', fields: ['id', 'name'] });
   };
 
+  getEsCountries = async () => {
+    return this.get({ resource: 'countries/es' });
+  };
+
   getForm = async ({ id }: { id: any }) => {
     return this.get({ resource: `forms/${id}` });
   };
