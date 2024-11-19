@@ -14,6 +14,7 @@ import {
   isStringControl,
   isTimeControl,
   optionIs,
+  or,
   rankWith,
   uiTypeIs,
 } from '@jsonforms/core';
@@ -91,7 +92,7 @@ export const customRenderers = [
   },
 
   {
-    tester: rankWith(3, isEnumControl),
+    tester: rankWith(3, or(isEnumControl, optionIs('display', 'customEnum'))),
     renderer: withJsonFormsControlProps(SelectFieldRenderer),
   },
 

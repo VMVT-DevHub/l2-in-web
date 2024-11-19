@@ -37,3 +37,8 @@ export const buttonLabels = {
   confirm: 'Patvirtinti',
   cancel: 'Atšaukti',
 };
+
+export const fileUploadErrors = {
+  badFileTypes: 'Blogi failų tipai',
+  fileSizesExceeded: 'Viršyti failų dydžiai',
+};

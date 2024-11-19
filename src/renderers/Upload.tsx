@@ -5,6 +5,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
 import api from '../utils/api';
+import { toast } from 'react-toastify';
+import { fileUploadErrors } from '../utils/text';
 
 export const UploadRenderer = ({
   handleChange,
@@ -52,6 +54,14 @@ export const UploadRenderer = ({
       showError={false}
       disabled={!enabled}
       onUpload={handleUploadFile}
+      handleError={(type) => {
+        toast.error(fileUploadErrors[type], {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+        });
+      }}
       files={displayData}
       multiple={isMulti}
       onDelete={handleDeleteFile}

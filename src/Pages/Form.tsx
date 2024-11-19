@@ -178,7 +178,14 @@ const Form = ({ formType }) => {
       }
     }
 
-    await createOrUpdateRequest.mutateAsync(isDraft ? StatusTypes.DRAFT : StatusTypes.CREATED);
+    const statusToSet =
+      request?.status === StatusTypes.RETURNED
+        ? StatusTypes.SUBMITTED
+        : isDraft
+        ? StatusTypes.DRAFT
+        : StatusTypes.CREATED;
+
+    await createOrUpdateRequest.mutateAsync(statusToSet);
   };
 
   const handleDelete = async () => {
