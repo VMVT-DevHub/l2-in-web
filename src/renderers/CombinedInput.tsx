@@ -9,6 +9,7 @@ export const CombinedInput = ({
   visible,
   label,
   uischema,
+  enabled,
   schema,
 }: ControlProps) => {
   if (!visible) return <></>;
@@ -37,6 +38,7 @@ export const CombinedInput = ({
   return (
     <CombinedField
       label={label}
+      disabled={!enabled}
       value={value}
       options={options}
       numeric={isNumeric}

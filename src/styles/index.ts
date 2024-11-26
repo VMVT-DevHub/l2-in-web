@@ -194,4 +194,10 @@ export const GlobalStyle = createGlobalStyle`
   }
 
 
+  .fieldWrapperChildren:has(input:disabled:not([type="checkbox"]), button:disabled,textarea:disabled) {
+  color: #4b5565; 
+  background-color: #f4f4f6; 
+}
+ 
+
 `;

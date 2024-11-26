@@ -1,26 +1,26 @@
 import { AsyncSelectField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 
-import {
-  Address,
-  addressesSearch,
-  municipalitiesSearch,
-  municipalitiesGet,
-  Municipality,
-  ResidentialArea,
-  residentialAreasSearch,
-  Room,
-  roomsSearch,
-  Street,
-  streetsSearch,
-  residentialAreasGet,
-  streetsGet,
-  addressesGet,
-  roomsGet,
-} from '../utils/boundaries';
-import { useEffect, useState } from 'react';
 import { useJsonForms } from '@jsonforms/react';
 import { get } from 'lodash';
+import { useEffect, useState } from 'react';
+import {
+  Address,
+  addressesGet,
+  addressesSearch,
+  municipalitiesGet,
+  municipalitiesSearch,
+  Municipality,
+  ResidentialArea,
+  residentialAreasGet,
+  residentialAreasSearch,
+  Room,
+  roomsGet,
+  roomsSearch,
+  Street,
+  streetsGet,
+  streetsSearch,
+} from '../utils/boundaries';
 
 function getCursor(page: number | string) {
   if (typeof page !== 'string') return;
@@ -133,6 +133,7 @@ export const BoundariesSelect = (props: ControlProps) => {
       disabled={!enabled}
       value={value}
       error={errors}
+      showError={false}
       onChange={(option: AddressType) => {
         setValue(option);
         handleChange(path, option?.code);

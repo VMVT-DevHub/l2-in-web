@@ -41,7 +41,7 @@ export const routes = [
     component: <Form formType={'food'} />,
   },
   {
-    title: 'Prašymai veterinarinės kontrolės objektams',
+    title: 'Veterinarinės kontrolės objektų prašymai',
     slug: slugs.animalRequests,
     component: <AnimalRequests />,
     sidebar: true,

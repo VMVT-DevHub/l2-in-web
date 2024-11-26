@@ -1,13 +1,14 @@
 import { Button, ButtonMultiSelect } from '@aplinkosministerija/design-system';
 import { ArrayLayoutProps, resolveData } from '@jsonforms/core';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
-import { useOptions } from '../utils/hooks';
 import styled from 'styled-components';
+import { useOptions } from '../utils/hooks';
 
 export const ButtonMultiSelectRerender = ({
   schema,
   uischema,
   path,
+  enabled,
   visible,
   //@ts-ignore
   handleChange,
@@ -40,10 +41,12 @@ export const ButtonMultiSelectRerender = ({
   return (
     <ButtonMultiSelect
       label={label}
+      disabled={!enabled}
       options={options}
       onChange={(values) => handleChange(path, values)}
       values={formData || []}
       labelButton={
+        enabled &&
         labelButtonTitle && (
           <StyledButton variant={'transparent'} onClick={toggleSelectOptions}>
             {labelButtonTitle}
