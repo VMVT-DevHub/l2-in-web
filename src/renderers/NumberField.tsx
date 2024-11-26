@@ -19,7 +19,6 @@ export const CustomNumberRenderer = ({
       name={label}
       showError={false}
       disabled={!enabled}
-      wholeNumber={false}
       {...uischema?.options}
     />
   );
