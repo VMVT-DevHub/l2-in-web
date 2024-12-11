@@ -1,6 +1,7 @@
 import { FieldWrapper } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import { TreeSelect } from 'antd';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
 import { formatLabel } from '../utils/functions';
@@ -20,31 +21,57 @@ export const TreeSelectFieldRenderer = ({
   if (!visible) return <></>;
 
   const options = useOptions({ schema, uischema });
-  const valueKey = uischema?.options?.value;
+  const { value, valueKey, parentKey } = uischema?.options || {};
+
+  // The functions findTopLevelParent, modifyTreeValues, and formatValue are temporary
+  // workarounds to handle issues with duplicate child/parent IDs in the options, which React
+  // does not support due to its restrictions on unique keys. These functions ensure the
+  // proper handling of tree data despite these limitations. This is a short-term solution, as a
+  // custom Tree Select component will soon be developed as part of our design library. The
+  // new component will not only resolve these issues but also significantly improve
+  // performance.
+
+  const findTopLevelParent = useMemo(() => {
+    const findParent = (targetValue, nodes) => {
+      for (const node of nodes) {
+        if (node[value] === targetValue) {
+          return node[value];
+        }
+        if (node.children) {
+          const childResult = findParent(targetValue, node.children);
+          if (childResult) {
+            return node.id;
+          }
+        }
+      }
+      return null;
+    };
+    return (value) => findParent(value, options);
+  }, [options]);
 
   const modifyTreeValues = (options, depth = 0) => {
     return options.map((item) => {
       return {
         ...item,
-        value: `${item[valueKey]}_${depth}`,
+        value: `${item[value]}_${depth}`,
         label: formatLabel(item, uischema?.options?.labelFormat),
         children: item.children ? modifyTreeValues(item.children, depth + 1) : [],
       };
     });
   };
 
-  const searchTree = (nodes, targetValue) => {
+  const formatValue = (nodes, targetValue) => {
     if (!targetValue) return null;
 
     for (const node of nodes) {
-      const originalValue = node[valueKey];
+      const originalValue = node[value];
 
       if (originalValue == targetValue) {
         return formatLabel(node, uischema?.options?.labelFormat);
       }
 
       if (node.children) {
-        const result = searchTree(node.children, targetValue);
+        const result = formatValue(node.children, targetValue);
         if (result) return result;
       }
     }
@@ -56,7 +83,7 @@ export const TreeSelectFieldRenderer = ({
       <RelativeFieldWrapper error={errors} showError={false} label={label}>
         <StyledTreeSelect
           disabled={!enabled}
-          value={searchTree(options, data)}
+          value={formatValue(options, data?.[valueKey] || data)}
           error={!!errors}
           treeData={modifyTreeValues(options)}
           style={{ width: '100%' }}
@@ -68,7 +95,15 @@ export const TreeSelectFieldRenderer = ({
             value: 'value',
           }}
           onChange={(val: any) => {
-            handleChange(path, val.split('_')[0]);
+            const value = val.split('_')[0];
+            if (valueKey && parentKey) {
+              handleChange(path, {
+                [valueKey]: value,
+                [parentKey]: findTopLevelParent(value),
+              });
+            } else {
+              handleChange(path, value);
+            }
           }}
           placeholder={uischema?.options?.placeholder || 'Pasirinkite'}
         />
@@ -94,11 +129,13 @@ const RelativeFieldWrapper = styled(FieldWrapper)`
 `;
 
 const StyledTreeSelect = styled(TreeSelect)<{ error: boolean }>`
-
   .ant-select-arrow{
-    top: 65%;
+    top: 50%;
   }
-  
+
+:where(.css-dev-only-do-not-override-tpassh).ant-select-single {
+    height: auto;
+}
   
     .ant-select-selector,
     .ant-select-selection-search-input {

@@ -71,7 +71,6 @@ const AnimalRequests = () => {
         data={tableData}
         columns={animalRequestColumns}
         onClick={(item: any) => {
-          console.log('item', item);
           navigate(slugs.animalRequest(item.form, item.id));
         }}
       />

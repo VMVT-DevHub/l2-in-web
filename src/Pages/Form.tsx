@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import Ajv, { KeywordDefinition } from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import FullscreenLoader from '../components/FullscreenLoader';
@@ -105,12 +105,14 @@ const Form = ({ formType }) => {
     food: slugs.foodRequests,
     animal: slugs.animalRequests,
   };
+
   const { form = '', requestId = '' } = useParams();
   const [values, setValues] = useState<any>({});
   const [errors, setErrors] = useState<string[]>([]);
   const [validationMode, setValidationMode] = useState<ValidationMode>('ValidateAndHide');
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const isNewRequest = isNew(requestId);
 
   const { data: formData, isFetching: isFormLoading } = useQuery(
     ['form', formType, form],
@@ -124,14 +126,40 @@ const Form = ({ formType }) => {
     {
       onError: handleError,
       onSuccess: (request) => setValues(request.data),
-      enabled: !isNew(requestId),
+      enabled: !isNewRequest,
       refetchOnWindowFocus: false,
+    },
+  );
+
+  useEffect(() => {
+    if (isNewRequest) {
+      createInitialDraft.mutateAsync();
+    }
+  }, [isNewRequest]);
+
+  const createInitialDraft = useMutation(
+    () => api.createRequest({ data: {}, form, status: StatusTypes.DRAFT, formType }),
+    {
+      onError: handleAlert,
+      onSuccess: (request) => {
+        const requestId = request?.id?.toString();
+        const form = request?.form;
+        const redirectRoute = {
+          certificate: slugs.certificateRequest(form, requestId),
+          food: slugs.foodRequest(form, requestId),
+          animal: slugs.animalRequest(form, requestId),
+        };
+
+        navigate(redirectRoute[formType]);
+      },
+
+      retry: false,
     },
   );
 
   const createOrUpdateRequest = useMutation(
     (status: StatusTypes) =>
-      isNew(requestId)
+      isNewRequest
         ? api.createRequest({ data: { ...values }, form, status, formType })
         : api.updateRequest(requestId, { data: { ...values }, form, status, formType }),
     {
@@ -147,11 +175,12 @@ const Form = ({ formType }) => {
     retry: false,
   });
 
-  const shouldShowLoader = isFormLoading || !formData || isRequestLoading;
+  const shouldShowLoader =
+    isFormLoading || !formData || isRequestLoading || createInitialDraft.isLoading;
   const showDraftButton = !request?.status || request.status === StatusTypes.DRAFT;
 
   const showDeleteButton =
-    !isNew(requestId) && (!request?.status || request.status === StatusTypes.DRAFT);
+    !isNewRequest && (!request?.status || request.status === StatusTypes.DRAFT);
 
   if (shouldShowLoader) {
     return <FullscreenLoader />;

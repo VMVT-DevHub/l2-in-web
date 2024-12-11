@@ -17,6 +17,7 @@ export const CategorizationLayout = ({
 
   const {
     core,
+
     config: { submitForm },
   }: JsonFormsStateContext = useJsonForms();
   const errors = core?.errors;

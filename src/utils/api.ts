@@ -1,6 +1,7 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'universal-cookie';
 import { Form, Request, User } from '../types';
+import { SortFields } from './constants';
 
 const cookies = new Cookies();
 
@@ -175,7 +176,7 @@ class Api {
   };
 
   getEsCountries = async () => {
-    return this.get({ resource: 'countries/es' });
+    return this.get({ resource: 'options/countries/es' });
   };
 
   getForm = async ({ id }: { id: any }) => {
@@ -203,18 +204,21 @@ class Api {
   getRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/certificate',
+      sort: [SortFields.CREATED_AT],
       query,
     });
   };
   getFoodRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/food',
+      sort: [SortFields.CREATED_AT],
       query,
     });
   };
   getAnimalRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/animal',
+      sort: [SortFields.CREATED_AT],
       query,
     });
   };
@@ -256,7 +260,7 @@ class Api {
     });
   };
 
-  uploadFiles = async (files: File[] = []): Promise<any> => {
+  uploadFiles = async (files: File[] = [], requestId: string): Promise<any> => {
     if (!files.length) return [];
 
     const config = {
@@ -268,6 +272,8 @@ class Api {
         files?.map(async (file) => {
           const formData = new FormData();
           formData.append('file', file);
+          formData.append('requestId', requestId);
+
           const { data } = await this.AuthApiAxios.post(`/api/sharePoint/upload`, formData, config);
           return data;
         }),

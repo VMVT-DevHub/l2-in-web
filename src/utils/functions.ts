@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
 import { ProfileId } from '../types';
+import { UISchemaElement } from '@jsonforms/core';
 
 const cookies = new Cookies();
 
@@ -43,4 +44,52 @@ export const getDefault = (schema, path) => {
     subSchema = subSchema?.properties?.[element];
   }
   return subSchema?.default;
+};
+
+function replacePathByKey(path: string, key: string) {
+  const propToReplace = path.split('.').pop() || '';
+  return path.replace(propToReplace, key);
+}
+
+export const handleSetOnChange = ({
+  path,
+  uischema,
+  handleChange,
+}: {
+  path: string;
+  uischema: UISchemaElement;
+  handleChange(path: string, value: any): void;
+}) => {
+  const onChangeSet = uischema?.options?.onChangeSet || {};
+  const keys = Object.keys(onChangeSet || {});
+
+  return (value: any) => {
+    if (!keys?.length) return;
+
+    for (const key of keys) {
+      const valueToSet = onChangeSet[key] ? value[onChangeSet[key]] : value;
+
+      handleChange(replacePathByKey(path, key), valueToSet);
+    }
+  };
+};
+
+export const handleClearOnChange = ({
+  path,
+  uischema,
+  handleChange,
+}: {
+  path: string;
+  uischema: UISchemaElement;
+  handleChange(path: string, value: any): void;
+}) => {
+  const keys = uischema?.options?.onChangeClear || [];
+
+  return () => {
+    if (!keys?.length) return;
+
+    for (const key of keys) {
+      handleChange(replacePathByKey(path, key), undefined);
+    }
+  };
 };

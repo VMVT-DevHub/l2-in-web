@@ -21,6 +21,7 @@ import {
   streetsGet,
   streetsSearch,
 } from '../utils/boundaries';
+import { handleClearOnChange, handleSetOnChange } from '../utils/functions';
 
 function getCursor(page: number | string) {
   if (typeof page !== 'string') return;
@@ -111,7 +112,9 @@ const getParentData = (path, property, data) => {
 export const BoundariesSelect = (props: ControlProps) => {
   const ctx = useJsonForms();
   const { path, visible, enabled, handleChange, label, data, errors, uischema } = props;
-  const { fetchOptionsFromBoundaries, onChangeClear } = uischema.options || {};
+  const { fetchOptionsFromBoundaries } = uischema.options || {};
+  const clearOnChange = handleClearOnChange({ uischema, path, handleChange });
+  const setOnChange = handleSetOnChange({ uischema, path, handleChange });
   const address = getParentData(path, fetchOptionsFromBoundaries, ctx.core?.data);
   const [value, setValue] = useState<AddressType>();
 
@@ -137,12 +140,8 @@ export const BoundariesSelect = (props: ControlProps) => {
       onChange={(option: AddressType) => {
         setValue(option);
         handleChange(path, option?.code);
-        if (onChangeClear?.length) {
-          for (const clearPath of onChangeClear) {
-            const clear = path.replace(fetchOptionsFromBoundaries, clearPath);
-            handleChange(clear, undefined);
-          }
-        }
+        clearOnChange();
+        setOnChange(option);
       }}
       getOptionLabel={(option) =>
         option?.name || option?.plot_or_building_number || option?.room_number || '-'

@@ -6,6 +6,7 @@ export const requestStatusLabels = {
   [StatusTypes.RETURNED]: 'Grąžintas taisymui',
   [StatusTypes.REJECTED]: 'Atmestas',
   [StatusTypes.APPROVED]: 'Patvirtintas',
+  [StatusTypes.COMPLETED]: 'Sertifikatas išduotas',
   [StatusTypes.DRAFT]: 'Juodraštis',
 };
 
@@ -15,6 +16,7 @@ export const requestFormHistoryDescriptions = {
   [HistoryTypes.RETURNED]: 'grąžino taisyti pateiktą prašymą',
   [HistoryTypes.REJECTED]: 'atmetė pateiktą prašymą',
   [HistoryTypes.APPROVED]: 'patvirtino prašymą',
+  [HistoryTypes.COMPLETED]: 'išdavė sertifikatą',
 };
 
 export const formTypeLabels = {

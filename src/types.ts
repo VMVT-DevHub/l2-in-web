@@ -21,6 +21,7 @@ export interface FormHistory {
 
 export interface Form {
   id: number;
+  form: string;
   name: string;
   schema: any;
   uiSchema: any;

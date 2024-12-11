@@ -4,6 +4,7 @@ export const certificateColumns = {
   productNames: { show: true, label: 'Produkto pavadinimas' },
   importingCountry: { show: true, label: 'Šalis importuotoja' },
   productAmount: { show: true, label: 'Kiekis' },
+  date: {show: true, label: 'Data'},
   status: { show: true, label: 'Statusas' },
 };
 
