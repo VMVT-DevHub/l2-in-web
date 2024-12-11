@@ -1,11 +1,11 @@
-import Certificates from '../Pages/Certificates';
-import Form from '../Pages/Form';
-import FoodRequests from '../Pages/FoodRequests';
 import AnimalRequests from '../Pages/AnimalRequests';
+import Certificates from '../Pages/Certificates';
+import FoodRequests from '../Pages/FoodRequests';
+import Form from '../Pages/Form';
 
 export const slugs = {
   certificates: `/sertifikatai`,
-  certificate: (form: string, requestId: string) => `/sertifikatai/${form}/${requestId}`,
+  certificateRequest: (form: string, requestId: string) => `/sertifikatai/${form}/${requestId}`,
 
   foodRequests: `/maisto-tvarkymas`,
   foodRequest: (form: string, requestId: string) => `/maisto-tvarkymas/${form}/${requestId}`,
@@ -27,7 +27,7 @@ export const routes = [
     sidebar: true,
   },
   {
-    slug: slugs.certificate(':form', ':requestId'),
+    slug: slugs.certificateRequest(':form', ':requestId'),
     component: <Form formType={'certificate'} />,
   },
   {

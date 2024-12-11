@@ -7,6 +7,7 @@ import Icon, { IconName } from '../components/Icons';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import { fileUploadErrors } from '../utils/text';
+import { useParams } from 'react-router-dom';
 
 export const UploadRenderer = ({
   handleChange,
@@ -20,12 +21,13 @@ export const UploadRenderer = ({
   const { core } = useJsonForms();
   const inputData = resolveData(core?.data, path) || (uischema?.options?.multi ? [] : null);
   const isMulti = uischema?.options?.multi;
+  const { requestId = '' } = useParams();
 
   if (!visible) return null;
 
   const handleUploadFile = async (files: File[]) => {
     try {
-      const uploadedFiles = await api.uploadFiles(files);
+      const uploadedFiles = await api.uploadFiles(files, requestId);
 
       if (isMulti) {
         handleChange(path, [...(inputData || []), ...uploadedFiles]);

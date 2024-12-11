@@ -112,17 +112,18 @@ export const customRenderers = [
     tester: rankWith(5, and(isEnumControl, optionIs('display', 'timelineCountryEnd'))),
     renderer: withJsonFormsControlProps(TimelineCountryEndRenderer),
   },
-
   {
     tester: rankWith(4, and(isEnumControl, optionIs('display', 'treeSelect'))),
     renderer: withJsonFormsControlProps(TreeSelectFieldRenderer),
   },
-
+  {
+    tester: rankWith(4, and(isObjectControl, optionIs('display', 'treeSelect'))),
+    renderer: withJsonFormsControlProps(TreeSelectFieldRenderer),
+  },
   {
     tester: rankWith(4, and(isPrimitiveArrayControl, optionIs('display', 'multiTreeSelect'))),
     renderer: withJsonFormsControlProps(MultiTreeSelectFieldRenderer),
   },
-
   {
     tester: rankWith(4, and(isEnumControl, optionIs('display', 'buttonGroup'))),
     renderer: withJsonFormsControlProps(ButtonGroupRenderer),

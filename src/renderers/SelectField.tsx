@@ -1,6 +1,6 @@
 import { SelectField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
-import { formatLabel } from '../utils/functions';
+import { formatLabel, handleClearOnChange, handleSetOnChange } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
 
 export const SelectFieldRenderer = ({
@@ -15,6 +15,8 @@ export const SelectFieldRenderer = ({
   visible,
 }: ControlProps) => {
   const options = useOptions({ schema, uischema });
+  const setOnChange = handleSetOnChange({ uischema, path, handleChange });
+  const clearOnChange = handleClearOnChange({ uischema, path, handleChange });
   const valueKey = uischema?.options?.value;
   const value = valueKey ? options.find((item) => item[valueKey] === data) : data;
 
@@ -24,6 +26,8 @@ export const SelectFieldRenderer = ({
     <SelectField
       onChange={(value = '') => {
         handleChange(path, valueKey ? value?.[valueKey] : value);
+        clearOnChange();
+        setOnChange(value);
       }}
       label={label}
       getOptionLabel={(val) => {

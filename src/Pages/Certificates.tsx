@@ -10,12 +10,13 @@ import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
 import { Request } from '../types';
 import api from '../utils/api';
+import { certificateColumns } from '../utils/columns';
 import { colorsByStatus } from '../utils/constants';
 import { handleError } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
-import { certificateColumns } from '../utils/columns';
+import { format } from 'date-fns';
 
 const Certificates = () => {
   const [searchParams] = useSearchParams();
@@ -42,6 +43,7 @@ const Certificates = () => {
       no: `#${item.id}`,
       form: item?.form,
       formTitle: item?.formConfig?.title,
+      date: format(item.createdAt, 'yyyy MM dd'),
       productNames: item?.productNames?.join(', '),
       importingCountry: item?.importingCountry,
       productAmount: item?.productAmount,
@@ -72,13 +74,13 @@ const Certificates = () => {
         data={tableData}
         columns={certificateColumns}
         onClick={(item: any) => {
-          navigate(slugs.certificate(item.form, item.id));
+          navigate(slugs.certificateRequest(item.form, item.id));
         }}
       />
       <FormSelectModal
         title="Naujas sertifikato prašymas"
         onClick={(form) => {
-          navigate(slugs.certificate(form, 'naujas'));
+          navigate(slugs.certificateRequest(form, 'naujas'));
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}

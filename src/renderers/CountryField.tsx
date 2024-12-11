@@ -1,7 +1,7 @@
 import { SelectField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import styled from 'styled-components';
-import { formatLabel } from '../utils/functions';
+import { formatLabel, handleClearOnChange } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
 
 export const CountryFieldRenderer = ({
@@ -17,6 +17,7 @@ export const CountryFieldRenderer = ({
 }: ControlProps) => {
   const options = useOptions({ schema, uischema });
   const valueKey = uischema?.options?.value;
+  const clearOnChange = handleClearOnChange({ uischema, path, handleChange });
   const value = valueKey ? options.find((item) => item[valueKey] === data) : data;
 
   if (!visible) return <></>;
@@ -25,6 +26,7 @@ export const CountryFieldRenderer = ({
     <SelectField
       onChange={(value) => {
         handleChange(path, valueKey ? value?.[valueKey] : value);
+        clearOnChange();
       }}
       label={label}
       getOptionLabel={(val) => {
