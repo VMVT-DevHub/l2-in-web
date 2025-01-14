@@ -12,11 +12,13 @@ import Icon, { IconName } from './Icons';
 import StatusTag from './StatusTag';
 
 const HistoryContainer = ({
-  open,
+  isOpen,
+  setIsOpen,
   requestId,
   errors = [],
 }: {
-  open: boolean;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
   requestId: any;
   errors: string[];
 }) => {
@@ -29,12 +31,6 @@ const HistoryContainer = ({
     {},
     !isNew(requestId),
   );
-
-  const [isOpen, setIsOpen] = useState(open);
-
-  useEffect(() => {
-    setIsOpen(open);
-  }, [open]);
 
   if (!isOpen) {
     return (

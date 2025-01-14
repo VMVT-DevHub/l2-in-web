@@ -1,7 +1,7 @@
-import { TableData, TableRow } from '@aplinkosministerija/design-system';
+import { TableRow } from '@aplinkosministerija/design-system';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import api from './api';
@@ -68,30 +68,20 @@ interface TableDataProp {
   enabled?: boolean;
 }
 
-export const useTableData = ({
-  endpoint,
-  mapData,
-  dependencyArray,
-  name,
-  enabled = true,
-}: TableDataProp) => {
-  const [tableData, setTableData] = useState<TableData>({ data: [] });
-
-  const { isFetching } = useQuery([name, ...dependencyArray], () => endpoint(), {
+export const useTableData = ({ endpoint, mapData, dependencyArray, name }: TableDataProp) => {
+  const { isFetching, data } = useQuery([name, ...dependencyArray], () => endpoint(), {
     onError: () => {
       handleError();
     },
-    onSuccess: (list) => {
-      setTableData({
-        data: mapData(list?.rows || []),
-        totalPages: list?.totalPages,
-      });
-    },
-    enabled,
-    refetchOnWindowFocus: false,
   });
 
-  return { tableData, loading: isFetching };
+  return {
+    tableData: {
+      data: mapData(data?.rows || []),
+      totalPages: data?.totalPages || 1,
+    },
+    loading: isFetching,
+  };
 };
 
 export const useGetCurrentProfile = () => {
@@ -124,4 +114,3 @@ export const useOptions = ({
 
   return fetchOptionsFrom ? data : schema?.enum || [];
 };
-

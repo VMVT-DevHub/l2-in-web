@@ -1,10 +1,12 @@
 import { Button, device, Modal } from '@aplinkosministerija/design-system';
-import { ArrayLayoutProps, resolveData, toDataPath } from '@jsonforms/core';
+import { ArrayLayoutProps, createAjv, resolveData, toDataPath } from '@jsonforms/core';
 import { JsonForms, useJsonForms } from '@jsonforms/react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import AddButton from '../components/AddButton';
 import { default as Icon, default as Icons, IconName } from '../components/Icons';
+
+const formAjv = createAjv({ useDefaults: true, coerceTypes: 'array' });
 
 export const ModalArrayLayout = ({
   uischema,
@@ -177,6 +179,7 @@ export const ModalArrayLayout = ({
               cells={cells}
               renderers={renderers!}
               data={values}
+              ajv={formAjv}
               readonly={!enabled}
             />
           ) : (
@@ -193,6 +196,7 @@ export const ModalArrayLayout = ({
                 cells={cells}
                 renderers={renderers!}
                 data={values}
+                ajv={formAjv}
                 readonly={!enabled}
               />
               <Button

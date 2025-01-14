@@ -1,20 +1,20 @@
-import { Button, Table, TableData } from '@aplinkosministerija/design-system';
+import { Button, Table } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import FullscreenLoader from '../components/FullscreenLoader';
-import { useState } from 'react';
 import FormSelectModal from '../components/FormSelectModal';
+import FullscreenLoader from '../components/FullscreenLoader';
+import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
 import api from '../utils/api';
-import { handleError } from '../utils/functions';
-import { slugs } from '../utils/routes';
 import { animalRequestColumns } from '../utils/columns';
-import { useTableData } from '../utils/hooks';
-import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 import { colorsByStatus } from '../utils/constants';
-import StatusTag from '../components/StatusTag';
-import { format } from 'date-fns';
+import { handleError } from '../utils/functions';
+import { useTableData } from '../utils/hooks';
+import { slugs } from '../utils/routes';
+import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 
 const AnimalRequests = () => {
   const [searchParams] = useSearchParams();
@@ -44,10 +44,10 @@ const AnimalRequests = () => {
   };
 
   const { tableData, loading: isTableLoading } = useTableData({
-    name: 'requests',
-    endpoint: () => api.getAnimalRequests({ query: {} }),
+    name: 'animalRequests',
+    endpoint: () => api.getAnimalRequests({ query: {}, page }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [searchParams, page],
+    dependencyArray: [page],
     enabled: !isFormLoading,
   });
 
@@ -81,7 +81,7 @@ const AnimalRequests = () => {
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
-        forms={data?.forms}
+        forms={data?.forms || []}
       />
     </TableWrapper>
   );

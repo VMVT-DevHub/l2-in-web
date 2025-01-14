@@ -1,11 +1,11 @@
 import { Button, Table } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import FullscreenLoader from '../components/FullscreenLoader';
-
-import { useState } from 'react';
 import FormSelectModal from '../components/FormSelectModal';
+import FullscreenLoader from '../components/FullscreenLoader';
 import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
 import { Request } from '../types';
@@ -16,7 +16,6 @@ import { handleError } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
-import { format } from 'date-fns';
 
 const Certificates = () => {
   const [searchParams] = useSearchParams();
@@ -25,18 +24,18 @@ const Certificates = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const { data, isLoading: isFormLoading } = useQuery(['forms'], () => api.getTableForm(), {
-    onError: handleError,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading: isFormLoading } = useQuery(
+    ['certificates'],
+    () => api.getCertificateForm(),
+    {
+      onError: handleError,
+      refetchOnWindowFocus: false,
+    },
+  );
 
-  const { tableData, loading: isTableLoading } = useTableData({
-    name: 'requests',
-    endpoint: () => api.getRequests({ query: {} }),
-    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [searchParams, page],
-    enabled: !isFormLoading,
-  });
+  const renderStatusTag = (status) =>
+    status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
+
   const mapTableData = (item) => {
     return {
       id: item.id,
@@ -51,8 +50,13 @@ const Certificates = () => {
     };
   };
 
-  const renderStatusTag = (status) =>
-    status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
+  const { tableData, loading: isTableLoading } = useTableData({
+    name: 'certificateRequests',
+    endpoint: () => api.getCertificateRequests({ query: {}, page }),
+    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
+    dependencyArray: [page],
+    enabled: !isFormLoading,
+  });
 
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
 
@@ -84,7 +88,7 @@ const Certificates = () => {
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
-        forms={data?.forms}
+        forms={data?.forms || []}
       />
     </TableWrapper>
   );

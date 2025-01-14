@@ -21,7 +21,7 @@ export const FormCategorizationLayout = ({
 
   const {
     core,
-    config: { submitForm, showDraftButton, showDeleteButton, deleteForm },
+    config: { submitForm, showDraftButton, showDeleteButton, deleteForm, backRoute },
   }: JsonFormsStateContext = useJsonForms();
 
   const handleSubmitDraft = useMutation(() => submitForm({ isDraft: true }), {
@@ -98,7 +98,7 @@ export const FormCategorizationLayout = ({
   const renderFormLayout = () => (
     <Container>
       <TitleColumn>
-        <BackButton />
+        <BackButton backRoute={backRoute} />
         <Row>
           <InnerRow>
             <Title>{schema?.title}</Title>
