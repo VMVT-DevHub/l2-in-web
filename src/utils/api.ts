@@ -183,7 +183,7 @@ class Api {
     return this.get({ resource: `forms/${id}` });
   };
 
-  getTableForm = async (): Promise<any> => {
+  getCertificateForm = async (): Promise<any> => {
     return this.get({ resource: `formTypes/certificate` });
   };
 
@@ -201,25 +201,43 @@ class Api {
     });
   };
 
-  getRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
+  getCertificateRequests = async ({
+    query,
+    page,
+    pageSize,
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize'>): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/certificate',
       sort: [SortFields.CREATED_AT],
       query,
+      page,
+      pageSize,
     });
   };
-  getFoodRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
+  getFoodRequests = async ({
+    query,
+    page,
+    pageSize,
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize'>): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/food',
       sort: [SortFields.CREATED_AT],
       query,
+      page,
+      pageSize,
     });
   };
-  getAnimalRequests = async ({ query }: { query: any }): Promise<GetAllResponse<Request>> => {
+  getAnimalRequests = async ({
+    query,
+    page,
+    pageSize,
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize'>): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/animal',
       sort: [SortFields.CREATED_AT],
       query,
+      page,
+      pageSize,
     });
   };
 

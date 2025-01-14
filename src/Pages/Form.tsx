@@ -110,7 +110,7 @@ const Form = ({ formType }) => {
   const [values, setValues] = useState<any>({});
   const [errors, setErrors] = useState<string[]>([]);
   const [validationMode, setValidationMode] = useState<ValidationMode>('ValidateAndHide');
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const isNewRequest = isNew(requestId);
 
@@ -201,7 +201,7 @@ const Form = ({ formType }) => {
 
         setErrors(customErrorMessages);
         setValidationMode('ValidateAndShow');
-        setOpen(true);
+        setIsOpen(true);
 
         return;
       }
@@ -232,6 +232,7 @@ const Form = ({ formType }) => {
             showDraftButton,
             showDeleteButton,
             deleteForm: handleDelete,
+            backRoute: backRoutes[formType],
           }}
           data={values}
           renderers={customRenderers}
@@ -244,7 +245,12 @@ const Form = ({ formType }) => {
           readonly={!!request && !request?.canEdit}
         />
       </InnerContainer>
-      <HistoryContainer open={open} requestId={requestId} errors={errors} />
+      <HistoryContainer
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        requestId={requestId}
+        errors={errors}
+      />
     </Container>
   );
 };

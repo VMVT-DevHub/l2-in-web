@@ -1,20 +1,20 @@
-import { Button, Table, TableData } from '@aplinkosministerija/design-system';
+import { Button, Table } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import FullscreenLoader from '../components/FullscreenLoader';
-import { useState } from 'react';
 import FormSelectModal from '../components/FormSelectModal';
+import FullscreenLoader from '../components/FullscreenLoader';
+import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
 import api from '../utils/api';
-import { handleError } from '../utils/functions';
-import { slugs } from '../utils/routes';
 import { foodRequestColumns } from '../utils/columns';
-import { useTableData } from '../utils/hooks';
-import { foodReasonLabels, requestStatusLabels } from '../utils/text';
 import { colorsByStatus } from '../utils/constants';
-import StatusTag from '../components/StatusTag';
-import { format } from 'date-fns';
+import { handleError } from '../utils/functions';
+import { useTableData } from '../utils/hooks';
+import { slugs } from '../utils/routes';
+import { foodReasonLabels, requestStatusLabels } from '../utils/text';
 
 const FoodRequests = () => {
   const [searchParams] = useSearchParams();
@@ -44,14 +44,14 @@ const FoodRequests = () => {
   };
 
   const { tableData, loading: isTableLoading } = useTableData({
-    name: 'requests',
-    endpoint: () => api.getFoodRequests({ query: {} }),
+    name: 'foodRequests',
+    endpoint: () => api.getFoodRequests({ query: {}, page }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [searchParams, page],
+    dependencyArray: [page],
     enabled: !isFormLoading,
   });
 
-  if (isFormLoading || isTableLoading) return <FullscreenLoader />;
+  if (isTableLoading) return <FullscreenLoader />;
 
   return (
     <TableWrapper title={'Prašymai maisto tvarkymui'}>
@@ -81,7 +81,7 @@ const FoodRequests = () => {
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
-        forms={data?.forms}
+        forms={data?.forms || []}
       />
     </TableWrapper>
   );

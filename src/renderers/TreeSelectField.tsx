@@ -105,6 +105,7 @@ export const TreeSelectFieldRenderer = ({
               handleChange(path, value);
             }
           }}
+          treeLine
           placeholder={uischema?.options?.placeholder || 'Pasirinkite'}
         />
       </RelativeFieldWrapper>
