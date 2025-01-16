@@ -16,7 +16,7 @@ const FormSelectModal = ({ onClick, forms, onClose, isVisible, title }: RequestC
   const [selectedForm, setSelectedForm] = useState();
 
   return (
-    <Modal visible={isVisible} onClose={onClose}>
+    <Modal visible={isVisible}>
       <PopupContainer>
         <Row>
           <Column>

@@ -149,7 +149,7 @@ export const ModalArrayLayout = ({
         </CardContainer>
       ) : null}
 
-      <Modal onClose={() => setShowModal(false)} visible={showModal}>
+      <Modal visible={showModal}>
         <PopupContainer>
           <PopupTopRow>
             <PopupTitle>{addLabel}</PopupTitle>
