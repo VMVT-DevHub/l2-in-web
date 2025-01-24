@@ -236,6 +236,7 @@ const PopupContainer = styled.div<{ width?: string }>`
   min-width: 440px;
   width: ${({ width }) => width};
   padding: 20px;
+  max-width: 800px;
 
   background-color: white;
   flex-basis: auto;
