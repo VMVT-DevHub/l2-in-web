@@ -1,7 +1,7 @@
 import { ButtonsGroup } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
-import { useOptions } from '../utils/hooks';
 import { handleClearOnChange } from '../utils/functions';
+import { useOptions } from '../utils/hooks';
 
 export const ButtonGroupRenderer = ({
   data,
@@ -13,9 +13,9 @@ export const ButtonGroupRenderer = ({
   visible,
   uischema,
 }: ControlProps) => {
-  if (!visible) return <></>;
-
   const options = useOptions({ schema, uischema });
+
+  if (!visible) return <></>;
 
   const clearOnChange = handleClearOnChange({ uischema, path, handleChange });
 

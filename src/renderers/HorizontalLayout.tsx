@@ -5,13 +5,15 @@ import styled from 'styled-components';
 
 export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, ...rest }: any) => {
   const { core }: JsonFormsStateContext = useJsonForms();
+  const options = uischema?.options;
+  const bottomLabel = options?.bottomLabel;
 
   if (!visible) {
     return <></>;
   }
 
   const elementsLength =
-    uischema?.options?.columns ||
+    options?.columns ||
     uischema.elements.filter((element) => {
       if (!core?.ajv) return false;
       return isVisible(element, core?.data, '', core?.ajv);
@@ -31,11 +33,26 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
   };
 
   return (
-    <HorizontalLayoutContainer $columns={elementsLength}>
-      {renderElements()}
-    </HorizontalLayoutContainer>
+    <Container>
+      <HorizontalLayoutContainer $columns={elementsLength}>
+        {renderElements()}
+      </HorizontalLayoutContainer>
+      {bottomLabel && <SubTitle>{bottomLabel}</SubTitle>}
+    </Container>
   );
 };
+
+const SubTitle = styled.div`
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 15.6px;
+  color: ${({ theme }) => theme?.colors?.text?.secondary};
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  width: inherit;
+`;
 
 const HorizontalLayoutContainer = styled.div<{ $columns: number }>`
   display: grid;
@@ -46,4 +63,9 @@ const HorizontalLayoutContainer = styled.div<{ $columns: number }>`
   @media ${device.mobileL} {
     grid-template-columns: 1fr;
   }
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
