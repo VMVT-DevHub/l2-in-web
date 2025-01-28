@@ -21,6 +21,7 @@ export const GroupLayout = ({ uischema, path, schema, renderers, visible, ...res
     );
   }
 
+
   return (
     <GroupContainer>
       <TitleContainer>

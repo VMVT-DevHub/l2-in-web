@@ -23,7 +23,7 @@ export const GroupTimelineLayout = ({
     <GroupContainer>
       <TitleContainer>
         <GroupTitle>{uischema.label}</GroupTitle>
-        <GroupDescription>{uischema.description}</GroupDescription>
+        <GroupDescription dangerouslySetInnerHTML={{ __html: uischema.description }} />
       </TitleContainer>
       <SimpleContainer>
         <SimpleContainerInnerContainer>
