@@ -25,7 +25,9 @@ export const GroupLayout = ({ uischema, path, schema, renderers, visible, ...res
     <GroupContainer>
       <TitleContainer>
         <GroupTitle>{uischema.label}</GroupTitle>
-        <GroupDescription>{uischema.description}</GroupDescription>
+        <GroupDescription
+          dangerouslySetInnerHTML={{ __html: uischema.description }}
+        ></GroupDescription>
       </TitleContainer>
       <SimpleContainer>
         <MaterialLayoutRenderer {...layoutProps} />
