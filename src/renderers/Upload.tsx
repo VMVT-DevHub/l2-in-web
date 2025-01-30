@@ -2,12 +2,12 @@ import { DragAndDropUploadField } from '@aplinkosministerija/design-system';
 import { ControlProps, resolveData } from '@jsonforms/core';
 import { useJsonForms } from '@jsonforms/react';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
 import api from '../utils/api';
-import { toast } from 'react-toastify';
 import { fileUploadErrors } from '../utils/text';
-import { useParams } from 'react-router-dom';
 
 export const UploadRenderer = ({
   handleChange,
@@ -20,7 +20,11 @@ export const UploadRenderer = ({
 }: ControlProps) => {
   const { core } = useJsonForms();
   const inputData = resolveData(core?.data, path) || (uischema?.options?.multi ? [] : null);
+  const text = uischema?.options?.text;
+  const availableMimeTypes = uischema?.options?.availableMimeTypes;
+  const availableExtensionsTypes = uischema?.options?.availableExtensionsTypes;
   const isMulti = uischema?.options?.multi;
+
   const { requestId = '' } = useParams();
 
   if (!visible) return null;
@@ -72,6 +76,9 @@ export const UploadRenderer = ({
           <StyledIcon name={IconName.deleteItem} />
         </IconContainer>
       }
+      text={text}
+      availableMimeTypes={availableMimeTypes}
+      availableExtensionsTypes={availableExtensionsTypes}
     />
   );
 };

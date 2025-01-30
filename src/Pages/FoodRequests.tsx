@@ -19,7 +19,7 @@ import { foodReasonLabels, requestStatusLabels } from '../utils/text';
 const FoodRequests = () => {
   const [searchParams] = useSearchParams();
   const params = Object.fromEntries([...searchParams]);
-  const { page } = params;
+  const { page, pageSize } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -45,9 +45,9 @@ const FoodRequests = () => {
 
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'foodRequests',
-    endpoint: () => api.getFoodRequests({ query: {}, page }),
+    endpoint: () => api.getFoodRequests({ query: {}, page, pageSize }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [page],
+    dependencyArray: [page, pageSize],
     enabled: !isFormLoading,
   });
 
@@ -73,6 +73,7 @@ const FoodRequests = () => {
         onClick={(item: any) => {
           navigate(slugs.foodRequest(item.form, item.id));
         }}
+        showPageSizeDropdown={true}
       />
       <FormSelectModal
         title="Naujas maisto tvarkymo subjekto prašymas"

@@ -16,6 +16,8 @@ import api from '../utils/api';
 import { StatusTypes } from '../utils/constants';
 import { handleError, isNew } from '../utils/functions';
 import { slugs } from '../utils/routes';
+import ConfirmPopup from '../components/ConfirmPopup';
+import { ButtonVariants } from '../styles';
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
 const formAjv = createAjv({ useDefaults: true });
@@ -108,6 +110,7 @@ const Form = ({ formType }) => {
 
   const { form = '', requestId = '' } = useParams();
   const [values, setValues] = useState<any>({});
+  const [popUpVisible, setPopUpVisible] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [validationMode, setValidationMode] = useState<ValidationMode>('ValidateAndHide');
   const [isOpen, setIsOpen] = useState(false);
@@ -187,34 +190,33 @@ const Form = ({ formType }) => {
   }
 
   const handleSubmit = async ({ isDraft }) => {
-    if (!isDraft) {
-      const validate = ajv.compile(formData.schema);
-      validate(values);
-
-      const errors = validate?.errors;
-
-      if (errors?.length) {
-        // Filter out default errors, keeping only custom error messages, as the ajv-errors library sometimes duplicates messages
-        const customErrorMessages = errors
-          .filter((err: any) => err?.keyword === 'errorMessage')
-          .map((err: any) => err?.message);
-
-        setErrors(customErrorMessages);
-        setValidationMode('ValidateAndShow');
-        setIsOpen(true);
-
-        return;
-      }
+    if (isDraft) {
+      await createOrUpdateRequest.mutateAsync(StatusTypes.DRAFT);
+      return;
     }
 
-    const statusToSet =
-      request?.status === StatusTypes.RETURNED
-        ? StatusTypes.SUBMITTED
-        : isDraft
-        ? StatusTypes.DRAFT
-        : StatusTypes.CREATED;
+    const validate = ajv.compile(formData.schema);
+    validate(values);
+    const errors = validate?.errors;
+    if (errors?.length) {
+      // Filter out default errors, keeping only custom error messages, as the ajv-errors library sometimes duplicates messages
+      const customErrorMessages = errors
+        .filter((err: any) => err?.keyword === 'errorMessage')
+        .map((err: any) => err?.message);
 
-    await createOrUpdateRequest.mutateAsync(statusToSet);
+      setErrors(customErrorMessages);
+      setValidationMode('ValidateAndShow');
+      setIsOpen(true);
+    } else {
+      setPopUpVisible(true);
+    }
+  };
+
+  const handleConfimForm = async () => {
+    await createOrUpdateRequest.mutateAsync(
+      request?.status === StatusTypes.RETURNED ? StatusTypes.SUBMITTED : StatusTypes.CREATED,
+    );
+    setPopUpVisible(false);
   };
 
   const handleDelete = async () => {
@@ -250,6 +252,19 @@ const Form = ({ formType }) => {
         setIsOpen={setIsOpen}
         requestId={requestId}
         errors={errors}
+      />
+      <ConfirmPopup
+        visible={popUpVisible}
+        onClose={() => setPopUpVisible(false)}
+        content={{
+          title: 'Ar tikrai norite pateikti prašymą?',
+          subtitle: `${formData.schema?.title} bus pateiktas VMVT`,
+          confirmButtonTitle: 'Pateikti',
+          confirmButtonVariant: ButtonVariants.PRIMARY,
+          onConfirm: handleConfimForm,
+          onCancel: () => setPopUpVisible(false),
+          showCancel: true,
+        }}
       />
     </Container>
   );
