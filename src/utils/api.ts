@@ -290,9 +290,12 @@ class Api {
         files?.map(async (file) => {
           const formData = new FormData();
           formData.append('file', file);
-          formData.append('requestId', requestId);
 
-          const { data } = await this.AuthApiAxios.post(`/api/sharePoint/upload`, formData, config);
+          const { data } = await this.AuthApiAxios.post(
+            `/api/sharePoint/upload/${requestId}`,
+            formData,
+            config,
+          );
           return data;
         }),
       );
