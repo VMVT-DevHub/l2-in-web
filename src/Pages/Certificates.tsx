@@ -20,7 +20,7 @@ import { requestStatusLabels } from '../utils/text';
 const Certificates = () => {
   const [searchParams] = useSearchParams();
   const params = Object.fromEntries([...searchParams]);
-  const { page } = params;
+  const { page, pageSize } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -52,9 +52,9 @@ const Certificates = () => {
 
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'certificateRequests',
-    endpoint: () => api.getCertificateRequests({ query: {}, page }),
+    endpoint: () => api.getCertificateRequests({ query: {}, page, pageSize }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [page],
+    dependencyArray: [page, pageSize],
     enabled: !isFormLoading,
   });
 
@@ -80,6 +80,7 @@ const Certificates = () => {
         onClick={(item: any) => {
           navigate(slugs.certificateRequest(item.form, item.id));
         }}
+        showPageSizeDropdown={true}
       />
       <FormSelectModal
         title="Naujas sertifikato prašymas"

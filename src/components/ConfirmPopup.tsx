@@ -1,4 +1,4 @@
-import { Button, CheckBox, device, Popup, PopupType } from '@aplinkosministerija/design-system';
+import { Button, device, Popup, PopupType } from '@aplinkosministerija/design-system';
 
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
@@ -35,20 +35,15 @@ const ConfirmPopup: React.FC<Props> = ({ content, onClose, visible = false }) =>
   } = content;
   const theme = useTheme();
 
+  const titleColor =
+    confirmButtonVariant === ButtonVariants.DANGER
+      ? theme.colors.danger
+      : theme.colors.text?.primary;
+
   return (
     <Popup type={PopupType.CENTER} visible={visible} onClose={onClose}>
       <Container>
-        {title && (
-          <Title
-            $color={
-              confirmButtonVariant === ButtonVariants.DANGER
-                ? theme.colors.danger
-                : theme.colors.primary
-            }
-          >
-            {title}
-          </Title>
-        )}
+        {title && <Title $color={titleColor || theme.colors.primary}>{title}</Title>}
         {subtitle && <Description>{subtitle}</Description>}
 
         <BottomRow>
@@ -93,14 +88,12 @@ const Title = styled.div<{
 
 const Description = styled.span`
   font-size: 1.6rem;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text?.secondary};
   width: 100%;
   text-align: center;
   white-space: pre-line;
-`;
-
-const StyledCheckBox = styled(CheckBox)`
-  margin-top: 12px;
+  line-height: 1.6;
+  margin-top: 8px;
 `;
 
 const Container = styled.div`

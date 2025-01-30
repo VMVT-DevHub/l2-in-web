@@ -19,7 +19,7 @@ import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 const AnimalRequests = () => {
   const [searchParams] = useSearchParams();
   const params = Object.fromEntries([...searchParams]);
-  const { page } = params;
+  const { page, pageSize } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -45,9 +45,9 @@ const AnimalRequests = () => {
 
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'animalRequests',
-    endpoint: () => api.getAnimalRequests({ query: {}, page }),
+    endpoint: () => api.getAnimalRequests({ query: {}, page, pageSize }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [page],
+    dependencyArray: [page, pageSize],
     enabled: !isFormLoading,
   });
 
@@ -73,6 +73,7 @@ const AnimalRequests = () => {
         onClick={(item: any) => {
           navigate(slugs.animalRequest(item.form, item.id));
         }}
+        showPageSizeDropdown={true}
       />
       <FormSelectModal
         title="Naujas valstybinės veterinarinės kontrolės subjekto prašymas"
