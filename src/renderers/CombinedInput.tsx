@@ -32,7 +32,7 @@ export const CombinedInput = ({
       [inputKey]: val.input ? (isNumeric ? Number(val.input) : val.input) : undefined,
       [optionKey]: val.option || undefined,
     };
-    handleChange(path, newValue);
+    handleChange(path, val.input ? newValue : undefined);
   };
 
   return (

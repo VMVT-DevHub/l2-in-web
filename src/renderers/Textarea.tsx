@@ -15,7 +15,7 @@ export const TextareaRenderer = ({
   return (
     <TextAreaField
       value={data}
-      onChange={(value) => handleChange(path, value)}
+      onChange={(value) => handleChange(path, value || undefined)}
       label={label}
       error={errors}
       name={label}

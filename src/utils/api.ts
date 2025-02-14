@@ -280,6 +280,7 @@ class Api {
 
   uploadFiles = async (files: File[] = [], requestId: string): Promise<any> => {
     if (!files.length) return [];
+
     const config = {
       headers: { 'Content-Type': 'multipart/form-data' },
     };

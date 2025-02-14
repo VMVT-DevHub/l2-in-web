@@ -18,7 +18,7 @@ export const CustomTextRenderer = ({
   return (
     <TextField
       value={data}
-      onChange={(value) => handleChange(path, value)}
+      onChange={(value) => handleChange(path, value || undefined)}
       label={label}
       error={errors}
       type={type}
