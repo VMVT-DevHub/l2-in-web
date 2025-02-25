@@ -14,10 +14,16 @@ import HistoryContainer from '../components/HistoryContainer';
 import { customRenderers } from '../renderers/Index';
 import api from '../utils/api';
 import { StatusTypes } from '../utils/constants';
-import { handleError, isNew } from '../utils/functions';
+import {handleError, handleSuccess, isNew} from '../utils/functions';
 import { slugs } from '../utils/routes';
 import ConfirmPopup from '../components/ConfirmPopup';
 import { ButtonVariants } from '../styles';
+
+const getPathTitle = (uiSchema: any, path: string) => {
+  if (!uiSchema || !path) return '';
+  const rootPath = path.split('/').filter(Boolean)[0];
+  return uiSchema.options?.labels?.[rootPath] || '';
+};
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
 const formAjv = createAjv({ useDefaults: true });
@@ -101,7 +107,7 @@ const keyword: KeywordDefinition = {
 ajv.addKeyword(keyword);
 formAjv.addKeyword(keyword);
 
-const Form = ({ formType }) => {
+const Form = ({ formType, copyEnabled }) => {
   const backRoutes = {
     certificate: slugs.certificates,
     food: slugs.foodRequests,
@@ -134,31 +140,31 @@ const Form = ({ formType }) => {
     },
   );
 
+  const createInitialDraft = useMutation(
+      () => api.createRequest({ data: {}, form, status: StatusTypes.DRAFT, formType }),
+      {
+        onError: handleAlert,
+        onSuccess: (request) => {
+          const requestId = request?.id?.toString();
+          const form = request?.form;
+          const redirectRoute = {
+            certificate: slugs.certificateRequest(form, requestId),
+            food: slugs.foodRequest(form, requestId),
+            animal: slugs.animalRequest(form, requestId),
+          };
+
+          navigate(redirectRoute[formType]);
+        },
+
+        retry: false,
+      },
+  );
+
   useEffect(() => {
     if (isNewRequest) {
       createInitialDraft.mutateAsync();
     }
   }, [isNewRequest]);
-
-  const createInitialDraft = useMutation(
-    () => api.createRequest({ data: {}, form, status: StatusTypes.DRAFT, formType }),
-    {
-      onError: handleAlert,
-      onSuccess: (request) => {
-        const requestId = request?.id?.toString();
-        const form = request?.form;
-        const redirectRoute = {
-          certificate: slugs.certificateRequest(form, requestId),
-          food: slugs.foodRequest(form, requestId),
-          animal: slugs.animalRequest(form, requestId),
-        };
-
-        navigate(redirectRoute[formType]);
-      },
-
-      retry: false,
-    },
-  );
 
   const createOrUpdateRequest = useMutation(
     (status: StatusTypes) =>
@@ -170,6 +176,18 @@ const Form = ({ formType }) => {
       onSuccess: () => navigate(backRoutes[formType]),
       retry: false,
     },
+  );
+
+  const copyRequest = useMutation(
+      () => api.createRequest({ data: { ...values }, form, status: StatusTypes.DRAFT, formType }),
+      {
+        onError: handleAlert,
+        onSuccess: () => {
+          navigate(backRoutes[formType]);
+          handleSuccess(`Prašymas sėkmingai nukopijuotas.`);
+        },
+        retry: false,
+      },
   );
 
   const deleteRequest = useMutation(() => api.deleteRequest(requestId), {
@@ -184,6 +202,13 @@ const Form = ({ formType }) => {
 
   const showDeleteButton =
     !isNewRequest && (!request?.status || request.status === StatusTypes.DRAFT);
+
+  const showCopyButton =
+      !isNewRequest &&
+      (!request?.status ||
+          [StatusTypes.APPROVED, StatusTypes.COMPLETED]
+              .some((status)=> status === request.status)) &&
+      copyEnabled;
 
   if (shouldShowLoader) {
     return <FullscreenLoader />;
@@ -202,7 +227,11 @@ const Form = ({ formType }) => {
       // Filter out default errors, keeping only custom error messages, as the ajv-errors library sometimes duplicates messages
       const customErrorMessages = errors
         .filter((err: any) => err?.keyword === 'errorMessage')
-        .map((err: any) => err?.message);
+          .map((err: any) => {
+            const pathTitle = getPathTitle(formData.uiSchema, err.instancePath);
+            if(!pathTitle) return err?.message || '';
+            return `${pathTitle}: ${err?.message || ''}`;
+          });
 
       setErrors(customErrorMessages);
       setValidationMode('ValidateAndShow');
@@ -231,8 +260,10 @@ const Form = ({ formType }) => {
           uischema={formData.uiSchema}
           config={{
             submitForm: handleSubmit,
+            copyForm: copyRequest,
             showDraftButton,
             showDeleteButton,
+            showCopyButton,
             deleteForm: handleDelete,
             backRoute: backRoutes[formType],
           }}

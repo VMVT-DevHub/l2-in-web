@@ -15,7 +15,6 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
     <Container>
       {isTablet ? <MobileNavbar /> : <SideBar />}
 
-      <ToastContainer />
       <Content>{children}</Content>
     </Container>
   );

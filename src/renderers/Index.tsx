@@ -95,7 +95,6 @@ export const customRenderers = [
     tester: rankWith(3, or(isEnumControl, optionIs('display', 'customEnum'))),
     renderer: withJsonFormsControlProps(SelectFieldRenderer),
   },
-
   {
     tester: rankWith(4, and(isEnumControl, optionIs('display', 'countrySelect'))),
     renderer: withJsonFormsControlProps(CountryFieldRenderer),

@@ -28,7 +28,7 @@ export const routes = [
   },
   {
     slug: slugs.certificateRequest(':form', ':requestId'),
-    component: <Form formType={'certificate'} />,
+    component: <Form formType={'certificate'} copyEnabled={true} />,
   },
   {
     title: 'Maisto tvarkymo subjektų prašymai',
@@ -38,7 +38,7 @@ export const routes = [
   },
   {
     slug: slugs.foodRequest(':form', ':requestId'),
-    component: <Form formType={'food'} />,
+    component: <Form formType={'food'} copyEnabled={false}/>,
   },
   {
     title: 'Veterinarinės kontrolės objektų prašymai',
@@ -48,6 +48,6 @@ export const routes = [
   },
   {
     slug: slugs.animalRequest(':form', ':requestId'),
-    component: <Form formType={'animal'} />,
+    component: <Form formType={'animal'} copyEnabled={false}/>,
   },
 ];

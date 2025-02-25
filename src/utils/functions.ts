@@ -14,6 +14,16 @@ export const handleError = (responseError = 'Įvyko klaida, prašome pabandyti v
   });
 };
 
+export const handleSuccess = (message: string) => {
+  if(message)
+  toast.success(message, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+  });
+};
+
 export const isNew = (id?: string) => !id || id === 'naujas';
 
 export const handleSelectProfile = (profileId: ProfileId) => {

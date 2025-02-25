@@ -21,7 +21,7 @@ export const FormCategorizationLayout = ({
 
   const {
     core,
-    config: { submitForm, showDraftButton, showDeleteButton, deleteForm, backRoute },
+    config: { submitForm, copyForm, showDraftButton, showDeleteButton, showCopyButton, deleteForm, backRoute },
   }: JsonFormsStateContext = useJsonForms();
 
   const handleSubmitDraft = useMutation(() => submitForm({ isDraft: true }), {
@@ -68,7 +68,7 @@ export const FormCategorizationLayout = ({
     ));
 
   const disabledLoading =
-    handleSubmit.isLoading || handleSubmitDraft.isLoading || handleDelete.isLoading;
+    handleSubmit.isLoading || handleSubmitDraft.isLoading || handleDelete.isLoading || copyForm.isLoading;
 
   const renderNavigationButtons = () => (
     <ButtonRow>
@@ -138,6 +138,17 @@ export const FormCategorizationLayout = ({
                   Išsaugoti kaip juodraštį
                 </Button>
               </InnerRow>
+            )}
+            {showCopyButton && (
+                <InnerRow>
+                  <Button
+                      loading={copyForm.isLoading}
+                      disabled={disabledLoading}
+                      onClick={() => copyForm.mutateAsync()}
+                  >
+                    Kopijuoti prašymą
+                  </Button>
+                </InnerRow>
             )}
             {enabled && (
               <InnerRow>
