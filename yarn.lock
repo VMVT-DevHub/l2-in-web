@@ -97,10 +97,10 @@
   resolved "https://registry.yarnpkg.com/@aplinkosministerija/biip-prettier-config/-/biip-prettier-config-1.1.0.tgz#f62b0dde76107ab3f646cce2d54d02bd783ce388"
   integrity sha512-DxWGfBY2KuK8OgP2KUb96ieGlqE5gYuxI22Yt1FfoIldlDENW5I8kXj+YFB4iG65i7e1neXPZd9RGHmxxDxxSQ==
 
-"@aplinkosministerija/design-system@^1.2.12":
-  version "1.2.13"
-  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-1.2.13.tgz#f36764766d84946edf3edfb6e8a07f5782327de6"
-  integrity sha512-dRyIIEfe/OhTc2yMejXj2cUbWhg2I3Ruou/I4kd3NawUEvL2j5mdTTRU0eoqlCQnRvwmnyZnKfxbNVYYk82nfg==
+"@aplinkosministerija/design-system@^1.2.18":
+  version "1.2.24"
+  resolved "https://registry.yarnpkg.com/@aplinkosministerija/design-system/-/design-system-1.2.24.tgz#4b006ad0ca11c2993fbc241e0727e6d83536f5a2"
+  integrity sha512-AJ0DKDr1lvgwTJgEJH97UmvtlMX1V2VTStNxU9lD/edT+w4y9tJB5oG8oqyJO3UoJ7Xm5d1kHkPAausnWdaNCg==
   dependencies:
     "@mapbox/mapbox-gl-draw" "^1.4.3"
     "@mapbox/mapbox-gl-draw-static-mode" "^1.0.1"
@@ -4665,6 +4665,13 @@ react-toastify@^10.0.5:
   integrity sha512-mNKt2jBXJg4O7pSdbNUfDdTsK9FIdikfsIE/yUCxbAEXl4HMyJaivrVFcn3Elvt5xvCQYhUZm+hqTIu1UXM3Pw==
   dependencies:
     clsx "^2.1.0"
+
+react-toastify@^11.0.3:
+  version "11.0.5"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-11.0.5.tgz#ce4c42d10eeb433988ab2264d3e445c4e9d13313"
+  integrity sha512-EpqHBGvnSTtHYhCPLxML05NLY2ZX0JURbAdNYa6BUkk+amz4wbKBQvoKQAB0ardvSarUBuY4Q4s1sluAzZwkmA==
+  dependencies:
+    clsx "^2.1.1"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
