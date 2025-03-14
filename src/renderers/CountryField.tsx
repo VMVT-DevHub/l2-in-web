@@ -1,7 +1,7 @@
 import { SelectField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import styled from 'styled-components';
-import { formatLabel, handleClearOnChange } from '../utils/functions';
+import { formatError, formatLabel, handleClearOnChange } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
 
 export const CountryFieldRenderer = ({
@@ -45,9 +45,9 @@ export const CountryFieldRenderer = ({
       }}
       options={options}
       value={value}
-      error={errors}
+      error={formatError(errors)}
       disabled={!enabled}
-      showError={false}
+      showError={true}
     />
   );
 };

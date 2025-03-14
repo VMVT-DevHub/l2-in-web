@@ -1,5 +1,6 @@
 import { TextAreaField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
+import { formatError } from '../utils/functions';
 
 export const TextareaRenderer = ({
   data,
@@ -17,9 +18,9 @@ export const TextareaRenderer = ({
       value={data}
       onChange={(value) => handleChange(path, value || undefined)}
       label={label}
-      error={errors}
+       error={formatError(errors)}
       name={label}
-      showError={false}
+      showError={true}
       disabled={!enabled}
     />
   );

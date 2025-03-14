@@ -21,7 +21,7 @@ import {
   streetsGet,
   streetsSearch,
 } from '../utils/boundaries';
-import { handleClearOnChange, handleSetOnChange } from '../utils/functions';
+import { formatError, handleClearOnChange, handleSetOnChange } from '../utils/functions';
 
 function getCursor(page: number | string) {
   if (typeof page !== 'string') return;
@@ -135,8 +135,8 @@ export const BoundariesSelect = (props: ControlProps) => {
       label={label}
       disabled={!enabled}
       value={value}
-      error={errors}
-      showError={false}
+      error={formatError(errors)}
+      showError={true}
       onChange={(option: AddressType) => {
         setValue(option);
         handleChange(path, option?.code);

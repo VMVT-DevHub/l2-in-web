@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
 import api from '../utils/api';
 import { fileUploadErrors } from '../utils/text';
+import { formatError } from '../utils/functions';
 
 export const UploadRenderer = ({
   handleChange,
@@ -56,8 +57,8 @@ export const UploadRenderer = ({
   return (
     <DragAndDropUploadField
       label={label}
-      error={errors}
-      showError={false}
+      error={formatError(errors)}
+      showError={true}
       disabled={!enabled}
       onUpload={handleUploadFile}
       handleError={(type) => {

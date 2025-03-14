@@ -4,7 +4,7 @@ import { useJsonForms } from '@jsonforms/react';
 import { TreeSelect } from 'antd';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
-import { formatLabel } from '../utils/functions';
+import { formatError, formatLabel } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
 
 export const MultiTreeSelectFieldRenderer = ({
@@ -39,7 +39,7 @@ export const MultiTreeSelectFieldRenderer = ({
 
   return (
     <TreeSelectContainer>
-      <RelativeFieldWrapper error={errors} showError={false} label={label}>
+      <RelativeFieldWrapper error={formatError(errors)} showError={true} label={label}>
         <StyledTreeSelect
           disabled={!enabled}
           value={formData}

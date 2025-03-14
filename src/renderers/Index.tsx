@@ -5,6 +5,7 @@ import {
   isArrayObjectControl,
   isBooleanControl,
   isDateControl,
+  isDateTimeControl,
   isEnumControl,
   isIntegerControl,
   isNumberControl,
@@ -31,6 +32,7 @@ import { CombinedInput } from './CombinedInput';
 import { CountryFieldRenderer } from './CountryField';
 import CreatableMultiSelectRerender from './CreatableMultiSelect';
 import { DateRenderer } from './DateField';
+import { DateTimeRenderer } from './DateTimeField';
 import { EmailFieldRenderer } from './EmailField';
 import { FormCategorizationLayout } from './FormCategorizationLayout';
 import { GroupLayout } from './GroupLayout';
@@ -68,6 +70,10 @@ export const customRenderers = [
   {
     tester: rankWith(9, isDateControl),
     renderer: withJsonFormsControlProps(DateRenderer),
+  },
+  {
+    tester: rankWith(9, isDateTimeControl),
+    renderer: withJsonFormsControlProps(DateTimeRenderer),
   },
   {
     tester: rankWith(9, uiTypeIs('Category')),

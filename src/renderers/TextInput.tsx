@@ -1,5 +1,6 @@
 import { TextField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
+import { formatError } from '../utils/functions';
 
 export const CustomTextRenderer = ({
   data,
@@ -14,16 +15,16 @@ export const CustomTextRenderer = ({
 }: ControlProps) => {
   if (!visible) return <></>;
   const type = schema?.type?.toString() || '';
-
+  
   return (
     <TextField
       value={data}
       onChange={(value) => handleChange(path, value || undefined)}
       label={label}
-      error={errors}
+      error={formatError(errors)}
       type={type}
       name={label}
-      showError={false}
+      showError={true}
       disabled={!enabled}
       placeholder={uischema?.options?.placeholder}
     />

@@ -1,12 +1,17 @@
 import { Button, device, Modal } from '@aplinkosministerija/design-system';
 import { ArrayLayoutProps, createAjv, resolveData, toDataPath } from '@jsonforms/core';
+import addErrors from 'ajv-errors';
 import { JsonForms, useJsonForms } from '@jsonforms/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AddButton from '../components/AddButton';
 import { default as Icon, default as Icons, IconName } from '../components/Icons';
+import { localizeErrors } from '../utils/localization';
+import Ajv from 'ajv';
 
+const ajv = new Ajv({ allErrors: true, useDefaults: true });
 const formAjv = createAjv({ useDefaults: true, coerceTypes: 'array' });
+addErrors(ajv, { keepErrors: true });
 
 export const ModalArrayLayout = ({
   uischema,
@@ -44,6 +49,25 @@ export const ModalArrayLayout = ({
   const handleRemoveItem = (index: number) => {
     if (removeItems) {
       removeItems(path, [index])();
+    }
+  };
+
+  useEffect(() => {
+    if (showModal && errors.length) {
+      localizeErrors(errors);
+    }
+  }, [showModal, errors]);
+
+  const handleSubmit = () => {
+    const validate = ajv.compile(schema);
+    validate(values);
+    const errors = validate?.errors;
+    if (errors?.length) {
+      localizeErrors(errors);
+      setErrors(errors);
+    } else if (values?.length) {
+      addItem(path, values)();
+      setShowModal(false);
     }
   };
 
@@ -163,12 +187,12 @@ export const ModalArrayLayout = ({
                 submitForm: () => {
                   if (typeof currentIndex !== 'undefined') {
                     handleChange(`${path}.${currentIndex}`, values);
+                    setShowModal(false);
                   } else {
-                    addItem(path, values)();
+                    handleSubmit();
                   }
-
-                  setShowModal(false);
                 },
+                rootData: {...ctx.core?.data, ...values},
               }}
               onChange={({ data }) => {
                 setValues(data);
@@ -181,6 +205,7 @@ export const ModalArrayLayout = ({
               data={values}
               ajv={formAjv}
               readonly={!enabled}
+              additionalErrors={errors}
             />
           ) : (
             <>
@@ -188,6 +213,9 @@ export const ModalArrayLayout = ({
                 onChange={({ data, errors }) => {
                   setValues(data);
                   setErrors(errors);
+                }}
+                config={{
+                  rootData: {...ctx.core?.data, ...values},
                 }}
                 //@ts-ignore
                 uischema={{ type: 'Category', elements: detail.elements || [detail] }}
@@ -198,16 +226,17 @@ export const ModalArrayLayout = ({
                 data={values}
                 ajv={formAjv}
                 readonly={!enabled}
+                additionalErrors={errors}
               />
               <Button
                 disabled={!!Object.keys(errors).length}
                 onClick={() => {
                   if (typeof currentIndex !== 'undefined') {
                     handleChange(`${path}.${currentIndex}`, values);
+                    setShowModal(false);
                   } else {
-                    addItem(path, values)();
+                    handleSubmit();
                   }
-                  setShowModal(false);
                 }}
               >
                 Pateikti

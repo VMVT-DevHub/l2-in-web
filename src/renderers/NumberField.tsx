@@ -1,5 +1,6 @@
-import { NumericTextField } from '@aplinkosministerija/design-system';
+import { NumericField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
+import { formatError } from '../utils/functions';
 
 export const CustomNumberRenderer = ({
   data,
@@ -11,13 +12,13 @@ export const CustomNumberRenderer = ({
   enabled,
 }: ControlProps) => {
   return (
-    <NumericTextField
+    <NumericField
       value={data}
       onChange={(value) => handleChange(path, value || undefined)}
       label={label}
-      error={errors}
+      error={formatError(errors)}
       name={label}
-      showError={false}
+      showError={true}
       disabled={!enabled}
       {...uischema?.options}
     />

@@ -2,6 +2,7 @@ import { TextField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import { useContext, useEffect } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
+import { formatError } from '../utils/functions';
 
 export const CustomAthFieldRenderer = ({
   data,
@@ -23,11 +24,11 @@ export const CustomAthFieldRenderer = ({
   return (
     <TextField
       value={data}
-      onChange={(value) => handleChange(path, value)}
+      onChange={(value) => handleChange(path, value || undefined)}
       label={label}
-      error={errors}
+      error={formatError(errors)}
       name={label}
-      showError={false}
+      showError={true}
       placeholder={uischema?.options?.placeholder}
       disabled={!enabled}
     />

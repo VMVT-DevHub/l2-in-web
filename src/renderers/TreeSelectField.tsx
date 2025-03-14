@@ -4,7 +4,7 @@ import { TreeSelect } from 'antd';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
-import { formatLabel } from '../utils/functions';
+import { formatError, formatLabel } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
 
 export const TreeSelectFieldRenderer = ({
@@ -80,7 +80,7 @@ export const TreeSelectFieldRenderer = ({
 
   return (
     <TreeSelectContainer>
-      <RelativeFieldWrapper error={errors} showError={false} label={label}>
+      <RelativeFieldWrapper error={formatError(errors)} showError={true} label={label}>
         <StyledTreeSelect
           disabled={!enabled}
           value={formatValue(options, data?.[valueKey] || data)}
@@ -116,7 +116,6 @@ export const TreeSelectFieldRenderer = ({
 const TreeSelectContainer = styled.div`
   height: 100%;
   overflow: hidden;
-  height: 68px;
 `;
 
 const StyledIcons = styled(Icon)`
@@ -126,10 +125,14 @@ const StyledIcons = styled(Icon)`
 
 const RelativeFieldWrapper = styled(FieldWrapper)`
   position: relative;
-  height: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 `;
 
 const StyledTreeSelect = styled(TreeSelect)<{ error: boolean }>`
+  margin-bottom: 8px;
   .ant-select-arrow{
     top: 50%;
   }
