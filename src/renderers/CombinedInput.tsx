@@ -1,5 +1,6 @@
 import { CombinedField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
+import { formatError } from '../utils/functions';
 
 export const CombinedInput = ({
   data,
@@ -43,8 +44,8 @@ export const CombinedInput = ({
       options={options}
       numeric={isNumeric}
       onChange={handleValue}
-      error={errors}
-      showError={false}
+      error={formatError(errors)}
+      showError={true}
       {...props}
     />
   );

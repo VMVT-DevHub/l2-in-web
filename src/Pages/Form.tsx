@@ -3,21 +3,23 @@ import { createAjv, ValidationMode } from '@jsonforms/core';
 import { materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import Ajv, { KeywordDefinition } from 'ajv';
+import Ajv, { ErrorObject, KeywordDefinition } from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
+import { cloneDeep, unset } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import ConfirmPopup from '../components/ConfirmPopup';
 import FullscreenLoader from '../components/FullscreenLoader';
 import HistoryContainer from '../components/HistoryContainer';
 import { customRenderers } from '../renderers/Index';
+import { ButtonVariants } from '../styles';
 import api from '../utils/api';
 import { StatusTypes } from '../utils/constants';
-import {handleError, handleSuccess, isNew} from '../utils/functions';
+import { handleError, handleSuccess, isNew } from '../utils/functions';
+import { localizeErrors } from '../utils/localization';
 import { slugs } from '../utils/routes';
-import ConfirmPopup from '../components/ConfirmPopup';
-import { ButtonVariants } from '../styles';
 
 const getPathTitle = (uiSchema: any, path: string) => {
   if (!uiSchema || !path) return '';
@@ -27,7 +29,7 @@ const getPathTitle = (uiSchema: any, path: string) => {
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
 const formAjv = createAjv({ useDefaults: true });
-addErrors(ajv);
+addErrors(ajv, { keepErrors: true });
 addFormats(ajv);
 
 let EU_COUNTRIES: string[] = [];
@@ -117,7 +119,9 @@ const Form = ({ formType, copyEnabled }) => {
   const { form = '', requestId = '' } = useParams();
   const [values, setValues] = useState<any>({});
   const [popUpVisible, setPopUpVisible] = useState(false);
-  const [errors, setErrors] = useState<string[]>([]);
+
+  const [errors, setErrors] = useState<ErrorObject<string, Record<string, any>, unknown>[]>([]);
+  const [customErrors, setCustomErrors] = useState<string[]>([]);
   const [validationMode, setValidationMode] = useState<ValidationMode>('ValidateAndHide');
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -141,23 +145,23 @@ const Form = ({ formType, copyEnabled }) => {
   );
 
   const createInitialDraft = useMutation(
-      () => api.createRequest({ data: {}, form, status: StatusTypes.DRAFT, formType }),
-      {
-        onError: handleAlert,
-        onSuccess: (request) => {
-          const requestId = request?.id?.toString();
-          const form = request?.form;
-          const redirectRoute = {
-            certificate: slugs.certificateRequest(form, requestId),
-            food: slugs.foodRequest(form, requestId),
-            animal: slugs.animalRequest(form, requestId),
-          };
+    () => api.createRequest({ data: {}, form, status: StatusTypes.DRAFT, formType }),
+    {
+      onError: handleAlert,
+      onSuccess: (request) => {
+        const requestId = request?.id?.toString();
+        const form = request?.form;
+        const redirectRoute = {
+          certificate: slugs.certificateRequest(form, requestId),
+          food: slugs.foodRequest(form, requestId),
+          animal: slugs.animalRequest(form, requestId),
+        };
 
-          navigate(redirectRoute[formType]);
-        },
-
-        retry: false,
+        navigate(redirectRoute[formType]);
       },
+
+      retry: false,
+    },
   );
 
   useEffect(() => {
@@ -173,21 +177,99 @@ const Form = ({ formType, copyEnabled }) => {
         : api.updateRequest(requestId, { data: { ...values }, form, status, formType }),
     {
       onError: handleAlert,
-      onSuccess: () => navigate(backRoutes[formType]),
+      onSuccess: () => {
+        if (!errors?.length) {
+          navigate(backRoutes[formType]);
+        }
+      },
       retry: false,
     },
   );
 
+  const copyFormData = (formData: Record<string, unknown>, uischema: any) => {
+    const copiedData = cloneDeep(formData);
+
+    function clearFields(data, uischema: any, path = '') {
+      if (!uischema || !data) return;
+
+      const elements = uischema?.elements || uischema?.options?.detail?.elements;
+
+      if (elements) {
+        for (const element of elements) {
+          if (element?.type === 'Control' && element?.scope && element?.options?.clearOnCopy) {
+            const deletePath = path + getPathFromScope(element.scope);
+
+            deleteByPath(data, deletePath);
+          } else if (typeof element === 'object') {
+            let previousPath = path;
+
+            if (element?.scope) {
+              path += `${getPathFromScope(element.scope)}.`;
+            }
+
+            clearFields(data, element, path);
+
+            path = previousPath;
+          }
+        }
+      }
+    }
+
+    const getPathFromScope = (scope: string) =>
+      scope.replace(/^#\/|\/?properties\/?|\/+/g, '.').replace(/^\.+|\.+$/g, '');
+
+    const deleteByPath = (obj: Record<string, unknown>, path: string) => {
+      const pathParts = path.split('.');
+
+      const deleteRecursively = (
+        currentObj: any,
+        currentPath: string,
+        pathPartsIndex: number = 0,
+      ) => {
+        if (!currentObj) return;
+
+        const key = pathParts[pathPartsIndex];
+
+        const newPath = pathPartsIndex === 0 ? key : `${currentPath}.${key}`;
+
+        if (pathPartsIndex === pathParts.length - 1 && currentObj.hasOwnProperty(key)) {
+          return unset(obj, newPath);
+        }
+
+        if (Array.isArray(currentObj[key])) {
+          for (let index = 0; index < currentObj[key].length; index++) {
+            const item = currentObj[key][index];
+            deleteRecursively(item, `${newPath}.${index}`, pathPartsIndex + 1);
+          }
+        } else if (typeof currentObj[key] === 'object') {
+          deleteRecursively(currentObj[key], newPath, pathPartsIndex + 1);
+        }
+      };
+
+      deleteRecursively(obj, '');
+    };
+
+    clearFields(copiedData, uischema);
+
+    return copiedData;
+  };
+
   const copyRequest = useMutation(
-      () => api.createRequest({ data: { ...values }, form, status: StatusTypes.DRAFT, formType }),
-      {
-        onError: handleAlert,
-        onSuccess: () => {
-          navigate(backRoutes[formType]);
-          handleSuccess(`Prašymas sėkmingai nukopijuotas.`);
-        },
-        retry: false,
+    () =>
+      api.createRequest({
+        data: copyFormData(values, formData?.uiSchema),
+        form,
+        status: StatusTypes.DRAFT,
+        formType,
+      }),
+    {
+      onError: handleAlert,
+      onSuccess: () => {
+        navigate(backRoutes[formType]);
+        handleSuccess(`Prašymas sėkmingai nukopijuotas.`);
       },
+      retry: false,
+    },
   );
 
   const deleteRequest = useMutation(() => api.deleteRequest(requestId), {
@@ -204,11 +286,10 @@ const Form = ({ formType, copyEnabled }) => {
     !isNewRequest && (!request?.status || request.status === StatusTypes.DRAFT);
 
   const showCopyButton =
-      !isNewRequest &&
-      (!request?.status ||
-          [StatusTypes.APPROVED, StatusTypes.COMPLETED]
-              .some((status)=> status === request.status)) &&
-      copyEnabled;
+    !isNewRequest &&
+    (!request?.status ||
+      [StatusTypes.APPROVED, StatusTypes.COMPLETED].some((status) => status === request.status)) &&
+    copyEnabled;
 
   if (shouldShowLoader) {
     return <FullscreenLoader />;
@@ -224,18 +305,23 @@ const Form = ({ formType, copyEnabled }) => {
     validate(values);
     const errors = validate?.errors;
     if (errors?.length) {
+      localizeErrors(errors);
+
       // Filter out default errors, keeping only custom error messages, as the ajv-errors library sometimes duplicates messages
       const customErrorMessages = errors
         .filter((err: any) => err?.keyword === 'errorMessage')
-          .map((err: any) => {
-            const pathTitle = getPathTitle(formData.uiSchema, err.instancePath);
-            if(!pathTitle) return err?.message || '';
-            return `${pathTitle}: ${err?.message || ''}`;
-          });
+        .map((err: any) => {
+          const pathTitle = getPathTitle(formData.uiSchema, err.instancePath);
+          if (!pathTitle) return err?.message || '';
+          return `${pathTitle}: ${err?.message || ''}`;
+        });
 
-      setErrors(customErrorMessages);
+      setErrors(errors);
+      setCustomErrors(customErrorMessages);
       setValidationMode('ValidateAndShow');
       setIsOpen(true);
+      // Save the request with validation errors as a DRAFT
+      await createOrUpdateRequest.mutateAsync(StatusTypes.DRAFT);
     } else {
       setPopUpVisible(true);
     }
@@ -266,23 +352,26 @@ const Form = ({ formType, copyEnabled }) => {
             showCopyButton,
             deleteForm: handleDelete,
             backRoute: backRoutes[formType],
+            rootData: values,
           }}
           data={values}
           renderers={customRenderers}
           cells={materialCells}
           onChange={({ data }) => {
             setValues(data);
+            setErrors([]);
           }}
           validationMode={validationMode}
           ajv={formAjv}
           readonly={!!request && !request?.canEdit}
+          additionalErrors={errors}
         />
       </InnerContainer>
       <HistoryContainer
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         requestId={requestId}
-        errors={errors}
+        errors={customErrors}
       />
       <ConfirmPopup
         visible={popUpVisible}

@@ -1,5 +1,6 @@
 import { FieldWrapper, TextFieldInput } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
+import { formatError } from '../utils/functions';
 
 export const EmailFieldRenderer = ({
   data = '',
@@ -20,12 +21,17 @@ export const EmailFieldRenderer = ({
   };
 
   return (
-    <FieldWrapper handleBlur={handleBlur} label={label} error={errors} showError={false}>
+    <FieldWrapper
+      handleBlur={handleBlur}
+      label={label}
+      error={formatError(errors)}
+      showError={true}
+    >
       <TextFieldInput
         value={data}
         name={label}
-        error={errors}
-        onChange={(value) => handleChange(path, value)}
+        error={formatError(errors)}
+        onChange={(value) => handleChange(path, value || undefined)}
         disabled={!enabled}
         placeholder={uischema?.options?.placeholder || ''}
       />

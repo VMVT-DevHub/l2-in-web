@@ -7,7 +7,7 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
   const { core }: JsonFormsStateContext = useJsonForms();
   const options = uischema?.options;
   const bottomLabel = options?.bottomLabel;
-
+  
   if (!visible) {
     return <></>;
   }

@@ -2,6 +2,7 @@ import { TimePicker } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import styled from 'styled-components';
 import { formatTime } from '../utils/format';
+import { formatError } from '../utils/functions';
 
 export const TimeRenderer = ({
   data,
@@ -27,8 +28,8 @@ export const TimeRenderer = ({
         handleChange(path, value ? formatTime(value) : undefined);
       }}
       label={label}
-      error={errors}
-      showError={false}
+      error={formatError(errors)}
+      showError={true}
       disabled={!enabled}
     />
   );

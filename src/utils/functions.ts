@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
 import { ProfileId } from '../types';
 import { UISchemaElement } from '@jsonforms/core';
+import { translations } from './localization';
 
 const cookies = new Cookies();
 
@@ -102,4 +103,12 @@ export const handleClearOnChange = ({
       handleChange(replacePathByKey(path, key), undefined);
     }
   };
+};
+
+export const formatError = (errors: string) => {
+  if (errors === 'is a required property') {
+    return translations.lt.required;
+  }
+  const errorMessage = errors ? errors.split('\n').pop() : undefined;
+  return errorMessage?.includes("must match") ? undefined : errorMessage;
 };
