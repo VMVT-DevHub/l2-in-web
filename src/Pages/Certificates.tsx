@@ -61,7 +61,7 @@ const Certificates = () => {
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
 
   return (
-    <TableWrapper title={'Sertfikatai'}>
+    <TableWrapper title={'Sertifikatai'}>
       <TableButtonsRow>
         <TableButtonsInnerRow />
         <Button
