@@ -75,9 +75,13 @@
     "@hey-api/openapi-ts": "^0.53.8",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/styled-components": "^5.1.25",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "8.57.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react-refresh": "^0.4.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "openapi-typescript": "^7.4.1",
@@ -92,5 +96,6 @@
       "eslint"
     ],
     "*.{md,html,css}": "prettier --write"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

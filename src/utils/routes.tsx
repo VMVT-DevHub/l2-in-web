@@ -30,24 +30,24 @@ export const routes = [
     slug: slugs.certificateRequest(':form', ':requestId'),
     component: <Form formType={'certificate'} copyEnabled={true} />,
   },
-  {
-    title: 'Maisto tvarkymo subjektų prašymai',
-    slug: slugs.foodRequests,
-    component: <FoodRequests />,
-    sidebar: true,
-  },
-  {
-    slug: slugs.foodRequest(':form', ':requestId'),
-    component: <Form formType={'food'} copyEnabled={false}/>,
-  },
-  {
-    title: 'Veterinarinės kontrolės objektų prašymai',
-    slug: slugs.animalRequests,
-    component: <AnimalRequests />,
-    sidebar: true,
-  },
-  {
-    slug: slugs.animalRequest(':form', ':requestId'),
-    component: <Form formType={'animal'} copyEnabled={false}/>,
-  },
+  // {
+  //   title: 'Maisto tvarkymo subjektų prašymai',
+  //   slug: slugs.foodRequests,
+  //   component: <FoodRequests />,
+  //   sidebar: true,
+  // },
+  // {
+  //   slug: slugs.foodRequest(':form', ':requestId'),
+  //   component: <Form formType={'food'} copyEnabled={false}/>,
+  // },
+  // {
+  //   title: 'Veterinarinės kontrolės objektų prašymai',
+  //   slug: slugs.animalRequests,
+  //   component: <AnimalRequests />,
+  //   sidebar: true,
+  // },
+  // {
+  //   slug: slugs.animalRequest(':form', ':requestId'),
+  //   component: <Form formType={'animal'} copyEnabled={false}/>,
+  // },
 ];
