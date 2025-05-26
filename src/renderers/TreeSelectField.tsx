@@ -18,8 +18,6 @@ export const TreeSelectFieldRenderer = ({
   enabled,
   visible,
 }: ControlProps) => {
-  if (!visible) return <></>;
-
   const options = useOptions({ schema, uischema });
   const { value, valueKey, parentKey } = uischema?.options || {};
 
@@ -48,6 +46,8 @@ export const TreeSelectFieldRenderer = ({
     };
     return (value) => findParent(value, options);
   }, [options]);
+
+  if (!visible) return <></>;
 
   const modifyTreeValues = (options, depth = 0) => {
     return options.map((item) => {
@@ -78,6 +78,14 @@ export const TreeSelectFieldRenderer = ({
     return null;
   };
 
+  const handleSearch = (inputValue, node) => {
+    const nodeValue = node.value.split('_')[0];
+    return (
+      nodeValue.toLowerCase().includes(inputValue.toLowerCase()) ||
+      node.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+
   return (
     <TreeSelectContainer>
       <RelativeFieldWrapper error={formatError(errors)} showError={true} label={label}>
@@ -94,6 +102,8 @@ export const TreeSelectFieldRenderer = ({
             children: 'children',
             value: 'value',
           }}
+          showSearch
+          filterTreeNode={handleSearch}
           onChange={(val: any) => {
             const value = val.split('_')[0];
             if (valueKey && parentKey) {
@@ -133,55 +143,53 @@ const RelativeFieldWrapper = styled(FieldWrapper)`
 
 const StyledTreeSelect = styled(TreeSelect)<{ error: boolean }>`
   margin-bottom: 8px;
-  .ant-select-arrow{
+  .ant-select-arrow {
     top: 50%;
   }
 
-:where(.css-dev-only-do-not-override-tpassh).ant-select-single {
+  :where(.css-dev-only-do-not-override-tpassh).ant-select-single {
     height: auto;
-}
-  
-    .ant-select-selector,
-    .ant-select-selection-search-input {
-      min-height: ${({ theme }) => `${theme.height?.fields || 5.6}rem`} !important;
-      padding: 0px 12px !important;
-      font-size: ${({ theme }) => theme.fontSize?.fields || 1.6}rem;
-      display: flex;
-      align-items: center;
-    }
-    .ant-select {
-      transition: none !important;
-    }
-  
-    .ant-select-selector {
-      border: 1px solid ${({ theme, error }) =>
-        error ? theme.colors.danger : theme.colors.border} !important;
-      border-radius: ${({ theme }) => theme.radius?.fields || 0.4}rem; !important;
-      background-color: ${({ theme }) => theme.colors.fields?.background || 'white'};
-      color: ${({ theme }) => theme.colors.fields?.text || '#101010'};
-    }
-  
-    .ant-select-selection-overflow-item{
-      padding-top:4px;
-    }
-  
-    .ant-select-selector,
-    .ant-select-disabled {
-      cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-      opacity: ${({ disabled }) => (disabled ? 0.48 : 1)};
-      background: white !important;
-    }
-  
-  
-    .ant-select-selector:focus-within {
-      border-color: ${({ theme }) =>
-        theme.colors.fields?.borderFocus || theme.colors.fields?.border || '#d4d5de'} !important;
-      box-shadow: ${({ theme }) =>
-        theme.colors.fields?.borderFocus
-          ? `0 0 0 4px ${theme.colors.fields.borderFocus}33`
-          : 'none'} !important;
-      outline: none !important;
-      animation-duration: 0s !important;
-      transition: none !important;
-    }
-  `;
+  }
+
+  .ant-select-selector,
+  .ant-select-selection-search-input {
+    min-height: ${({ theme }) => `${theme.height?.fields || 5.6}rem`} !important;
+    padding: 0px 12px !important;
+    font-size: ${({ theme }) => theme.fontSize?.fields || 1.6}rem;
+    display: flex;
+    align-items: center;
+  }
+  .ant-select {
+    transition: none !important;
+  }
+
+  .ant-select-selector {
+    border: 1px solid ${({ theme, error }) => (error ? theme.colors.danger : theme.colors.border)} !important;
+    border-radius: ${({ theme }) => theme.radius?.fields || 0.4}rem !important;
+    background-color: ${({ theme }) => theme.colors.fields?.background || 'white'};
+    color: ${({ theme }) => theme.colors.fields?.text || '#101010'};
+  }
+
+  .ant-select-selection-overflow-item {
+    padding-top: 4px;
+  }
+
+  .ant-select-selector,
+  .ant-select-disabled {
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${({ disabled }) => (disabled ? 0.48 : 1)};
+    background: white !important;
+  }
+
+  .ant-select-selector:focus-within {
+    border-color: ${({ theme }) =>
+      theme.colors.fields?.borderFocus || theme.colors.fields?.border || '#d4d5de'} !important;
+    box-shadow: ${({ theme }) =>
+      theme.colors.fields?.borderFocus
+        ? `0 0 0 4px ${theme.colors.fields.borderFocus}33`
+        : 'none'} !important;
+    outline: none !important;
+    animation-duration: 0s !important;
+    transition: none !important;
+  }
+`;
