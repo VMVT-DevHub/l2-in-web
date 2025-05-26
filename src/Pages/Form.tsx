@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { device } from '@aplinkosministerija/design-system';
 import { createAjv, ValidationMode } from '@jsonforms/core';
 import { materialCells } from '@jsonforms/material-renderers';
@@ -55,7 +56,7 @@ const keyword: KeywordDefinition = {
         data: data['eksportuojanti-salis'] || {},
       });
 
-      for (let i in data['tranzitines-salys']) {
+      for (const i in data['tranzitines-salys']) {
         flatData.push({
           message: `Maršrutas: Tranzitinės šalies #${+i + 1}`,
           instancePath: `/marsrutas/tranzitines-salys/${i}`,
@@ -96,7 +97,7 @@ const keyword: KeywordDefinition = {
       }
 
       if (errors.length) {
-        // @ts-ignore
+        // @ts-expect-error
         validation.errors = errors;
         return false;
       }
@@ -201,7 +202,7 @@ const Form = ({ formType, copyEnabled }) => {
 
             deleteByPath(data, deletePath);
           } else if (typeof element === 'object') {
-            let previousPath = path;
+            const previousPath = path;
 
             if (element?.scope) {
               path += `${getPathFromScope(element.scope)}.`;
@@ -232,6 +233,7 @@ const Form = ({ formType, copyEnabled }) => {
 
         const newPath = pathPartsIndex === 0 ? key : `${currentPath}.${key}`;
 
+        // eslint-disable-next-line no-prototype-builtins
         if (pathPartsIndex === pathParts.length - 1 && currentObj.hasOwnProperty(key)) {
           return unset(obj, newPath);
         }

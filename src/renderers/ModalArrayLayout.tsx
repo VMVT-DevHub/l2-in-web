@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Button, device, Modal } from '@aplinkosministerija/design-system';
 import { ArrayLayoutProps, createAjv, resolveData, toDataPath } from '@jsonforms/core';
 import addErrors from 'ajv-errors';
@@ -21,7 +22,7 @@ export const ModalArrayLayout = ({
   renderers,
   cells,
   addItem,
-  //@ts-ignore
+  //@ts-expect-error
   handleChange,
   removeItems,
   enabled,
@@ -32,6 +33,12 @@ export const ModalArrayLayout = ({
   const [errors, setErrors] = useState<any>([]);
   const ctx = useJsonForms();
   const formData = resolveData(ctx.core?.data, path);
+
+  useEffect(() => {
+    if (showModal && errors.length) {
+      localizeErrors(errors);
+    }
+  }, [showModal, errors]);
 
   if (!visible) return <></>;
 
@@ -51,12 +58,6 @@ export const ModalArrayLayout = ({
       removeItems(path, [index])();
     }
   };
-
-  useEffect(() => {
-    if (showModal && errors.length) {
-      localizeErrors(errors);
-    }
-  }, [showModal, errors]);
 
   const handleSubmit = () => {
     const validate = ajv.compile(schema);
@@ -174,7 +175,7 @@ export const ModalArrayLayout = ({
       ) : null}
 
       <Modal visible={showModal}>
-        <PopupContainer>
+        <PopupContainer width="750px">
           <PopupTopRow>
             <PopupTitle>{addLabel}</PopupTitle>
             <PopupCloseWrapper onClick={() => setShowModal(false)}>
@@ -192,7 +193,7 @@ export const ModalArrayLayout = ({
                     handleSubmit();
                   }
                 },
-                rootData: {...ctx.core?.data, ...values},
+                rootData: { ...ctx.core?.data, ...values },
               }}
               onChange={({ data }) => {
                 setValues(data);
@@ -215,7 +216,7 @@ export const ModalArrayLayout = ({
                   setErrors(errors);
                 }}
                 config={{
-                  rootData: {...ctx.core?.data, ...values},
+                  rootData: { ...ctx.core?.data, ...values },
                 }}
                 //@ts-ignore
                 uischema={{ type: 'Category', elements: detail.elements || [detail] }}
