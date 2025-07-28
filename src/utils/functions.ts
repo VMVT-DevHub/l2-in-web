@@ -16,13 +16,13 @@ export const handleError = (responseError = 'Įvyko klaida, prašome pabandyti v
 };
 
 export const handleSuccess = (message: string) => {
-  if(message)
-  toast.success(message, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: true,
-    closeOnClick: true,
-  });
+  if (message)
+    toast.success(message, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+    });
 };
 
 export const isNew = (id?: string) => !id || id === 'naujas';
@@ -110,5 +110,33 @@ export const formatError = (errors: string) => {
     return translations.lt.required;
   }
   const errorMessage = errors ? errors.split('\n').pop() : undefined;
-  return errorMessage?.includes("must match") ? undefined : errorMessage;
+  return errorMessage?.includes('must match') ? undefined : errorMessage;
+};
+
+export const bytesToMb = (bytes: number) => {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return 'n/a';
+
+  const sizeArrayIndex = parseInt(`${Math.floor(Math.log(bytes) / Math.log(1024))}`, 10);
+  if (sizeArrayIndex === 0) return `${bytes} ${sizes[sizeArrayIndex]})`;
+  return `${(bytes / 1024 ** sizeArrayIndex).toFixed(1)} ${sizes[sizeArrayIndex]}`;
+};
+
+export const validateFileSizes = (files: File[], maxSize: number) => {
+  for (let i = 0; i < files.length; i++) {
+    const fileSizeToMb = files[i].size / 1024 / 1024;
+    if (fileSizeToMb > maxSize) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export const validateFileTypes = (files: File[], availableMimeTypes: string[]) => {
+  for (let i = 0; i < files.length; i++) {
+    const availableType = availableMimeTypes.find((type) => type == files[i].type);
+    if (!availableType) return false;
+  }
+  return true;
 };

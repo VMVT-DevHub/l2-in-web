@@ -1,4 +1,4 @@
-import { DragAndDropUploadField } from '@aplinkosministerija/design-system';
+import DragAndDropUploadField from './DragAndDropUploadField';
 import { ControlProps, resolveData } from '@jsonforms/core';
 import { useJsonForms } from '@jsonforms/react';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -29,6 +29,15 @@ export const UploadRenderer = ({
   const { requestId = '' } = useParams();
 
   if (!visible) return null;
+
+  const handleDownloadFile = async (file: any) => {
+    try {
+      const url = await api.getSharePointDownloadUrl(file.sharepointFileId || file.id);
+      window.open(url, '_blank');
+    } catch (error) {
+      toast.error('Failed to get download URL');
+    }
+  };
 
   const handleUploadFile = async (files: File[]) => {
     try {
@@ -72,6 +81,7 @@ export const UploadRenderer = ({
       files={displayData}
       multiple={isMulti}
       onDelete={handleDeleteFile}
+      onDownload={handleDownloadFile}
       customDeleteIcon={
         <IconContainer>
           <StyledIcon name={IconName.deleteItem} />

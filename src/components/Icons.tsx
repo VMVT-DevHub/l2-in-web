@@ -1,7 +1,7 @@
 import { AiOutlineArrowRight, AiOutlineEye } from 'react-icons/ai';
 import { BiCalendarEvent } from 'react-icons/bi';
 import { FaTrash } from 'react-icons/fa';
-import { FiDownload } from 'react-icons/fi';
+import { FiDownload, FiUpload } from 'react-icons/fi';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { HiOutlineArrowNarrowLeft } from 'react-icons/hi';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -58,10 +58,13 @@ export enum IconName {
   tableArrowDown = 'tableArrowDown',
   logoLogin = 'logoLogin',
   location = 'location',
+  upload = 'upload',
 }
 
 const Icon = ({ name, className }: IconProps) => {
   switch (name) {
+    case IconName.upload:
+      return <FiUpload className={className} />;
     case IconName.location:
       return (
         <svg
