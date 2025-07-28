@@ -278,6 +278,12 @@ class Api {
     });
   };
 
+  getSharePointDownloadUrl = async (itemId: string): Promise<string> => {
+    return this.get({
+      resource: `sharePoint/downloadUrl/${itemId}`,
+    });
+  };
+
   uploadFiles = async (files: File[] = [], requestId: string): Promise<any> => {
     if (!files.length) return [];
 
