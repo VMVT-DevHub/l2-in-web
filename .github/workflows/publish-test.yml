@@ -23,6 +23,8 @@ jobs:
         run: yarn install
 
       - name: Build React app
+        env:
+          VITE_SHOW_ALL_REQUESTS: true
         run: yarn build
 
       - name: Archive artifacts
