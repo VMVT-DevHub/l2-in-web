@@ -16,9 +16,9 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   const currentLocation = useLocation();
   const hasProfiles = false;
   const chosenJAName =
-    Array.isArray(user?.roles?.orgs) && user.roles.orgs.length > 1
-      ? user.roles.orgs.find((org) => org.id.toString() === user?.activeOrgCode) || null
-      : null;
+    Array.isArray(user?.roles?.orgs) && user?.roles?.orgs.length > 1
+      ? user.roles.orgs.find((org) => org.id.toString() === user?.activeOrgCode) || undefined
+      : undefined;
 
   if (currentLocation.pathname.includes(slugs.selectOrg)) {
     return (
@@ -93,7 +93,7 @@ const SideBar = ({ className }: ModuleMenuProps) => {
                 ) : user?.activeOrgCode ? (
                   <>
                     <Email>atstovauja </Email>
-                    <JAinfo>{` ${chosenJAName?.orgName || ''} ${user?.activeOrgCode}`}</JAinfo>
+                    <JAinfo>{` ${chosenJAName?.orgName} ${user?.activeOrgCode}`}</JAinfo>
                   </>
                 ) : (
                   ''
