@@ -15,11 +15,10 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   const { user, logout } = useContext<UserContextType>(UserContext);
   const currentLocation = useLocation();
   const hasProfiles = false;
-  const chosenJAName =
-    Array.isArray(user?.roles?.orgs) && user?.roles?.orgs.length > 1
-      ? user.roles.orgs.find((org) => org.id.toString() === user?.activeOrgCode) || undefined
-      : undefined;
-
+  let chosenJAName;
+  if (user?.roles?.orgs && user.roles.orgs.length > 1) {
+    chosenJAName = user.roles.orgs.find((org) => org.id.toString() === user?.activeOrgCode);
+  }
   if (currentLocation.pathname.includes(slugs.selectOrg)) {
     return (
       <Header className={className}>
