@@ -10,6 +10,16 @@ export interface User {
   type?: any;
   phone?: string;
   profiles?: any[];
+  companyCode: string;
+  companyName: string;
+  activeOrgCode: string;
+  roles: {
+    orgs: {
+      id: number;
+      roles: string[];
+      orgName: string;
+    }[];
+  };
 }
 
 export interface FormHistory {

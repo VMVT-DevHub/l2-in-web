@@ -256,6 +256,13 @@ class Api {
     });
   };
 
+  updateCurrentOrg = async (params: { orgCode: string }): Promise<Form> => {
+    return await this.post({
+      resource: 'auth/session/active-org',
+      params,
+    });
+  };
+
   createRequest = async (params: any): Promise<Form> => {
     return await this.post({
       resource: 'requests',

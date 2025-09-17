@@ -2,10 +2,12 @@ import AnimalRequests from '../Pages/AnimalRequests';
 import Certificates from '../Pages/Certificates';
 import FoodRequests from '../Pages/FoodRequests';
 import Form from '../Pages/Form';
+import JAselection from '../Pages/JAselection';
 
 const showAllRequests = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
 
 export const slugs = {
+  selectOrg: '/organizacija',
   certificates: `/sertifikatai`,
   certificateRequest: (form: string, requestId: string) => `/sertifikatai/${form}/${requestId}`,
 
@@ -27,6 +29,10 @@ export const routes = [
     slug: slugs.certificates,
     component: <Certificates />,
     sidebar: true,
+  },
+  {
+    slug: slugs.selectOrg,
+    component: <JAselection />,
   },
   {
     slug: slugs.certificateRequest(':form', ':requestId'),

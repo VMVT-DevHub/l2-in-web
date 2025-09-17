@@ -85,7 +85,7 @@ const HistoryContainer = ({
               history?.pages.map((page: { data: FormHistory[] }, pageIndex: number) => (
                 <React.Fragment key={`history-${pageIndex}`}>
                   {page?.data.map((history, index) => {
-                    const createdBy = !!history?.createdBy
+                    const createdBy = history?.createdBy
                       ? `${history?.createdBy?.firstName?.[0]}. ${history?.createdBy?.lastName}`
                       : 'SPECIALISTAS';
                     return (
@@ -159,8 +159,8 @@ const Row = styled.div`
 `;
 
 const SideBar = styled.div<{ $width: string; $padding: string }>`
-  min-width ${({ $width }) => $width};
-  width ${({ $width }) => $width};
+  min-width: ${({ $width }) => $width};
+  width: ${({ $width }) => $width};
   background-color: white;
   overflow-y: auto;
   padding: ${({ $padding }) => $padding};

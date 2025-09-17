@@ -24,6 +24,7 @@ export const UploadRenderer = ({
   const text = uischema?.options?.text;
   const availableMimeTypes = uischema?.options?.availableMimeTypes;
   const availableExtensionsTypes = uischema?.options?.availableExtensionsTypes;
+  const maxFileSizeMB = uischema?.options?.maxFileSizeMB;
   const isMulti = uischema?.options?.multi;
 
   const { requestId = '' } = useParams();
@@ -90,6 +91,7 @@ export const UploadRenderer = ({
       text={text}
       availableMimeTypes={availableMimeTypes}
       availableExtensionsTypes={availableExtensionsTypes}
+      maxFileSizeMB={maxFileSizeMB}
     />
   );
 };
