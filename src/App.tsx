@@ -8,6 +8,7 @@ import LoginLayout from './components/LoginLayout';
 import { UserContext, UserContextType } from './components/UserProvider';
 import Login from './Pages/Login';
 import { routes, slugs } from './utils/routes';
+import { User } from './types';
 
 interface RouteProps {
   loggedIn: boolean;
@@ -15,16 +16,18 @@ interface RouteProps {
   location?: Location;
 }
 
-const getDefaultUrl = ({ loggedIn }: { loggedIn: boolean }) => {
+const getDefaultUrl = ({ loggedIn, user }: { loggedIn: boolean; user: User | null }) => {
   if (!loggedIn) return slugs.login;
-
-  return slugs.certificates;
+  if (user?.companyCode) {
+    return slugs.certificates;
+  }
+  return slugs.selectOrg;
 };
 
 function App() {
   const location = useLocation();
-  const { loggedIn, isLoading } = useContext<UserContextType>(UserContext);
-  const defaultUrl = getDefaultUrl({ loggedIn });
+  const { loggedIn, isLoading, user } = useContext<UserContextType>(UserContext);
+  const defaultUrl = getDefaultUrl({ loggedIn, user });
 
   if (isLoading) {
     return <FullscreenLoader />;

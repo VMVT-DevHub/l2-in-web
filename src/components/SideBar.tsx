@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { routes } from '../utils/routes';
+import { routes, slugs } from '../utils/routes';
 import Avatar from './Avatar';
 import Icon, { IconName } from './Icons';
 import Logo from './Logo';
@@ -15,6 +15,45 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   const { user, logout } = useContext<UserContextType>(UserContext);
   const currentLocation = useLocation();
   const hasProfiles = false;
+  const chosenJAName =
+    Array.isArray(user?.roles?.orgs) && user.roles.orgs.length > 1
+      ? user.roles.orgs.find((org) => org.id.toString() === user?.activeOrgCode) || null
+      : null;
+
+  if (currentLocation.pathname.includes(slugs.selectOrg)) {
+    return (
+      <Header className={className}>
+        <div>
+          <TitleRow>
+            <Logo isWhite={true} />
+          </TitleRow>
+        </div>
+        <BottomRow>
+          {hasProfiles ? (
+            <></>
+          ) : (
+            <ProfileRow>
+              <InnerRow>
+                <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
+                <UserInfo>
+                  <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
+                  <Email>{user?.email}</Email>
+                </UserInfo>
+              </InnerRow>
+
+              <div
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <StyledLogoutIcon name={IconName.logout} />
+              </div>
+            </ProfileRow>
+          )}
+        </BottomRow>
+      </Header>
+    );
+  }
 
   const renderTabs = () => {
     return (routes || [])
@@ -48,6 +87,17 @@ const SideBar = ({ className }: ModuleMenuProps) => {
               <UserInfo>
                 <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
                 <Email>{user?.email}</Email>
+
+                {user?.companyName ? (
+                  <JAinfo>{`${user?.companyName}, ${user?.companyCode} `}</JAinfo>
+                ) : user?.activeOrgCode ? (
+                  <>
+                    <Email>atstovauja </Email>
+                    <JAinfo>{` ${chosenJAName?.orgName || ''} ${user?.activeOrgCode}`}</JAinfo>
+                  </>
+                ) : (
+                  ''
+                )}
               </UserInfo>
             </InnerRow>
 
@@ -93,8 +143,16 @@ const UserInfo = styled.div`
   margin: 0 20px 0 8px;
 `;
 
-const FullName = styled.div`
+const JAinfo = styled.div`
   font-size: 1.4rem;
+  margin-top: 8px;
+  max-width: 170px;
+  font-weight: bold;
+  color: #f7f8fa;
+`;
+
+const FullName = styled.div`
+  font-size: 1.7rem;
   max-width: 110px;
   font-weight: bold;
   color: #f7f8fa;
@@ -102,6 +160,7 @@ const FullName = styled.div`
 
 const Email = styled.div`
   font-size: 1.2rem;
+  margin-top: 4px;
   color: rgb(255, 255, 255, 0.64);
 `;
 
