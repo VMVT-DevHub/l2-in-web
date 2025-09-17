@@ -18,7 +18,7 @@ interface RouteProps {
 
 const getDefaultUrl = ({ loggedIn, user }: { loggedIn: boolean; user: User | null }) => {
   if (!loggedIn) return slugs.login;
-  if (user?.companyCode) {
+  if (user?.companyCode || user?.roles.orgs.length == 0) {
     return slugs.certificates;
   }
   return slugs.selectOrg;
