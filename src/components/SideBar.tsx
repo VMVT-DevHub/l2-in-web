@@ -31,23 +31,26 @@ const SideBar = ({ className }: ModuleMenuProps) => {
           {hasProfiles ? (
             <></>
           ) : (
-            <ProfileRow>
-              <InnerRow>
-                <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
-                <UserInfo>
-                  <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
-                  <Email>{user?.email}</Email>
-                </UserInfo>
-              </InnerRow>
+            <ContentContainer>
+              <ProfileRow>
+                <InnerRow>
+                  <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
+                  <UserInfo>
+                    <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
+                    <Email>{user?.email}</Email>
+                  </UserInfo>
+                </InnerRow>
 
-              <div
-                onClick={() => {
-                  logout();
-                }}
-              >
-                <StyledLogoutIcon name={IconName.logout} />
-              </div>
-            </ProfileRow>
+                <div
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  <StyledLogoutIcon name={IconName.logout} />
+                </div>
+              </ProfileRow>
+              {user?.companyCode && <StyledLink to="/sertifikatai">Grįžti atgal</StyledLink>}
+            </ContentContainer>
           )}
         </BottomRow>
       </Header>
@@ -80,34 +83,41 @@ const SideBar = ({ className }: ModuleMenuProps) => {
         {hasProfiles ? (
           <></>
         ) : (
-          <ProfileRow>
-            <InnerRow>
-              <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
-              <UserInfo>
-                <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
-                <Email>{user?.email}</Email>
+          <ContentContainer>
+            <ProfileRow>
+              <InnerRow>
+                <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
+                <UserInfo>
+                  <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
+                  <Email>{user?.email}</Email>
 
-                {user?.companyName ? (
-                  <JAinfo>{`${user?.companyName}, ${user?.companyCode} `}</JAinfo>
-                ) : user?.activeOrgCode ? (
-                  <>
-                    <Email>atstovauja </Email>
-                    <JAinfo>{` ${chosenJAName?.orgName} ${user?.activeOrgCode}`}</JAinfo>
-                  </>
-                ) : (
-                  ''
-                )}
-              </UserInfo>
-            </InnerRow>
+                  {user?.companyCode ? (
+                    <JAinfo>{`${user.companyName ? user?.companyName : ''} ${
+                      user?.companyCode
+                    } `}</JAinfo>
+                  ) : user?.activeOrgCode ? (
+                    <>
+                      <Email>atstovauja </Email>
+                      <JAinfo>{` ${chosenJAName?.orgName ? chosenJAName?.orgName : ''} ${
+                        user?.activeOrgCode
+                      }`}</JAinfo>
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </UserInfo>
+              </InnerRow>
 
-            <div
-              onClick={() => {
-                logout();
-              }}
-            >
-              <StyledLogoutIcon name={IconName.logout} />
-            </div>
-          </ProfileRow>
+              <div
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <StyledLogoutIcon name={IconName.logout} />
+              </div>
+            </ProfileRow>
+            {user?.companyCode && <StyledLink to="/organizacija">Deleguoti asmenis</StyledLink>}
+          </ContentContainer>
         )}
       </BottomRow>
     </Header>
@@ -115,6 +125,22 @@ const SideBar = ({ className }: ModuleMenuProps) => {
 };
 
 export default SideBar;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: end;
+  align-items: end;
+`;
+const StyledLink = styled(Link)`
+  color: white;
+  max-width: 350px;
+  padding-left: 9px;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 export const Column = styled.div`
   display: flex;
@@ -152,7 +178,7 @@ const JAinfo = styled.div`
 
 const FullName = styled.div`
   font-size: 1.7rem;
-  max-width: 110px;
+  max-width: 150px;
   font-weight: bold;
   color: #f7f8fa;
 `;

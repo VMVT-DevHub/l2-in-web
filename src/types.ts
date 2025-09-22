@@ -22,11 +22,22 @@ export interface User {
   };
 }
 
+export interface DelegatedUsers {
+  roles: string[];
+  userId: string;
+  userName: string;
+}
+
 export interface FormHistory {
   type: HistoryTypes;
   comment: string;
   createdBy: User;
   createdAt: Date;
+}
+export interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  personalCode?: string;
 }
 
 export interface Form {
