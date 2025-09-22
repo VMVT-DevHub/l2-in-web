@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes, slugs } from '../utils/routes';
@@ -15,10 +15,13 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   const { user, logout } = useContext<UserContextType>(UserContext);
   const currentLocation = useLocation();
   const hasProfiles = false;
-  let chosenJAName;
-  if (user?.roles?.orgs && user.roles.orgs.length > 1) {
-    chosenJAName = user.roles.orgs.find((org) => org.id.toString() === user?.activeOrgCode);
-  }
+  const [chosenJAName, setChosenJAName] = useState('');
+
+  useEffect(() => {
+    const foundOrg = user?.roles.orgs.find((org) => org.id === user.activeOrgCode);
+    setChosenJAName(foundOrg?.orgName || '');
+  }, [user]);
+
   if (currentLocation.pathname.includes(slugs.selectOrg)) {
     return (
       <Header className={className}>
@@ -98,9 +101,7 @@ const SideBar = ({ className }: ModuleMenuProps) => {
                   ) : user?.activeOrgCode ? (
                     <>
                       <Email>atstovauja </Email>
-                      <JAinfo>{` ${chosenJAName?.orgName ? chosenJAName?.orgName : ''} ${
-                        user?.activeOrgCode
-                      }`}</JAinfo>
+                      <JAinfo>{` ${chosenJAName} ${user?.activeOrgCode}`}</JAinfo>
                     </>
                   ) : (
                     ''
