@@ -15,7 +15,7 @@ export interface User {
   activeOrgCode: string;
   roles: {
     orgs: {
-      id: number;
+      id: string;
       roles: string[];
       orgName: string;
     }[];
