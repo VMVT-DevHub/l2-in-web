@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'universal-cookie';
-import { Form, Request, User } from '../types';
+import { DelegatedUsers, Form, Request, User } from '../types';
 import { SortFields } from './constants';
 
 const cookies = new Cookies();
@@ -252,6 +252,30 @@ class Api {
     return await this.get({
       resource: 'requests',
       populate: ['canEdit'],
+      id,
+    });
+  };
+
+  getDelegatedUsers = async (): Promise<DelegatedUsers[]> => {
+    return await this.get({
+      resource: 'auth/delegate/org/users',
+    });
+  };
+
+  addDelegatedUsers = async (params: {
+    ak: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<Form> => {
+    return await this.post({
+      resource: 'auth/delegate/org',
+      params,
+    });
+  };
+
+  removeDelegatedUsers = async (id: string): Promise<Form> => {
+    return await this.delete({
+      resource: 'auth/delegate/org',
       id,
     });
   };
