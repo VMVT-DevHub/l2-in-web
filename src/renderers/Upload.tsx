@@ -83,7 +83,7 @@ export const UploadRenderer = ({
       error={formatError(errors)}
       showError={true}
       disabled={!enabled}
-      onUpload={handleCreateFile}
+      onUpload={handleUploadFile}
       handleError={(type) => {
         toast.error(fileUploadErrors[type], {
           position: 'top-center',
