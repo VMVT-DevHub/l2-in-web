@@ -54,6 +54,19 @@ export const UploadRenderer = ({
     }
   };
 
+  const handleCreateFile = async (files: File[]) => {
+    try {
+      const uploadedFiles = await api.createFiles(files, requestId);
+      if (isMulti) {
+        handleChange(path, [...(inputData || []), ...uploadedFiles]);
+      } else {
+        handleChange(path, uploadedFiles[0] || null);
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
+  };
+
   const handleDeleteFile = (files) => {
     if (isMulti && Array.isArray(inputData)) {
       handleChange(path, files);
@@ -70,7 +83,7 @@ export const UploadRenderer = ({
       error={formatError(errors)}
       showError={true}
       disabled={!enabled}
-      onUpload={handleUploadFile}
+      onUpload={handleCreateFile}
       handleError={(type) => {
         toast.error(fileUploadErrors[type], {
           position: 'top-center',

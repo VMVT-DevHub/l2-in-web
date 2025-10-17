@@ -343,6 +343,31 @@ class Api {
     }
   };
 
+  createFiles = async (files: File[] = [], requestId: string): Promise<any> => {
+    const config = {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 0,
+    };
+
+    try {
+      const data = await Promise.all(
+        files?.map(async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+          const { data } = await this.AuthApiAxios.post(
+            `/api/sharePoint/createFiles/${requestId}?fileSize=${file.size}`,
+            formData,
+            config,
+          );
+          return data;
+        }),
+      );
+      return data.flat();
+    } catch (e: any) {
+      return { error: e.response.data.message };
+    }
+  };
+
   submitForm = async ({ data }) => {
     return this.post({ resource: 'forms/goods/submit', params: { data } });
   };
