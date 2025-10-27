@@ -346,7 +346,6 @@ class Api {
   createFiles = async (files: File[] = [], requestId: string): Promise<any> => {
     const config = {
       headers: { 'Content-Type': 'multipart/form-data' },
-      timeout: 0,
     };
 
     try {
