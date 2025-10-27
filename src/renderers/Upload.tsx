@@ -71,7 +71,7 @@ export const UploadRenderer = ({
     if (isMulti && Array.isArray(inputData)) {
       handleChange(path, files);
     } else {
-      handleChange(path, null);
+      handleChange(path, undefined);
     }
   };
 
