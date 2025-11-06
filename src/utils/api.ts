@@ -3,6 +3,8 @@ import Cookies from 'universal-cookie';
 import { DelegatedUsers, Form, Request, User } from '../types';
 import { SortFields } from './constants';
 
+type certType = 'ser' | 'vet';
+
 const cookies = new Cookies();
 
 interface GetAll {
@@ -309,9 +311,9 @@ class Api {
     });
   };
 
-  getSharePointDownloadUrl = async (itemId: string): Promise<string> => {
+  getSharePointDownloadUrl = async (itemId: string, certType: certType): Promise<string> => {
     return this.get({
-      resource: `sharePoint/downloadUrl/${itemId}`,
+      resource: `sharePoint/downloadUrl/${itemId}?certType=${certType}`,
     });
   };
 
@@ -343,7 +345,7 @@ class Api {
     }
   };
 
-  createFiles = async (files: File[] = [], requestId: string): Promise<any> => {
+  createFiles = async (files: File[] = [], requestId: string, certType: string): Promise<any> => {
     const config = {
       headers: { 'Content-Type': 'multipart/form-data' },
     };
@@ -354,7 +356,7 @@ class Api {
           const formData = new FormData();
           formData.append('file', file);
           const { data } = await this.AuthApiAxios.post(
-            `/api/sharePoint/createFiles/${requestId}?fileSize=${file.size}`,
+            `/api/sharePoint/createFiles/${requestId}?fileSize=${file.size}&certType=${certType}`,
             formData,
             config,
           );
