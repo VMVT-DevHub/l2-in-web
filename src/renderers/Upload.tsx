@@ -26,6 +26,7 @@ export const UploadRenderer = ({
   const availableExtensionsTypes = uischema?.options?.availableExtensionsTypes;
   const maxFileSizeMB = uischema?.options?.maxFileSizeMB;
   const isMulti = uischema?.options?.multi;
+  const certType = uischema?.options?.certType || 'ser';
 
   const { requestId = '' } = useParams();
 
@@ -33,7 +34,7 @@ export const UploadRenderer = ({
 
   const handleDownloadFile = async (file: any) => {
     try {
-      const url = await api.getSharePointDownloadUrl(file.sharepointFileId || file.id);
+      const url = await api.getSharePointDownloadUrl(file.sharepointFileId || file.id, certType);
       window.open(url, '_blank');
     } catch (error) {
       toast.error('Failed to get download URL');
@@ -56,7 +57,7 @@ export const UploadRenderer = ({
 
   const handleCreateFile = async (files: File[]) => {
     try {
-      const uploadedFiles = await api.createFiles(files, requestId);
+      const uploadedFiles = await api.createFiles(files, requestId, certType);
       if (isMulti) {
         handleChange(path, [...(inputData || []), ...uploadedFiles]);
       } else {
