@@ -1,4 +1,4 @@
-import { Button, Table } from '@aplinkosministerija/design-system';
+import { Button, SortedColumnsProps, Table } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -11,19 +11,27 @@ import TableWrapper from '../components/TableWrapper';
 import { Request } from '../types';
 import api from '../utils/api';
 import { certificateColumns } from '../utils/columns';
-import { colorsByStatus } from '../utils/constants';
+import { colorsByStatus, SortFields } from '../utils/constants';
 import { handleError } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
-
 const Certificates = () => {
   const [searchParams] = useSearchParams();
+  const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
   const params = Object.fromEntries([...searchParams]);
   const { page, pageSize } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-
+  const sortingFields = {
+    no: 'id',
+    formTitle: 'form',
+    date: 'createdAt',
+    status: 'status',
+    productNames: 'productNames',
+    importingCountry: 'importCountry',
+    productAmount: 'importAmount',
+  };
   const { data, isLoading: isFormLoading } = useQuery(
     ['certificates'],
     () => api.getCertificateForm(),
@@ -32,10 +40,8 @@ const Certificates = () => {
       refetchOnWindowFocus: false,
     },
   );
-
   const renderStatusTag = (status) =>
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
-
   const mapTableData = (item) => {
     let truncatedProductNames = item?.productNames.join(', ').slice(0, 50);
     truncatedProductNames += truncatedProductNames.length >= 50 ? '...' : '';
@@ -47,21 +53,23 @@ const Certificates = () => {
       date: format(item.createdAt, 'yyyy MM dd'),
       productNames: truncatedProductNames,
       importingCountry: item?.importingCountry,
-      productAmount: item?.productAmount,
+      productAmount: item?.productAmount.join(', '),
       status: renderStatusTag(item.status),
     };
   };
-
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'certificateRequests',
-    endpoint: () => api.getCertificateRequests({ query: {}, page, pageSize }),
+    endpoint: () => api.getCertificateRequests({ query: {}, page, pageSize, sort }),
     mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [page, pageSize],
+    dependencyArray: [page, pageSize, sort],
     enabled: !isFormLoading,
   });
 
+  const handleSorting = ({ key, direction, sortBy = ['id'] }: SortedColumnsProps) => {
+    const prefix = direction === 'desc' ? '-' : '';
+    setSort([`${prefix}${sortingFields[sortBy[0]]}`]);
+  };
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
-
   return (
     <TableWrapper title={'Sertifikatai'}>
       <TableButtonsRow>
@@ -82,6 +90,7 @@ const Certificates = () => {
         onClick={(item: any) => {
           navigate(slugs.certificateRequest(item.form, item.id));
         }}
+        onColumnSort={handleSorting}
         showPageSizeDropdown={true}
       />
       <FormSelectModal
@@ -96,9 +105,7 @@ const Certificates = () => {
     </TableWrapper>
   );
 };
-
 export default Certificates;
-
 const TableButtonsRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -109,7 +116,6 @@ const TableButtonsRow = styled.div`
   gap: 16px;
   margin: 16px 0;
 `;
-
 const TableButtonsInnerRow = styled.div`
   display: flex;
   gap: 16px;

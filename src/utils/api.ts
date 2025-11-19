@@ -207,15 +207,17 @@ class Api {
     query,
     page,
     pageSize,
-  }: Pick<GetAll, 'query' | 'page' | 'pageSize'>): Promise<GetAllResponse<Request>> => {
+    sort = [SortFields.CREATED_AT],
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize' | 'sort'>): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/certificate',
-      sort: [SortFields.CREATED_AT],
+      sort,
       query,
       page,
       pageSize,
     });
   };
+
   getFoodRequests = async ({
     query,
     page,
