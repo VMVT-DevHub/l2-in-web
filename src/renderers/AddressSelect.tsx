@@ -2,6 +2,8 @@ import { AsyncSelectField } from '@aplinkosministerija/design-system';
 import api from '../utils/api';
 import styled from 'styled-components';
 import { ControlProps } from '@jsonforms/core';
+import { useContext } from 'react';
+import { UserContext, UserContextType } from '../components/UserProvider';
 
 export interface AddressValue {
   gyvId: number | null;
@@ -36,7 +38,10 @@ const formatLabel = (item?: AddressSearchItem): string =>
   item ? `${item.pavad}${item.vietove ? `, ${item.vietove}` : ''}` : '';
 
 export const AddressSelect = (props: ControlProps) => {
-  const { path, visible, enabled, handleChange, label, data, errors, uischema } = props;
+  const { user } = useContext<UserContextType>(UserContext);
+  const { path, enabled, handleChange, data } = props;
+
+  const hasAOB = !!user?.aob;
 
   const current: AddressValue = data ?? {
     gyvId: null,
@@ -46,7 +51,7 @@ export const AddressSelect = (props: ControlProps) => {
   return (
     <FieldWrapper>
       {/* GYV SELECT */}
-      <AsyncSelectField
+      <StyledAsyncSelectField
         name="gyvenviete"
         label="Gyvenvietė"
         disabled={!enabled}
@@ -78,11 +83,17 @@ export const AddressSelect = (props: ControlProps) => {
       />
 
       {/* ADR SELECT */}
-      <AsyncSelectField
+      <StyledAsyncSelectField
         name="adresas"
         label="Adresas"
         disabled={!enabled || !current.gyvId}
-        value={current.adrId ? { id: current.adrId, name: current.adrName ?? '' } : undefined}
+        value={
+          hasAOB && user.address
+            ? { id: user.aob, name: user.address ?? '' }
+            : current.adrId
+            ? { id: current.adrId, name: current.adrName ?? '' }
+            : undefined
+        }
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"
         loadOptions={async (input: string) => {
@@ -111,4 +122,11 @@ export const AddressSelect = (props: ControlProps) => {
   );
 };
 
-const FieldWrapper = styled.div``;
+const StyledAsyncSelectField = styled(AsyncSelectField)`
+  width: 100%;
+`;
+
+const FieldWrapper = styled.div`
+  display: flex;
+  gap: 16px;
+`;
