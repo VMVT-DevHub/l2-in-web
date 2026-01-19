@@ -1,6 +1,6 @@
 import { TextField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useLayoutEffect } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import { formatError } from '../utils/functions';
 import styled from 'styled-components';
@@ -19,14 +19,18 @@ export const CustomAthFieldRenderer = ({
   const isHidden = uischema.options?.hidden;
   const value = user?.[key];
 
-  if (value && !data && value !== data) {
-    handleChange(path, value);
-  }
+  const displayValue = typeof data === 'number' ? String(data) : data;
+
+  useLayoutEffect(() => {
+    if (data === undefined && value !== undefined) {
+      handleChange(path, value);
+    }
+  }, [data, value, path, handleChange]);
 
   return (
     <StyledTextField
-      value={data}
-      onChange={(value) => handleChange(path, value || undefined)}
+      value={displayValue}
+      onChange={(value) => handleChange(path, value || '')}
       label={label}
       error={formatError(errors)}
       name={label}

@@ -47,6 +47,7 @@ export const AddressSelect = (props: ControlProps) => {
     gyvId: null,
     adrId: null,
   };
+  const isUsingAOB = hasAOB && user.aob && current.adrId == null;
 
   return (
     <FieldWrapper>
@@ -88,7 +89,7 @@ export const AddressSelect = (props: ControlProps) => {
         label="Adresas"
         disabled={!enabled || !current.gyvId}
         value={
-          hasAOB && user.address
+          isUsingAOB
             ? { id: user.aob, name: user.address ?? '' }
             : current.adrId
             ? { id: current.adrId, name: current.adrName ?? '' }

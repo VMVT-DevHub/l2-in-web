@@ -415,6 +415,10 @@ class Api {
       }),
     );
   };
+
+  getActivities = async (): Promise<AddressSearchItem[]> => {
+    return this.errorWrapper(() => this.AuthApiAxios.get('/api/activities/okis'));
+  };
 }
 
 export default new Api();
