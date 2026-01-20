@@ -10,6 +10,7 @@ export const CheckBoxRenderer = ({
   path,
   label,
   enabled,
+  description,
 }: ControlProps) => {
   return (
     <StyledCheckBox
@@ -18,6 +19,7 @@ export const CheckBoxRenderer = ({
       label={label}
       error={!!errors}
       disabled={!enabled}
+      description={description}
       {...uischema?.options}
     />
   );

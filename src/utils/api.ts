@@ -56,6 +56,13 @@ interface Create {
   id?: string;
 }
 
+interface AddressSearchItem {
+  id: number;
+  pavad: string;
+  vietove: string;
+  tipas: string;
+}
+
 class Api {
   private AuthApiAxios: AxiosInstance;
 
@@ -92,6 +99,17 @@ class Api {
         ...rest,
         page: rest.page || 1,
         pageSize: rest.pageSize || 10,
+      },
+    };
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get(`/api/${resource}${id ? `/${id}` : ''}`, config),
+    );
+  };
+  getAR = async <T>({ resource, id, ...rest }: GetAll): Promise<GetAllResponse<T> | any> => {
+    const config = {
+      params: {
+        ...rest,
+        top: 10,
       },
     };
     return this.errorWrapper(() =>
@@ -381,6 +399,25 @@ class Api {
       page,
       search: input,
     });
+  };
+
+  getGyv = async (query: string): Promise<AddressSearchItem[]> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get('/api/addresses/find/gyv', {
+        params: { q: query, top: 10 },
+      }),
+    );
+  };
+  getAdr = async (gyvId: number, query: string): Promise<AddressSearchItem[]> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get('/api/addresses/find/adr', {
+        params: { gyv: gyvId, q: query, top: 10 },
+      }),
+    );
+  };
+
+  getActivities = async (): Promise<AddressSearchItem[]> => {
+    return this.errorWrapper(() => this.AuthApiAxios.get('/api/activities/okis'));
   };
 }
 

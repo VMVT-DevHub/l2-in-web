@@ -17,12 +17,14 @@ import {
   optionIs,
   or,
   rankWith,
+  scopeEndsWith,
   uiTypeIs,
 } from '@jsonforms/core';
 import { withJsonFormsArrayLayoutProps, withJsonFormsControlProps } from '@jsonforms/react';
 import { ArrayLayout } from './ArrayLayout';
 import { CustomAthFieldRenderer } from './AuthField';
 import { BoundariesSelect } from './BoundarySelect';
+import { AddressSelect } from './AddressSelect';
 import { ButtonGroupRenderer } from './ButtonGroup';
 import { ButtonMultiSelectRerender } from './ButtonMultiSelect';
 import { CategorizationLayout } from './CategorizationLayout';
@@ -193,5 +195,9 @@ export const customRenderers = [
   {
     tester: rankWith(10, and(isNumberControl, optionIs('display', 'boundariesSelect'))),
     renderer: withJsonFormsControlProps(BoundariesSelect),
+  },
+  {
+    tester: rankWith(10, and(scopeEndsWith('gyv'), optionIs('display', 'addressSelect'))),
+    renderer: withJsonFormsControlProps(AddressSelect),
   },
 ];

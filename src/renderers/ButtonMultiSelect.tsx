@@ -10,7 +10,8 @@ export const ButtonMultiSelectRerender = ({
   path,
   enabled,
   visible,
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-expect-error
   handleChange,
   label,
 }: ArrayLayoutProps) => {
