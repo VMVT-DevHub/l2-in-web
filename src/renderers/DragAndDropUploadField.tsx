@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import {
   bytesToMb,
   device,
+  TextField,
   validateFileSizes,
   validateFileTypes,
 } from '@aplinkosministerija/design-system';
@@ -17,6 +18,7 @@ export type FileProps = {
   name: string;
   size: number;
   main?: boolean;
+  infoText?: string;
 };
 
 export interface FileFieldProps {
@@ -24,10 +26,13 @@ export interface FileFieldProps {
   onDelete?: (files: File[]) => void;
   onUpload?: (files: File[]) => Promise<void>;
   onDownload?: (file: any) => void;
+  onInfoTextChange?: (files: any[]) => void;
   files: FileProps[] | File[] | any[];
   loading?: boolean;
   label?: string;
   disabled?: boolean;
+  hasInfoField?: boolean;
+  infoText?: string;
   customDeleteIcon?: JSX.Element | string;
   error?: string;
   showError?: boolean;
@@ -46,8 +51,10 @@ const DragAndDropUploadField = ({
   onDelete,
   onUpload,
   onDownload,
+  onInfoTextChange,
   multiple = true,
   customDeleteIcon,
+  hasInfoField = false,
   files,
   label = '',
   disabled = false,
@@ -81,6 +88,13 @@ const DragAndDropUploadField = ({
       await onUpload(currentFiles);
       setUploadLoading(false);
     }
+  };
+
+  const handleInfoChange = (index: number, value: string) => {
+    const updatedFiles = files.map((file, i) =>
+      i === index ? { ...file, infoText: value } : file,
+    );
+    onInfoTextChange?.(updatedFiles);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -168,47 +182,64 @@ const DragAndDropUploadField = ({
 
         return (
           <FileContainer key={`${index}-file`}>
-            <FileInnerContainer>
-              <FileName>{file?.name}</FileName>
-              <FileSize>{bytesToMb(file.size)}</FileSize>
-            </FileInnerContainer>
-            <FileInnerRow>
-              <IconContainer
-                onClick={
-                  onDownload
-                    ? (e) => {
-                        e.preventDefault();
-                        onDownload(file);
-                      }
-                    : undefined
-                }
-                tabIndex={0}
-                role="button"
-                aria-label={`Download ${file?.name}`}
-              >
-                <StyledIcon name={IconName.download} />
-              </IconContainer>
-              {!disabled && (
+            <UpperRow>
+              <FileInnerContainer>
+                <FileName>{file?.name}</FileName>
+                <FileSize>{bytesToMb(file.size)}</FileSize>
+              </FileInnerContainer>
+              <FileInnerRow>
                 <IconContainer
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(index);
-                  }}
-                  onKeyDown={handleKeyDownOnDelete(index)}
+                  onClick={
+                    onDownload
+                      ? (e) => {
+                          e.preventDefault();
+                          onDownload(file);
+                        }
+                      : undefined
+                  }
                   tabIndex={0}
                   role="button"
-                  aria-label={`Remove ${file?.name}`}
+                  aria-label={`Download ${file?.name}`}
                 >
-                  {customDeleteIcon || <StyledIcon name={IconName.remove} />}
+                  <StyledIcon name={IconName.download} />
                 </IconContainer>
+                {!disabled && (
+                  <IconContainer
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(index);
+                    }}
+                    onKeyDown={handleKeyDownOnDelete(index)}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Remove ${file?.name}`}
+                  >
+                    {customDeleteIcon || <StyledIcon name={IconName.remove} />}
+                  </IconContainer>
+                )}
+              </FileInnerRow>
+            </UpperRow>
+            <LowerRow>
+              {hasInfoField && (
+                <TextField
+                  value={file?.infoText || ''}
+                  placeholder="Trumpas failo aprašymas *"
+                  onChange={(value) => handleInfoChange(index, value || undefined)}
+                />
               )}
-            </FileInnerRow>
+            </LowerRow>
           </FileContainer>
         );
       })}
     </Wrapper>
   );
 };
+const UpperRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+`;
+const LowerRow = styled.div``;
 
 const Wrapper = styled.div`
   display: flex;
@@ -288,8 +319,8 @@ const FileContainer = styled.div<{ opacity?: number }>`
   border-radius: 4px;
   padding: 3px 12px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
 `;
 

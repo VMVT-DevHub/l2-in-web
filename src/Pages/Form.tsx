@@ -28,7 +28,7 @@ const getPathTitle = (uiSchema: any, path: string) => {
   return uiSchema.options?.labels?.[rootPath] || '';
 };
 
-const ajv = new Ajv({ allErrors: true, useDefaults: true });
+const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false });
 const formAjv = createAjv({ useDefaults: true });
 addErrors(ajv, { keepErrors: true });
 addFormats(ajv);

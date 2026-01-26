@@ -5,6 +5,7 @@ import { useJsonForms } from '@jsonforms/react';
 export const CreatableMultiSelectRerender = ({
   path,
   visible,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   handleChange,
   label,

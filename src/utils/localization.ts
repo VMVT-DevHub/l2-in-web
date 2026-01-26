@@ -3,6 +3,7 @@ import { ErrorObject } from 'ajv';
 export const translations = {
   lt: {
     required: 'Privalomas laukas',
+    type: 'Neteisingas formatas',
   },
 };
 
