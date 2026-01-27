@@ -10,7 +10,7 @@ import { default as Icon, default as Icons, IconName } from '../components/Icons
 import { localizeErrors } from '../utils/localization';
 import Ajv from 'ajv';
 
-const ajv = new Ajv({ allErrors: true, useDefaults: true });
+const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false });
 const formAjv = createAjv({ useDefaults: true, coerceTypes: 'array' });
 addErrors(ajv, { keepErrors: true });
 

@@ -15,7 +15,8 @@ export const CustomTextRenderer = ({
 }: ControlProps) => {
   if (!visible) return <></>;
   const type = schema?.type?.toString() || '';
-  
+
+  console.log(formatError(errors));
   return (
     <TextField
       value={data}

@@ -27,10 +27,19 @@ export const UploadRenderer = ({
   const maxFileSizeMB = uischema?.options?.maxFileSizeMB;
   const isMulti = uischema?.options?.multi;
   const certType = uischema?.options?.certType || 'ser';
+  const hasInfoField = uischema?.options?.hasInfoField || false;
 
   const { requestId = '' } = useParams();
 
   if (!visible) return null;
+
+  const handleInfoTextChange = (files) => {
+    if (isMulti) {
+      handleChange(path, files);
+    } else {
+      handleChange(path, files[0] || null);
+    }
+  };
 
   const handleDownloadFile = async (file: any) => {
     try {
@@ -94,8 +103,10 @@ export const UploadRenderer = ({
         });
       }}
       files={displayData}
+      hasInfoField={hasInfoField}
       multiple={isMulti}
       onDelete={handleDeleteFile}
+      onInfoTextChange={handleInfoTextChange}
       onDownload={handleDownloadFile}
       customDeleteIcon={
         <IconContainer>

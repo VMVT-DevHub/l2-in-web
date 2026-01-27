@@ -53,6 +53,7 @@ import { TimelineCountryStartRenderer } from './TimelineCountryStart';
 import { TimelineCountryStepRenderer } from './TimelineCountryStep';
 import { TreeSelectFieldRenderer } from './TreeSelectField';
 import { UploadRenderer } from './Upload';
+import { MultiSelect } from './MultiSelect';
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
@@ -187,6 +188,10 @@ export const customRenderers = [
   {
     tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'creatableMultiSelect'))),
     renderer: withJsonFormsArrayLayoutProps(CreatableMultiSelectRerender),
+  },
+  {
+    tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'multiSelect'))),
+    renderer: withJsonFormsArrayLayoutProps(MultiSelect),
   },
   {
     tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'buttonMultiSelect'))),
