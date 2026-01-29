@@ -81,14 +81,14 @@ const Column = styled.div`
 `;
 
 const Description = styled.div`
-  font-size: 1.2rem;
-  line-height: 15px;
+  font-size: 1.3rem;
+  line-height: 16px;
   color: #121926;
 `;
 
 const Title = styled.div`
-  font-size: 1.4rem;
-  font-weight: bold;
+  font-size: 1.8rem;
+  font-weight: 600;
   color: #121926;
 `;
 

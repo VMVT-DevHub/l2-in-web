@@ -4,6 +4,7 @@ export const translations = {
   lt: {
     required: 'Privalomas laukas',
     type: 'Neteisingas formatas',
+    enum: 'Reikšmė turi būti viena iš galimų pasirinkimų',
   },
 };
 
