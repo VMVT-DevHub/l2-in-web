@@ -54,6 +54,7 @@ import { TimelineCountryStepRenderer } from './TimelineCountryStep';
 import { TreeSelectFieldRenderer } from './TreeSelectField';
 import { UploadRenderer } from './Upload';
 import { MultiSelect } from './MultiSelect';
+import { PlainTextRenderer } from './PlainText';
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
@@ -167,6 +168,10 @@ export const customRenderers = [
   {
     tester: rankWith(2, uiTypeIs('Textarea')),
     renderer: withJsonFormsControlProps(TextareaRenderer),
+  },
+  {
+    tester: rankWith(15, and(isStringControl, optionIs('display', 'PlainText'))),
+    renderer: withJsonFormsControlProps(PlainTextRenderer),
   },
   {
     tester: rankWith(2, isArrayObjectControl),
