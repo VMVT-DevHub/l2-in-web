@@ -105,7 +105,8 @@ const PopupContainer = styled.div<{ width?: string }>`
 `;
 
 const TypeContainer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-bottom: 8px;
   @media ${device.mobileL} {

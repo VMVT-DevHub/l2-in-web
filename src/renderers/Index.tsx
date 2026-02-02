@@ -55,6 +55,7 @@ import { TreeSelectFieldRenderer } from './TreeSelectField';
 import { UploadRenderer } from './Upload';
 import { MultiSelect } from './MultiSelect';
 import { PlainTextRenderer } from './PlainText';
+import { RadioRenderer } from './Radio';
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
@@ -104,6 +105,10 @@ export const customRenderers = [
   {
     tester: rankWith(3, or(isEnumControl, optionIs('display', 'customEnum'))),
     renderer: withJsonFormsControlProps(SelectFieldRenderer),
+  },
+  {
+    tester: rankWith(5, and(isEnumControl, optionIs('display', 'radio'))),
+    renderer: withJsonFormsControlProps(RadioRenderer),
   },
   {
     tester: rankWith(4, and(isEnumControl, optionIs('display', 'countrySelect'))),
