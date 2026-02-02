@@ -12,6 +12,8 @@ export const CheckBoxRenderer = ({
   enabled,
   description,
 }: ControlProps) => {
+  const margin = uischema?.options?.margin;
+
   return (
     <StyledCheckBox
       value={data}
@@ -20,11 +22,12 @@ export const CheckBoxRenderer = ({
       error={!!errors}
       disabled={!enabled}
       description={description}
+      margin={margin}
       {...uischema?.options}
     />
   );
 };
 
-const StyledCheckBox = styled(CheckBox)`
-  margin: 16px 0;
+const StyledCheckBox = styled(CheckBox)<{ margin?: string }>`
+  margin: ${({ margin }) => (margin ? `3px ${margin}` : '3px 0')};
 `;
