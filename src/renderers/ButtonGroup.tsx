@@ -7,6 +7,7 @@ export const ButtonGroupRenderer = ({
   data,
   handleChange,
   path,
+  errors,
   label,
   schema,
   enabled,
@@ -25,6 +26,8 @@ export const ButtonGroupRenderer = ({
         handleChange(path, value);
         clearOnChange();
       }}
+      error={errors}
+      showError={true}
       label={label}
       getOptionLabel={(val) => val}
       options={options}

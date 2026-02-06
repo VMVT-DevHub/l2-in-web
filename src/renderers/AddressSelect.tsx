@@ -39,7 +39,8 @@ const formatLabel = (item?: AddressSearchItem): string =>
 
 export const AddressSelect = (props: ControlProps) => {
   const { user } = useContext<UserContextType>(UserContext);
-  const { path, enabled, handleChange, data } = props;
+  const { path, enabled, handleChange, data, errors } = props;
+  const cleanError = (typeof errors === 'string' && errors.split('\n')[1]) || '';
 
   const hasAOB = !!user?.aob;
 
@@ -55,6 +56,7 @@ export const AddressSelect = (props: ControlProps) => {
       <StyledAsyncSelectField
         name="gyvenviete"
         label="Gyvenvietė"
+        error={cleanError}
         disabled={!enabled}
         value={current.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
@@ -87,6 +89,7 @@ export const AddressSelect = (props: ControlProps) => {
       <StyledAsyncSelectField
         name="adresas"
         label="Adresas"
+        error={cleanError}
         disabled={!enabled || !current.gyvId}
         value={
           isUsingAOB

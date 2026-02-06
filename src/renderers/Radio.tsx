@@ -30,33 +30,41 @@ export const RadioRenderer = ({
   if (!visible) return <></>;
 
   return (
-    <RadioContainer>
-      {options.map((option, index) => {
-        if (render && render != index + 1) return;
-        else
-          return (
-            <Styledlabel key={option}>
-              <StyledInput
-                type="radio"
-                name={path}
-                id={option}
-                checked={data === option}
-                disabled={!enabled}
-                value={option}
-                onChange={() => {
-                  handleChange(path, option);
-                  clearOnChange();
-                  setOnChange(option);
-                }}
-              />
-              {option}
-            </Styledlabel>
-          );
-      })}
-    </RadioContainer>
+    <>
+      <RadioContainer $error={!!errors}>
+        {options.map((option, index) => {
+          if (render && render != index + 1) return;
+          else
+            return (
+              <Styledlabel key={option}>
+                <StyledInput
+                  type="radio"
+                  name={path}
+                  id={option}
+                  checked={data === option}
+                  disabled={!enabled}
+                  value={option}
+                  onChange={() => {
+                    handleChange(path, option);
+                    clearOnChange();
+                    setOnChange(option);
+                  }}
+                />
+                {option}
+              </Styledlabel>
+            );
+        })}
+      </RadioContainer>
+      {!!errors && <Error>Pažymėkite bent vieną atsakymą</Error>}
+    </>
   );
 };
-
+const Error = styled.p`
+  margin: 0;
+  line-height: 2.4rem;
+  font-size: 1.4rem;
+  color: #fe5b78;
+`;
 const StyledInput = styled.input`
   margin: 0 10px 0 0;
 `;
@@ -64,11 +72,13 @@ const StyledInput = styled.input`
 const Styledlabel = styled.label`
   cursor: pointer;
   font-size: 1.4rem;
-  margin: 6px 0;
+  margin: 8px 0;
 `;
 
-const RadioContainer = styled.div`
+const RadioContainer = styled.div<{ $error: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  border: ${({ $error }) => ($error ? `2px solid #FE5B78` : '0px')};
+  padding: ${({ $error }) => ($error ? `0 4px` : '0px')};
 `;

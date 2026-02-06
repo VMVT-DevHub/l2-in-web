@@ -10,6 +10,7 @@ export const ButtonMultiSelectRerender = ({
   path,
   enabled,
   visible,
+  errors,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-expect-error
   handleChange,
@@ -44,6 +45,7 @@ export const ButtonMultiSelectRerender = ({
       label={label}
       disabled={!enabled}
       options={options}
+      error={errors}
       onChange={(values) => handleChange(path, values)}
       values={formData || []}
       labelButton={
