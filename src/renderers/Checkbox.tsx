@@ -29,5 +29,5 @@ export const CheckBoxRenderer = ({
 };
 
 const StyledCheckBox = styled(CheckBox)<{ margin?: string }>`
-  margin: ${({ margin }) => (margin ? `3px ${margin}` : '3px 0')};
+  margin: ${({ margin }) => (margin ? `3px ${margin}` : '6px 0')};
 `;

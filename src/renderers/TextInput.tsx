@@ -35,5 +35,5 @@ export const CustomTextRenderer = ({
 };
 
 const StyledTextField = styled(TextField)<{ margin?: string }>`
-  margin: ${({ margin }) => (margin ? `0px ${margin}` : '6px 0')};
+  margin: ${({ margin }) => (margin ? `0px ${margin}` : '0')};
 `;

@@ -7,7 +7,8 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
   const { core }: JsonFormsStateContext = useJsonForms();
   const options = uischema?.options;
   const bottomLabel = options?.bottomLabel;
-  
+  const margin = uischema?.options?.margin;
+
   if (!visible) {
     return <></>;
   }
@@ -34,7 +35,7 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
 
   return (
     <Container>
-      <HorizontalLayoutContainer $columns={elementsLength}>
+      <HorizontalLayoutContainer $columns={elementsLength} $margin={margin}>
         {renderElements()}
       </HorizontalLayoutContainer>
       {bottomLabel && <SubTitle>{bottomLabel}</SubTitle>}
@@ -54,9 +55,10 @@ const SubTitle = styled.div`
   width: inherit;
 `;
 
-const HorizontalLayoutContainer = styled.div<{ $columns: number }>`
+const HorizontalLayoutContainer = styled.div<{ $columns: number; $margin?: string }>`
   display: grid;
   gap: 16px;
+  margin: ${({ $margin }) => ($margin ? `0px ${$margin}` : '0px')};
   margin-bottom: 16px;
   grid-template-columns: repeat(${({ $columns }) => $columns}, 1fr);
 
