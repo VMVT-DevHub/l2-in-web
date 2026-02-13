@@ -1,12 +1,12 @@
 import { TableRow } from '@aplinkosministerija/design-system';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import api from './api';
 import { intersectionObserverConfig } from './configs';
-import { handleError } from './functions';
+import { getFilteredOptions, handleError } from './functions';
 
 const cookies = new Cookies();
 
@@ -113,4 +113,101 @@ export const useOptions = ({
   );
 
   return fetchOptionsFrom ? data : schema?.enum || [];
+};
+
+export const useKeyAction = (action: (option?: any) => void, disabled = false) => {
+  return useCallback(
+    (option?: any) => (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !disabled) {
+        e.stopPropagation();
+        action(option);
+      }
+    },
+    [action, disabled],
+  );
+};
+
+export const useSelectData = ({
+  options,
+  disabled,
+  onChange,
+  getOptionLabel,
+  refreshOptions,
+  dependantId,
+  value,
+}) => {
+  const [input, setInputValue] = useState<any>(null);
+  const [showSelect, setShowSelect] = useState(false);
+  const [suggestions, setSuggestions] = useState(options);
+  const [loading, setLoading] = useState(false);
+
+  const handleBlur = (event: any) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setShowSelect(false);
+      setInputValue('');
+    }
+  };
+
+  const handleSetOptions = async () => {
+    if (!refreshOptions) return;
+    setLoading(true);
+    await refreshOptions(dependantId);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!showSelect || options?.length) return;
+    handleSetOptions();
+  }, [showSelect]);
+
+  useEffect(() => {
+    if (typeof dependantId === 'undefined') return;
+    handleSetOptions();
+  }, [dependantId]);
+
+  useEffect(() => {
+    const canClearValue =
+      !disabled && dependantId && !options?.some((option) => option?.id === value?.id);
+
+    if (canClearValue) {
+      onChange(null);
+    }
+
+    setSuggestions(options);
+  }, [options]);
+
+  const handleClick = (option: any) => {
+    setShowSelect(false);
+    setInputValue('');
+
+    if (value && getOptionLabel(value) === getOptionLabel(option)) return;
+
+    onChange(option);
+  };
+
+  const handleOnChange = (input) => {
+    if (!options) return;
+
+    if (input) {
+      setShowSelect(true);
+    }
+    setInputValue(input);
+    setSuggestions(getFilteredOptions(options, input, getOptionLabel));
+  };
+
+  const handleToggleSelect = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    !disabled && setShowSelect(!showSelect);
+  };
+
+  return {
+    suggestions,
+    input,
+    handleToggleSelect,
+    showSelect,
+    handleBlur,
+    handleClick,
+    handleOnChange,
+    loading,
+  };
 };
