@@ -1,8 +1,9 @@
-import { MultiSelectField } from '@aplinkosministerija/design-system';
+import MultiSelectField from './MultiSelectField';
 import { ArrayLayoutProps, resolveData } from '@jsonforms/core';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
 import { useOptions } from '../utils/hooks';
 import { formatError, handleClearOnChange, handleSetOnChange } from '../utils/functions';
+import { useState } from 'react';
 
 export const MultiSelect = ({
   schema,
@@ -18,9 +19,15 @@ export const MultiSelect = ({
 }: ArrayLayoutProps) => {
   const ctx: JsonFormsStateContext = useJsonForms();
   const formData = resolveData(ctx.core?.data, path) || [];
-
+  const [description, setDescription] = useState();
+  const descriptions = (schema as any)['x-info'];
   const options = useOptions({ schema, uischema });
   const props = uischema.options?.props;
+
+  const handleMouseOver = (option) => {
+    if (!descriptions) return;
+    setDescription(option);
+  };
 
   if (!visible) return null;
 
@@ -30,6 +37,10 @@ export const MultiSelect = ({
       disabled={!enabled}
       error={formatError(errors)}
       options={options}
+      handleMouseOver={(options) => {
+        handleMouseOver(options);
+      }}
+      description={description}
       values={formData || []}
       onChange={(values) => handleChange(path, values)}
       getOptionLabel={(option) => option}

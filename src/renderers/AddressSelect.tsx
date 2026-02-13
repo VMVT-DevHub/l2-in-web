@@ -40,8 +40,7 @@ const formatLabel = (item?: AddressSearchItem): string =>
 export const AddressSelect = (props: ControlProps) => {
   const { user } = useContext<UserContextType>(UserContext);
   const { path, enabled, handleChange, data, errors } = props;
-  const cleanError = (typeof errors === 'string' && errors.split('\n')[1]) || '';
-
+  const cleanError = (typeof errors === 'string' && errors.split('\n')[2]) || '';
   const hasAOB = !!user?.aob;
 
   const current: AddressValue = data ?? {
@@ -57,6 +56,7 @@ export const AddressSelect = (props: ControlProps) => {
         name="gyvenviete"
         label="Gyvenvietė"
         error={cleanError}
+        placeholder="Pradėkite vesti gyvenvietės pavadinimą"
         disabled={!enabled}
         value={current.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}

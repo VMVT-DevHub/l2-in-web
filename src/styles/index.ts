@@ -2,6 +2,7 @@ import { device, Theme } from '@aplinkosministerija/design-system';
 import { createGlobalStyle } from 'styled-components';
 
 declare module 'styled-components' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   export interface DefaultTheme extends Theme {}
 }
 
@@ -22,7 +23,7 @@ export enum ButtonVariants {
 }
 
 export const palette = {
-  primary: '#2671D9',
+  primary: '#2671d9',
   secondary: '#C7E6DC',
   tertiary: '#73DC8C',
   danger: '#FE5B78',
