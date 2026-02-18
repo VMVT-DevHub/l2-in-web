@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import styled from 'styled-components';
 import AddButton from '../components/AddButton';
 import { default as Icon, IconName } from '../components/Icons';
+import { useEffect } from 'react';
 
 export const ArrayLayout = ({
   uischema,
@@ -25,10 +26,41 @@ export const ArrayLayout = ({
 }: ArrayLayoutProps) => {
   const ctx = useJsonForms();
   const formData: any[] = resolveData(ctx.core?.data, path);
+  const veikla = ctx.core?.data?.veiklos?.veikla;
+
+  useEffect(() => {
+    const needsUpdate = formData?.some((item) => item.veikla !== veikla);
+
+    if (needsUpdate && handleChange) {
+      const updatedData = formData?.map((item) => ({
+        ...item,
+        veikla,
+      }));
+
+      handleChange(path, updatedData);
+    }
+  }, [veikla, formData?.length]);
 
   if (!visible) return <></>;
 
-  const { detail, addLabel, uniqueFields = [] } = uischema.options || {};
+  const {
+    detail,
+    addLabel,
+    isHorizontal,
+    veiklaIsNeeded,
+    uniqueFields = [],
+  } = uischema.options || {};
+
+  const handleItem = () => {
+    if (veiklaIsNeeded) {
+      const formValues = createDefaultValue(schema, rootSchema);
+      const formwithActionValues = { ...formValues, veikla: veikla };
+
+      addItem(path, formwithActionValues)();
+    } else {
+      addItem(path, createDefaultValue(schema, rootSchema))();
+    }
+  };
 
   const handleRemoveItem = (index: number) => {
     if (removeItems) {
@@ -47,48 +79,50 @@ export const ArrayLayout = ({
   };
 
   return (
-    <MainContainer>
-      {formData?.map((_, i) => {
-        const composePath = composePaths(path, `${i}`);
+    <MainContainer $isHorizontal={isHorizontal}>
+      <ArrayContainer $isHorizontal={isHorizontal}>
+        {formData?.map((_, i) => {
+          const composePath = composePaths(path, `${i}`);
 
-        const handleIconClick = () => {
-          if (enabled) handleRemoveItem(i);
-        };
+          const handleIconClick = () => {
+            if (enabled) handleRemoveItem(i);
+          };
 
-        const schemaCopy = uniqueFields.length ? cloneDeep(schema) : schema;
+          const schemaCopy = uniqueFields.length ? cloneDeep(schema) : schema;
 
-        uniqueFields.forEach((field) => {
-          const fieldSchema = schemaCopy?.properties?.[field];
+          uniqueFields.forEach((field) => {
+            const fieldSchema = schemaCopy?.properties?.[field];
 
-          if (fieldSchema) {
-            fieldSchema.enum = fieldSchema.enum.filter((option) =>
-              isCombinationUnique({ ...formData[i], [field]: option }, i),
-            );
-          }
-        });
-        return (
-          <ItemWrapper key={i}>
-            <JsonFormsDispatch
-              uischema={detail || uischema}
-              enabled={enabled}
-              path={composePath}
-              schema={schemaCopy}
-              cells={cells}
-              renderers={renderers}
-              {...rest}
-            />
-            {enabled ? (
-              <IconContainer onClick={handleIconClick}>
-                <StyledIcon name={IconName.deleteItem} />
-              </IconContainer>
-            ) : (
-              <div />
-            )}
-          </ItemWrapper>
-        );
-      })}
+            if (fieldSchema) {
+              fieldSchema.enum = fieldSchema.enum.filter((option) =>
+                isCombinationUnique({ ...formData[i], [field]: option }, i),
+              );
+            }
+          });
+          return (
+            <ItemWrapper key={i}>
+              <JsonFormsDispatch
+                uischema={detail || uischema}
+                enabled={enabled}
+                path={composePath}
+                schema={schemaCopy}
+                cells={cells}
+                renderers={renderers}
+                {...rest}
+              />
+              {enabled ? (
+                <IconContainer onClick={handleIconClick}>
+                  <StyledIcon name={IconName.deleteItem} />
+                </IconContainer>
+              ) : (
+                <div />
+              )}
+            </ItemWrapper>
+          );
+        })}
+      </ArrayContainer>
       {enabled && (
-        <AddButton onClick={() => addItem(path, createDefaultValue(schema, rootSchema))()}>
+        <AddButton padding={isHorizontal ? '39px 0 0 0' : ''} onClick={handleItem}>
           + {addLabel}
         </AddButton>
       )}
@@ -96,7 +130,14 @@ export const ArrayLayout = ({
   );
 };
 
-const MainContainer = styled.div`
+const ArrayContainer = styled.div<{ $isHorizontal: boolean }>`
+  width: ${({ $isHorizontal }) => ($isHorizontal ? '75%;' : '100%;')};
+`;
+
+const MainContainer = styled.div<{ $isHorizontal: boolean }>`
+  display: ${({ $isHorizontal }) => ($isHorizontal ? 'flex;' : 'block;')};
+  align-items: flex-start;
+  justify-content: space-between;
   width: 100%;
 `;
 

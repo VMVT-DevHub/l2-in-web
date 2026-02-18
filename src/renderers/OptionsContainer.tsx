@@ -2,6 +2,7 @@ import { JSX, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import LoaderComponent from './LoaderComponent';
 import { useKeyAction } from '../utils/hooks';
+import { Tooltip } from '@mui/material';
 
 export interface SelectOption {
   id?: string;
@@ -54,14 +55,6 @@ const OptionsContainer = ({
   const display = showSelect && !disabled;
   const optionsLength = options.length;
   const handleKeyDown = useKeyAction(handleClick);
-  const optionRef = useRef<HTMLDivElement>(null);
-  const [dropdownHeight, setDropdownHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    if (optionRef.current) {
-      setDropdownHeight(optionRef.current.offsetHeight);
-    }
-  }, [optionsLength, loading]);
 
   const renderOptions = () => {
     if (!options.length) {
@@ -81,18 +74,44 @@ const OptionsContainer = ({
           const isActive = activeOptionId === optionId;
 
           return (
-            <Option
-              id={optionId}
-              key={JSON.stringify(option) + index}
-              role="option"
-              tabIndex={0}
-              aria-selected={isActive}
-              onClick={() => handleClick(option)}
-              onMouseOver={() => handleMouseOver(option)}
-              onKeyDown={handleKeyDown(option)}
+            <Tooltip
+              title={description}
+              key={optionId}
+              arrow
+              placement="right"
+              disableInteractive
+              slotProps={{
+                tooltip: {
+                  sx: {
+                    fontSize: '1.3rem',
+                    padding: '8px',
+                  },
+                },
+                popper: {
+                  modifiers: [
+                    {
+                      name: 'offset',
+                      options: {
+                        offset: [0, 10],
+                      },
+                    },
+                  ],
+                },
+              }}
             >
-              {getOptionLabel(option)}
-            </Option>
+              <Option
+                id={optionId}
+                key={JSON.stringify(option) + index}
+                role="option"
+                tabIndex={0}
+                aria-selected={isActive}
+                onClick={() => handleClick(option)}
+                onMouseOver={() => handleMouseOver(option)}
+                onKeyDown={handleKeyDown(option)}
+              >
+                {getOptionLabel(option)}
+              </Option>
+            </Tooltip>
           );
         })}
         {loading && <LoaderComponent />}
@@ -103,23 +122,16 @@ const OptionsContainer = ({
   return (
     <>
       <Wrapper>
-        <OptionContainer
-          $display={display}
-          ref={optionRef}
-          className={className}
-          role="listbox"
-          aria-hidden={!display}
-          aria-disabled={disabled}
-        >
-          {renderOptions()}
-          {observerRef && (
-            <ObserverRef $display={display} ref={observerRef} aria-hidden={!display} />
-          )}
-        </OptionContainer>
-        {description && (
-          <DescriptionPopUp $display={display} $height={dropdownHeight}>
-            {description}
-          </DescriptionPopUp>
+        {display && (
+          <OptionContainer
+            className={className}
+            role="listbox"
+            aria-hidden={!display}
+            aria-disabled={disabled}
+          >
+            {renderOptions()}
+            {observerRef && <ObserverRef ref={observerRef} aria-hidden={!display} />}
+          </OptionContainer>
         )}
       </Wrapper>
       <OptionsLength aria-live="polite" aria-atomic="true">
@@ -134,19 +146,6 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const DescriptionPopUp = styled.div<{ $display: boolean; $height: number }>`
-  display: ${({ $display }) => ($display ? 'block' : 'none')};
-  position: absolute;
-  border-radius: 0.4rem;
-  top: ${({ $height }) => ($height ? `${$height}px` : '210px')};
-  padding: 8px;
-  margin-bottom: 8px;
-  z-index: 40;
-  width: 100%;
-  color: #2463eb;
-  background-color: #f0f4ff;
-`;
-
 const OptionsLength = styled.div`
   position: absolute;
   height: 1px;
@@ -155,8 +154,7 @@ const OptionsLength = styled.div`
   white-space: nowrap;
 `;
 
-const OptionContainer = styled.div<{ $display: boolean }>`
-  display: ${({ $display }) => ($display ? 'block' : 'none')};
+const OptionContainer = styled.div`
   position: absolute;
   z-index: 29;
   width: 100%;
@@ -198,8 +196,6 @@ const Option = styled.div`
   }
 `;
 
-const ObserverRef = styled.div<{ $display: boolean }>`
-  display: ${({ $display }) => ($display ? 'block' : 'none')};
-`;
+const ObserverRef = styled.div``;
 
 export default OptionsContainer;
