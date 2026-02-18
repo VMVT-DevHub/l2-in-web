@@ -54,7 +54,7 @@ export const AddressSelect = (props: ControlProps) => {
       {/* GYV SELECT */}
       <StyledAsyncSelectField
         name="gyvenviete"
-        label="Gyvenvietė"
+        label="Gyvenvietė *"
         error={cleanError}
         placeholder="Pradėkite vesti gyvenvietės pavadinimą"
         disabled={!enabled}
@@ -88,7 +88,7 @@ export const AddressSelect = (props: ControlProps) => {
       {/* ADR SELECT */}
       <StyledAsyncSelectField
         name="adresas"
-        label="Adresas"
+        label="Adresas *"
         error={cleanError}
         disabled={!enabled || !current.gyvId}
         value={
