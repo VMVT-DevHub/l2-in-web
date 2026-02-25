@@ -2,6 +2,7 @@ import { TextField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import { formatError } from '../utils/functions';
 import styled from 'styled-components';
+import { useJsonForms } from '@jsonforms/react';
 
 export const CustomTextRenderer = ({
   data,
@@ -17,10 +18,11 @@ export const CustomTextRenderer = ({
   if (!visible) return <></>;
   const type = schema?.type?.toString() || '';
   const margin = uischema?.options?.margin;
+  const defaultValue = schema?.default;
 
   return (
     <StyledTextField
-      value={data}
+      value={defaultValue ? defaultValue : data}
       onChange={(value) => handleChange(path, value || undefined)}
       label={label}
       error={formatError(errors)}
