@@ -28,21 +28,6 @@ export const ArrayLayout = ({
   const formData: any[] = resolveData(ctx.core?.data, path);
   const veikla = ctx.core?.data?.veiklos?.veikla;
 
-  useEffect(() => {
-    const needsUpdate = formData?.some((item) => item.veikla !== veikla);
-
-    if (needsUpdate && handleChange) {
-      const updatedData = formData?.map((item) => ({
-        ...item,
-        veikla,
-      }));
-
-      handleChange(path, updatedData);
-    }
-  }, [veikla, formData?.length]);
-
-  if (!visible) return <></>;
-
   const {
     detail,
     addLabel,
@@ -50,6 +35,21 @@ export const ArrayLayout = ({
     veiklaIsNeeded,
     uniqueFields = [],
   } = uischema.options || {};
+
+  useEffect(() => {
+    const needsUpdate = formData?.some((item) => item.veikla !== veikla);
+
+    if (veiklaIsNeeded && needsUpdate && handleChange) {
+      const updatedData = formData?.map((item) => ({
+        ...item,
+        veikla,
+      }));
+
+      handleChange(path, updatedData);
+    }
+  }, [veiklaIsNeeded, veikla, formData?.length]);
+
+  if (!visible) return <></>;
 
   const handleItem = () => {
     if (veiklaIsNeeded) {
