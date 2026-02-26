@@ -29,6 +29,7 @@ const Certificates = () => {
     date: 'createdAt',
     status: 'status',
     productNames: 'productNames',
+    animalNames: 'animalNames',
     importingCountry: 'importCountry',
     productAmount: 'importAmount',
   };
@@ -44,14 +45,16 @@ const Certificates = () => {
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
   const mapTableData = (item) => {
     let truncatedProductNames = item?.productNames.join(', ').slice(0, 50);
+    let truncatedAnimalNames = item?.animalNames.join(', ').slice(0, 50);
     truncatedProductNames += truncatedProductNames.length >= 50 ? '...' : '';
+    truncatedAnimalNames += truncatedAnimalNames.length >= 50 ? '...' : '';
     return {
       id: item.id,
       no: `#${item.id}`,
       form: item?.form,
       formTitle: item?.formConfig?.title,
       date: format(item.createdAt, 'yyyy MM dd'),
-      productNames: truncatedProductNames,
+      productNames: truncatedProductNames || truncatedAnimalNames,
       importingCountry: item?.importingCountry,
       productAmount: item?.productAmount.join(', '),
       status: renderStatusTag(item.status),
