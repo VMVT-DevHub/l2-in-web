@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes, slugs } from '../utils/routes';
 import Avatar from './Avatar';
@@ -16,6 +16,8 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   const currentLocation = useLocation();
   const hasProfiles = false;
   const [chosenJAName, setChosenJAName] = useState('');
+  const [currentTab, setCurrentTab] = useState('prasymai');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const foundOrg = user?.roles.orgs.find((org) => org.id === user.activeOrgCode);
@@ -25,11 +27,16 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   if (currentLocation.pathname.includes(slugs.selectOrg)) {
     return (
       <Header className={className}>
-        <div>
-          <TitleRow>
-            <Logo isWhite={true} />
-          </TitleRow>
-        </div>
+        <TitleContainer>
+          <LogoContainer
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            <StyledLogo isWhite={true} />
+            <p>VMVT Eportalas</p>
+          </LogoContainer>
+        </TitleContainer>
         <BottomRow>
           {hasProfiles ? (
             <></>
@@ -37,20 +44,34 @@ const SideBar = ({ className }: ModuleMenuProps) => {
             <ContentContainer>
               <ProfileRow>
                 <InnerRow>
-                  <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
-                  <UserInfo>
+                  <NameInfo>
+                    <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
                     <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
+                  </NameInfo>
+                  <UserInfo>
                     <Email>{user?.email}</Email>
+                    {user?.companyCode ? (
+                      <JAinfo>{`${user.companyName ? user?.companyName : ''} ${
+                        user?.companyCode
+                      } `}</JAinfo>
+                    ) : user?.activeOrgCode ? (
+                      <>
+                        <Email>atstovauja </Email>
+                        <JAinfo>{` ${chosenJAName} ${user?.activeOrgCode}`}</JAinfo>
+                      </>
+                    ) : (
+                      ''
+                    )}
                   </UserInfo>
                 </InnerRow>
 
-                <div
+                <LogOut
                   onClick={() => {
                     logout();
                   }}
                 >
                   <StyledLogoutIcon name={IconName.logout} />
-                </div>
+                </LogOut>
               </ProfileRow>
               {user?.companyCode && <StyledLink to="/sertifikatai">Grįžti atgal</StyledLink>}
             </ContentContainer>
@@ -60,16 +81,16 @@ const SideBar = ({ className }: ModuleMenuProps) => {
     );
   }
 
-  const renderTabs = () => {
+  const renderTabs = (currentTab: string) => {
     return (routes || [])
-      .filter((route) => route.sidebar)
+      .filter((route) => (currentTab == 'prasymai' ? route.sidebar : route.decisions))
       .map((route, index) => {
         const isActive = currentLocation.pathname.includes(route.slug);
 
         return (
-          <Link to={route.slug} key={`${index}-route`}>
+          <StyledTabLink to={route.slug} key={`${index}-route`}>
             <Tab isActive={isActive}>{route.title}</Tab>
-          </Link>
+          </StyledTabLink>
         );
       });
   };
@@ -77,10 +98,28 @@ const SideBar = ({ className }: ModuleMenuProps) => {
   return (
     <Header className={className}>
       <div>
-        <TitleRow>
-          <Logo isWhite={true} />
-        </TitleRow>
-        <Column>{renderTabs()}</Column>
+        <TitleContainer>
+          <LogoContainer onClick={() => navigate('/')}>
+            <StyledLogo isWhite={true} />
+            <p>VMVT Eportalas</p>
+          </LogoContainer>
+          <TitleRow>
+            <StyledButton
+              $isCurrent={currentTab == 'prasymai'}
+              onClick={() => setCurrentTab('prasymai')}
+            >
+              Prašymai
+            </StyledButton>
+            <StyledButton
+              $isCurrent={currentTab == 'sprendimai'}
+              onClick={() => setCurrentTab('sprendimai')}
+            >
+              Sprendimai
+            </StyledButton>
+          </TitleRow>
+        </TitleContainer>
+
+        <Column>{renderTabs(currentTab)}</Column>
       </div>
       <BottomRow>
         {hasProfiles ? (
@@ -89,11 +128,12 @@ const SideBar = ({ className }: ModuleMenuProps) => {
           <ContentContainer>
             <ProfileRow>
               <InnerRow>
-                <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
-                <UserInfo>
+                <NameInfo>
+                  <Avatar name={user?.firstName || ''} surname={user?.lastName || ''} />
                   <FullName>{`${user?.firstName} ${user?.lastName}`}</FullName>
+                </NameInfo>
+                <UserInfo>
                   <Email>{user?.email}</Email>
-
                   {user?.companyCode ? (
                     <JAinfo>{`${user.companyName ? user?.companyName : ''} ${
                       user?.companyCode
@@ -108,14 +148,13 @@ const SideBar = ({ className }: ModuleMenuProps) => {
                   )}
                 </UserInfo>
               </InnerRow>
-
-              <div
+              <LogOut
                 onClick={() => {
                   logout();
                 }}
               >
                 <StyledLogoutIcon name={IconName.logout} />
-              </div>
+              </LogOut>
             </ProfileRow>
             {user?.companyCode && <StyledLink to="/organizacija">Deleguoti asmenis</StyledLink>}
           </ContentContainer>
@@ -127,12 +166,65 @@ const SideBar = ({ className }: ModuleMenuProps) => {
 
 export default SideBar;
 
+const LogOut = styled.div`
+  align-self: flex-end;
+`;
+
+const NameInfo = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+`;
+
+const LogoContainer = styled.div`
+  display: flex;
+  color: #89aad2;
+  font-weight: 600;
+  align-items: center;
+  padding-bottom: 28px;
+  & p {
+    margin: 22px 0 0 10px;
+  }
+  cursor: pointer;
+`;
+
+const StyledLogo = styled(Logo)`
+  padding: 16px 0 0 16px;
+  width: 50px;
+`;
+
+const TitleContainer = styled.div`
+  background-color: #1254a4;
+`;
+
+const StyledButton = styled.button<{ $isCurrent: boolean }>`
+  font-weight: 600;
+  width: 50%;
+  padding: 9px;
+  color: #f7f8fa;
+  color: ${({ $isCurrent }) => ($isCurrent ? '#f7f8fa' : 'rgba(255,255,255,.5)')};
+  font-size: 1.7rem;
+  cursor: pointer;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  background: ${({ $isCurrent, theme }) => ($isCurrent ? theme.colors.primary : '0')};
+  &:hover {
+    color: ${({ $isCurrent }) => ($isCurrent ? '#f7f8fa' : '#f7f8fa')};
+  }
+`;
+
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
   justify-content: end;
   align-items: end;
+`;
+
+const StyledTabLink = styled(Link)`
+  color: white;
+  &:hover {
+  }
 `;
 const StyledLink = styled(Link)`
   color: white;
@@ -144,9 +236,12 @@ const StyledLink = styled(Link)`
 `;
 
 export const Column = styled.div`
+  margin-top: 15px;
   display: flex;
   gap: 8px;
   flex-direction: column;
+  background-color: '#FFFFFF1F';
+  padding: 18px 16px;
 `;
 
 const Header = styled.div`
@@ -156,7 +251,6 @@ const Header = styled.div`
   top: 0;
   width: 300px;
   background-color: ${({ theme }) => theme.colors.primary};
-  padding: 18px 16px;
   height: 100%;
 `;
 
@@ -166,7 +260,7 @@ const StyledLogoutIcon = styled(Icon)`
 `;
 
 const UserInfo = styled.div`
-  margin: 0 20px 0 8px;
+  margin: 8px 20px 0 8px;
 `;
 
 const JAinfo = styled.div`
@@ -191,8 +285,6 @@ const Email = styled.div`
 `;
 
 const InnerRow = styled.div`
-  display: flex;
-  align-items: center;
   cursor: pointer;
 `;
 
@@ -208,12 +300,14 @@ const BottomRow = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 18px 16px;
+  background-color: #1254a4;
 `;
 
 const TitleRow = styled.div`
   display: flex;
   width: 100%;
-  margin-bottom: 30px;
+  padding: 0;
 `;
 
 const Tab = styled.div<{ isActive: boolean }>`

@@ -18,7 +18,7 @@ export const ButtonMultiSelectRerender = ({
 }: ArrayLayoutProps) => {
   const ctx: JsonFormsStateContext = useJsonForms();
   const formData = resolveData(ctx.core?.data, path) || [];
-
+  const allErrors = ctx.core?.errors || [];
   const options = useOptions({ schema, uischema });
   const props = uischema.options?.props;
 

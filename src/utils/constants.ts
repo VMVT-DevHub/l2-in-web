@@ -55,6 +55,7 @@ export const FoodForms = {
 
 export const AnimalForms = {
   CREATE: 'create',
-  UPDATE: 'update',
+  CHANGE: 'change',
   REMOVE: 'remove',
+  RECALL: 'recall',
 };
