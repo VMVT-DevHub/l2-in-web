@@ -23,6 +23,14 @@ export const MultiSelect = ({
   const descriptions = (schema as any)['x-info'];
   const options = useOptions({ schema, uischema });
   const props = uischema.options?.props;
+  const allErrors = ctx.core?.errors || [];
+
+  const fieldErrors = allErrors
+    .filter((e) => e.instancePath === `/${path.replace(/\./g, '/')}` && e.keyword == 'oneOf')
+    .map((e) => e.parentSchema?.errorMessage?.oneOf)
+    .join(', ');
+
+  const combinedErrors = [errors, fieldErrors].filter(Boolean).join(', ');
 
   const handleMouseOver = (option) => {
     if (!descriptions) return;
@@ -35,7 +43,7 @@ export const MultiSelect = ({
     <MultiSelectField
       label={label}
       disabled={!enabled}
-      error={formatError(errors)}
+      error={combinedErrors ? formatError(combinedErrors) : formatError(errors)}
       options={options}
       handleMouseOver={(options) => {
         handleMouseOver(options);

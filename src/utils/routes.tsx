@@ -1,4 +1,5 @@
 import AnimalRequests from '../Pages/AnimalRequests';
+import AnimalRequestsDecisions from '../Pages/AnimalRequestsDecisions';
 import Certificates from '../Pages/Certificates';
 import FoodRequests from '../Pages/FoodRequests';
 import Form from '../Pages/Form';
@@ -9,6 +10,7 @@ const showAllRequests = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
 export const slugs = {
   selectOrg: '/organizacija',
   certificates: `/sertifikatai`,
+  decisions: `/sprendimai`,
   certificateRequest: (form: string, requestId: string) => `/sertifikatai/${form}/${requestId}`,
 
   foodRequests: `/maisto-tvarkymas`,
@@ -59,6 +61,12 @@ export const routes = [
         {
           slug: slugs.animalRequest(':form', ':requestId'),
           component: <Form formType={'animal'} copyEnabled={false} />,
+        },
+        {
+          title: 'Veterinarinės kontrolės objektų sprendimai',
+          slug: slugs.decisions,
+          component: <AnimalRequestsDecisions />,
+          decisions: true,
         },
       ]
     : []),

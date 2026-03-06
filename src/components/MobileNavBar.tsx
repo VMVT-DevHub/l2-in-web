@@ -16,10 +16,25 @@ const MobileNavbar = ({ className }: MobileHeaderInterface) => {
   const navigate = useNavigate();
   const currentLocation = useLocation();
   const { user, logout } = useContext<UserContextType>(UserContext);
+  const [currentTab, setCurrentTab] = useState('prasymai');
 
   const handleNavigate = (slug: string) => {
     navigate(slug);
     setShowMenu(false);
+  };
+
+  const renderTabs = (currentTab: string) => {
+    return (routes || [])
+      .filter((route) => (currentTab == 'prasymai' ? route.sidebar : route.decisions))
+      .map((route, index) => {
+        const isActive = currentLocation.pathname.includes(route.slug);
+
+        return (
+          <StyledTabLink to={route.slug} key={`${index}-route`}>
+            <Tab isActive={isActive}>{route.title}</Tab>
+          </StyledTabLink>
+        );
+      });
   };
 
   return (
@@ -33,28 +48,27 @@ const MobileNavbar = ({ className }: MobileHeaderInterface) => {
         </Header>
       ) : (
         <Container>
-          <div>
-            <SecondRow>
-              <Logo isWhite={true} />
-              <div onClick={() => setShowMenu(false)}>
-                <ExitIcon name={IconName.close} />
-              </div>
-            </SecondRow>
-            {(routes || [])
-              .filter((route) => route.sidebar)
-              .map((route, index) => {
-                const isActive = currentLocation.pathname.includes(route.slug);
-                return (
-                  <Tab
-                    isActive={isActive}
-                    onClick={() => handleNavigate(route.slug)}
-                    key={`tab-${index}`}
-                  >
-                    {route.title}
-                  </Tab>
-                );
-              })}
-          </div>
+          <SecondRow>
+            <StyledLogo isWhite={true} />
+            <TitleRow>
+              <StyledButton
+                $isCurrent={currentTab == 'prasymai'}
+                onClick={() => setCurrentTab('prasymai')}
+              >
+                Prašymai
+              </StyledButton>
+              <StyledButton
+                $isCurrent={currentTab == 'sprendimai'}
+                onClick={() => setCurrentTab('sprendimai')}
+              >
+                Sprendimai
+              </StyledButton>
+            </TitleRow>
+            <div onClick={() => setShowMenu(false)}>
+              <ExitIcon name={IconName.close} />
+            </div>
+          </SecondRow>
+          <Column>{renderTabs(currentTab)}</Column>
           <BottomRow>
             <ProfileRow>
               <Link to={'/profilis'}>
@@ -76,6 +90,41 @@ const MobileNavbar = ({ className }: MobileHeaderInterface) => {
     </>
   );
 };
+
+export const Column = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  background: ${({ theme }) => theme.colors.primary};
+  height: 100%;
+  padding: 48px 16px 0 16px;
+`;
+
+const StyledTabLink = styled(Link)`
+  color: white;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 0;
+`;
+
+const StyledButton = styled.button<{ $isCurrent: boolean }>`
+  font-weight: 600;
+  width: 50%;
+  padding: 9px;
+  color: #f7f8fa;
+  color: ${({ $isCurrent }) => ($isCurrent ? '#f7f8fa' : 'rgba(255,255,255,.5)')};
+  font-size: 1.7rem;
+  cursor: pointer;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  background: ${({ $isCurrent, theme }) => ($isCurrent ? theme.colors.primary : '0')};
+  &:hover {
+    color: ${({ $isCurrent }) => ($isCurrent ? '#f7f8fa' : '#f7f8fa')};
+  }
+`;
 
 const UserInfo = styled.div`
   margin: 0 20px 0 8px;
@@ -116,6 +165,8 @@ const BottomRow = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  padding: 18px 24px;
 `;
 
 const Tab = styled.div<{ isActive: boolean }>`
@@ -143,7 +194,9 @@ const SecondRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 57px;
+  gap: 16px;
+  background-color: #1254a4;
+  padding: 18px 24px 20px 24px;
 `;
 
 const ExitIcon = styled(Icon)`
@@ -169,24 +222,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: #1254a4;
   width: 100%;
   height: 100%;
   position: absolute;
   z-index: 5;
-  padding: 18px 24px;
   overflow-y: auto;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const StyledLogo = styled(Logo)`
   div {
     color: #231f20;
-    margin-bottom: 0;
   }
 `;
 
