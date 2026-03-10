@@ -31,9 +31,9 @@ export const foodReasonLabels = {
 
 export const animalReasonLabels = {
   [AnimalForms.CREATE]: 'Registravimas',
-  [AnimalForms.CHANGE]: 'Tikslinimas',
+  [AnimalForms.EDIT]: 'Tikslinimas',
   [AnimalForms.REMOVE]: 'Panaikinimas',
-  [AnimalForms.RECALL]: 'Atšaukimas',
+  [AnimalForms.RESUME]: 'Atšaukimas',
 };
 
 export const buttonLabels = {
