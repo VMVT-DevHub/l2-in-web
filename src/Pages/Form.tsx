@@ -236,6 +236,33 @@ const Form = ({ formType, copyEnabled }) => {
     },
   );
 
+  const handleFormChange = (data: any) => {
+    // If isnt VKO form, just update values
+    if (!data?.veiklos) {
+      setValues(data);
+      setErrors([]);
+      return;
+    }
+
+    const currentVeikla = data.veiklos?.veikla;
+    const previousVeikla = valuesRef.current?.veiklos?.veikla;
+
+    if (currentVeikla !== previousVeikla) {
+      const updatedVeiklos = Object.fromEntries(
+        Object.entries(data.veiklos).filter(([key]) => {
+          const dependent = VEIKLA_DEPENDENT_FIELDS[key];
+          return !dependent || dependent.includes(currentVeikla);
+        }),
+      );
+
+      setValues({ ...data, veiklos: updatedVeiklos });
+    } else {
+      setValues(data);
+    }
+
+    setErrors([]);
+  };
+
   const copyFormData = (formData: Record<string, unknown>, uischema: any) => {
     const copiedData = cloneDeep(formData);
 
@@ -416,22 +443,7 @@ const Form = ({ formType, copyEnabled }) => {
           renderers={customRenderers}
           cells={materialCells}
           onChange={({ data }) => {
-            const currentVeikla = data?.veiklos?.veikla;
-            const previousVeikla = valuesRef.current?.veiklos?.veikla;
-
-            if (currentVeikla !== previousVeikla) {
-              const updatedVeiklos = Object.fromEntries(
-                Object.entries(data.veiklos).filter(([key]) => {
-                  const dependent = VEIKLA_DEPENDENT_FIELDS[key];
-                  return !dependent || dependent.includes(currentVeikla);
-                }),
-              );
-              setValues({ ...data, veiklos: updatedVeiklos });
-            } else {
-              setValues(data);
-            }
-
-            setErrors([]);
+            handleFormChange(data);
           }}
           validationMode={validationMode}
           ajv={formAjv}
