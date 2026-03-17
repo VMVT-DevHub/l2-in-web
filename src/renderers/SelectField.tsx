@@ -27,6 +27,7 @@ export const SelectFieldRenderer = ({
   const descriptions = (schema as any)['x-info'];
   const value = valueKey ? options.find((item) => item[valueKey] === data) : data;
   const [description, setDescription] = useState('');
+  const defaultValue = schema?.default;
 
   const handleMouseOver = (option) => {
     if (!descriptions) return;
@@ -53,7 +54,7 @@ export const SelectFieldRenderer = ({
         return formatLabel(val, uischema?.options?.labelFormat);
       }}
       options={options}
-      value={value}
+      value={defaultValue ? defaultValue : value}
       error={formatError(errors)}
       disabled={!enabled}
       showError={true}

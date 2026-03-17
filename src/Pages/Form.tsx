@@ -8,7 +8,7 @@ import Ajv, { ErrorObject, KeywordDefinition } from 'ajv';
 import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 import { cloneDeep, unset } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ConfirmPopup from '../components/ConfirmPopup';
@@ -21,6 +21,49 @@ import { StatusTypes } from '../utils/constants';
 import { handleError, handleSuccess, isNew } from '../utils/functions';
 import { localizeErrors } from '../utils/localization';
 import { slugs } from '../utils/routes';
+
+const VEIKLA_DEPENDENT_FIELDS: Record<string, string[]> = {
+  'pasaru-detalizacija-68': ['68'],
+  'pasaru-detalizacija-79': ['79'],
+  detalizacija: ['25', '26', '27', '29', '30', '31', '32', '33', '34', '35', '38', '39', '40'],
+  'transporto-priemones': ['62', '78'],
+  produktai: ['12', '13', '15', '16', '18', '19', '92'],
+  gyvunai: [
+    '55',
+    '73',
+    '97',
+    '98',
+    '48',
+    '71',
+    '77',
+    '93',
+    '01',
+    '51',
+    '63',
+    '13',
+    '92',
+    '22',
+    '43',
+    '44',
+    '46',
+    '47',
+    '75',
+    '91',
+    '23',
+    '57',
+    '72',
+    '87',
+    '101',
+    '102',
+    '59',
+    '60',
+    '61',
+    '24',
+    '95',
+    '80',
+    '64',
+  ],
+};
 
 const getPathTitle = (uiSchema: any, path: string) => {
   if (!uiSchema || !path) return '';
@@ -128,6 +171,12 @@ const Form = ({ formType, copyEnabled }) => {
   const navigate = useNavigate();
   const isNewRequest = isNew(requestId);
 
+  const valuesRef = useRef(values);
+
+  useEffect(() => {
+    valuesRef.current = values;
+  }, [values]);
+
   const { data: formData, isFetching: isFormLoading } = useQuery(
     ['form', formType, form],
     () => api.getFormSchema({ formType, form }),
@@ -186,6 +235,33 @@ const Form = ({ formType, copyEnabled }) => {
       retry: false,
     },
   );
+
+  const handleFormChange = (data: any) => {
+    // If isnt VKO form, just update values
+    if (!data?.veiklos) {
+      setValues(data);
+      setErrors([]);
+      return;
+    }
+
+    const currentVeikla = data.veiklos?.veikla;
+    const previousVeikla = valuesRef.current?.veiklos?.veikla;
+
+    if (currentVeikla !== previousVeikla) {
+      const updatedVeiklos = Object.fromEntries(
+        Object.entries(data.veiklos).filter(([key]) => {
+          const dependent = VEIKLA_DEPENDENT_FIELDS[key];
+          return !dependent || dependent.includes(currentVeikla);
+        }),
+      );
+
+      setValues({ ...data, veiklos: updatedVeiklos });
+    } else {
+      setValues(data);
+    }
+
+    setErrors([]);
+  };
 
   const copyFormData = (formData: Record<string, unknown>, uischema: any) => {
     const copiedData = cloneDeep(formData);
@@ -367,8 +443,7 @@ const Form = ({ formType, copyEnabled }) => {
           renderers={customRenderers}
           cells={materialCells}
           onChange={({ data }) => {
-            setValues(data);
-            setErrors([]);
+            handleFormChange(data);
           }}
           validationMode={validationMode}
           ajv={formAjv}
