@@ -1,3 +1,4 @@
+//@ts-exepct-error
 import { Button, device } from '@aplinkosministerija/design-system';
 import { useState } from 'react';
 import styled from 'styled-components';
