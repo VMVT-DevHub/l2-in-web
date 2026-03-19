@@ -4,7 +4,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/vmvt-devhub/l2-in-web)](https://github.com/vmvt-devhub/l2-in-web/issues)
 [![GitHub stars](https://img.shields.io/github/stars/vmvt-devhub/l2-in-web)](https://github.com/vmvt-devhub/l2-in-web/stargazers)
 
-This repository contains the source code and documentation for the VMVT eksporto prašymai, developed by the Valstybinė maisto ir veterinarijos tarnyba
+This repository contains the source code and documentation for the VMVT eksporto prašymai, developed by the Valstybinė maisto ir veterinarijos tarnyba.
 
 ## Table of Contents
 
