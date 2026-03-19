@@ -37,7 +37,7 @@ const AnimalRequestsDecisions = () => {
     return {
       id: item.id,
       no: `#${item.id}`,
-      date: format(item.date, 'yyyy MM dd'),
+      date: item.date ? format(item.date, 'yyyy MM dd') : '',
       // status: renderStatusTag(item.status),
       actionId: item.action.id,
       actionTitle: item.action.title,

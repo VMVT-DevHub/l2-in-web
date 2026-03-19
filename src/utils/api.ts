@@ -287,7 +287,7 @@ class Api {
 
   getDecisions = async (): Promise<DelegatedUsers[]> => {
     return await this.get({
-      resource: '/decisions/all',
+      resource: 'decisions/all',
     });
   };
 
