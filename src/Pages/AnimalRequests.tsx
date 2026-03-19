@@ -1,4 +1,4 @@
-import { Button, Table } from '@aplinkosministerija/design-system';
+import { Button, SortedColumnsProps, Table } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -10,18 +10,28 @@ import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
 import api from '../utils/api';
 import { animalRequestColumns } from '../utils/columns';
-import { colorsByStatus } from '../utils/constants';
-import { handleError } from '../utils/functions';
+import { colorsByStatus, SortFields } from '../utils/constants';
+import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 
 const AnimalRequests = () => {
   const [searchParams] = useSearchParams();
+  const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
   const params = Object.fromEntries([...searchParams]);
   const { page, pageSize } = params;
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const sortingFields = {
+    no: 'id',
+    reason: 'form',
+    date: 'createdAt',
+    status: 'status',
+    actionPlace: 'actionPlace',
+    action: 'action',
+    submitter: 'createdBy',
+  };
 
   const { data, isLoading: isFormLoading } = useQuery(['animal'], () => api.getAnimalForm(), {
     onError: handleError,
@@ -32,11 +42,15 @@ const AnimalRequests = () => {
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
 
   const mapTableData = (item) => {
+    const truncatedActionPlace = truncateList(item?.actionPlace);
+    const truncatedAction = truncateList(item?.action);
     return {
       id: item.id,
       no: `#${item.id}`,
       reason: animalReasonLabels[item.form],
       date: format(item.createdAt, 'yyyy MM dd'),
+      actionPlace: truncatedActionPlace,
+      action: truncatedAction,
       submitter: `${item.name || ''} ${item.lastName || ''}`,
       status: renderStatusTag(item.status),
       form: item.form,
@@ -45,11 +59,16 @@ const AnimalRequests = () => {
 
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'animalRequests',
-    endpoint: () => api.getAnimalRequests({ query: {}, page, pageSize }),
-    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
-    dependencyArray: [page, pageSize],
+    endpoint: () => api.getAnimalRequests({ query: {}, page, pageSize, sort }),
+    mapData: (list: Request[]) => list?.map((item) => mapTableData(item)),
+    dependencyArray: [page, pageSize, sort],
     enabled: !isFormLoading,
   });
+
+  const handleSorting = ({ key, direction, sortBy = ['id'] }: SortedColumnsProps) => {
+    const prefix = direction === 'desc' ? '-' : '';
+    setSort([`${prefix}${sortingFields[sortBy[0]]}`]);
+  };
 
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
 
@@ -73,6 +92,7 @@ const AnimalRequests = () => {
         onClick={(item: any) => {
           navigate(slugs.animalRequest(item.form, item.id));
         }}
+        onColumnSort={handleSorting}
         showPageSizeDropdown={true}
       />
       <FormSelectModal

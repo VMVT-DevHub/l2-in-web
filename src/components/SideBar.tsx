@@ -7,6 +7,8 @@ import Icon, { IconName } from './Icons';
 import Logo from './Logo';
 import { UserContext, UserContextType } from './UserProvider';
 
+const showDecisionButton = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
+
 interface ModuleMenuProps {
   className?: string;
 }
@@ -34,7 +36,7 @@ const SideBar = ({ className }: ModuleMenuProps) => {
             }}
           >
             <StyledLogo isWhite={true} />
-            <p>VMVT Eportalas</p>
+            <p>VMVT e. portalas</p>
           </LogoContainer>
         </TitleContainer>
         <BottomRow>
@@ -101,7 +103,7 @@ const SideBar = ({ className }: ModuleMenuProps) => {
         <TitleContainer>
           <LogoContainer onClick={() => navigate('/')}>
             <StyledLogo isWhite={true} />
-            <p>VMVT Eportalas</p>
+            <p>VMVT e. portalas</p>
           </LogoContainer>
           <TitleRow>
             <StyledButton
@@ -110,12 +112,14 @@ const SideBar = ({ className }: ModuleMenuProps) => {
             >
               Prašymai
             </StyledButton>
-            <StyledButton
-              $isCurrent={currentTab == 'sprendimai'}
-              onClick={() => setCurrentTab('sprendimai')}
-            >
-              Sprendimai
-            </StyledButton>
+            {showDecisionButton && (
+              <StyledButton
+                $isCurrent={currentTab == 'sprendimai'}
+                onClick={() => setCurrentTab('sprendimai')}
+              >
+                Sprendimai
+              </StyledButton>
+            )}
           </TitleRow>
         </TitleContainer>
 

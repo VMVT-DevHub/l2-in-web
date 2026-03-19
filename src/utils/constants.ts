@@ -59,3 +59,10 @@ export const AnimalForms = {
   REMOVE: 'remove',
   RESUME: 'resume',
 };
+
+export const animalFoodMap = {
+  'Naminiai paukščiai': ['Kiaulės', 'Ūkiniai vabzdžiai'],
+  Kiaulės: ['Naminiai paukščiai', 'Ūkiniai vabzdžiai'],
+  'Akvakultūros gyvūnai, naminiai paukščiai ir kiaulės': ['Ūkiniai vabzdžiai'],
+  'Akvakultūros gyvūnai': ['Neatrajotojai', 'Ūkiniai vabzdžiai'],
+};

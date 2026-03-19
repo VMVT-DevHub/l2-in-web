@@ -44,8 +44,14 @@ jobs:
       run: |
         response=$(curl -s $API_URL1)
         echo "Response Web1: $response"
+        if [ "$response" != "Ok" ]; then
+          exit 1
+        fi
         response=$(curl -s $API_URL2)
         echo "Response Web2: $response"
+        if [ "$response" != "Ok" ]; then
+          exit 1
+        fi
       env:
         API_URL1: ${{ secrets.TRIGGER_PROD1 }}
         API_URL2: ${{ secrets.TRIGGER_PROD2 }}

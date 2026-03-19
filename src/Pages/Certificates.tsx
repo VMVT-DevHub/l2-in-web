@@ -12,7 +12,7 @@ import { Request } from '../types';
 import api from '../utils/api';
 import { certificateColumns } from '../utils/columns';
 import { colorsByStatus, SortFields } from '../utils/constants';
-import { handleError } from '../utils/functions';
+import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
@@ -133,14 +133,9 @@ const Certificates = () => {
 
   const renderStatusTag = (status: any) =>
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
-
-  const mapTableData = (item: any) => {
-    let truncatedProductNames = item?.productNames?.join?.(', ')?.slice?.(0, 50) ?? '';
-    let truncatedAnimalNames = item?.animalNames?.join?.(', ')?.slice?.(0, 50) ?? '';
-
-    truncatedProductNames += truncatedProductNames.length >= 50 ? '...' : '';
-    truncatedAnimalNames += truncatedAnimalNames.length >= 50 ? '...' : '';
-
+  const mapTableData = (item) => {
+    const truncatedProductNames = truncateList(item?.productNames);
+    const truncatedAnimalNames = truncateList(item?.animalNames);
     return {
       id: item.id,
       no: `#${item.id}`,

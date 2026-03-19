@@ -253,10 +253,11 @@ class Api {
     query,
     page,
     pageSize,
-  }: Pick<GetAll, 'query' | 'page' | 'pageSize'>): Promise<GetAllResponse<Request>> => {
+    sort = [SortFields.CREATED_AT],
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize' | 'sort'>): Promise<GetAllResponse<Request>> => {
     return await this.get({
       resource: 'reports/animal',
-      sort: [SortFields.CREATED_AT],
+      sort,
       query,
       page,
       pageSize,
@@ -281,6 +282,12 @@ class Api {
   getDelegatedUsers = async (): Promise<DelegatedUsers[]> => {
     return await this.get({
       resource: 'auth/delegate/org/users',
+    });
+  };
+
+  getDecisions = async (): Promise<DelegatedUsers[]> => {
+    return await this.get({
+      resource: '/decisions/all',
     });
   };
 

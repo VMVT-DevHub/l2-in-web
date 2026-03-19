@@ -11,7 +11,7 @@ const Login = () => {
       <StyledIcon name={IconName.logoLogin} />
       <InnerContainer>
         <Description>
-          Valstybinės maisto ir veterinarijos tarnybos <b>ePortalas</b> – Jūsų patogi prieiga prie
+          Valstybinės maisto ir veterinarijos tarnybos <b>e. portalas</b> – Jūsų patogi prieiga prie
           paslaugų!
         </Description>
       </InnerContainer>

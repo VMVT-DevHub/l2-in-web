@@ -9,7 +9,7 @@ import FullscreenLoader from '../components/FullscreenLoader';
 import StatusTag from '../components/StatusTag';
 import TableWrapper from '../components/TableWrapper';
 import api from '../utils/api';
-import { animalRequestColumns } from '../utils/columns';
+import { animalDecisionColumns, animalRequestColumns } from '../utils/columns';
 import { colorsByStatus } from '../utils/constants';
 import { handleError } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
@@ -23,7 +23,9 @@ const AnimalRequestsDecisions = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const { data, isLoading: isFormLoading } = useQuery(['animal'], () => api.getAnimalForm(), {
+  const { data, isLoading: isFormLoading } = useQuery({
+    queryKey: ['decision'],
+    queryFn: () => api.getDecisions(),
     onError: handleError,
     refetchOnWindowFocus: false,
   });
@@ -35,18 +37,18 @@ const AnimalRequestsDecisions = () => {
     return {
       id: item.id,
       no: `#${item.id}`,
-      reason: animalReasonLabels[item.form],
-      date: format(item.createdAt, 'yyyy MM dd'),
-      submitter: `${item.name || ''} ${item.lastName || ''}`,
-      status: renderStatusTag(item.status),
-      form: item.form,
+      date: format(item.date, 'yyyy MM dd'),
+      // status: renderStatusTag(item.status),
+      actionId: item.action.id,
+      actionTitle: item.action.title,
     };
   };
 
   const { tableData, loading: isTableLoading } = useTableData({
-    name: 'animalRequests',
-    endpoint: () => api.getAnimalRequests({ query: {}, page, pageSize }),
-    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
+    name: 'decision',
+    // endpoint: () => api.getDecisions({ query: {}, page, pageSize }),
+    endpoint: () => api.getDecisions(),
+    mapData: (list: Request[]) => list?.map((item) => mapTableData(item)),
     dependencyArray: [page, pageSize],
     enabled: !isFormLoading,
   });
@@ -60,7 +62,7 @@ const AnimalRequestsDecisions = () => {
         loading={isTableLoading}
         notFoundInfo={{ text: 'Nėra sukurtų prašymų', onClick: () => {} }}
         data={tableData}
-        columns={animalRequestColumns}
+        columns={animalDecisionColumns}
         onClick={(item: any) => {
           //   navigate(slugs.animalRequest(item.form, item.id));
         }}

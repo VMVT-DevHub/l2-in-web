@@ -44,5 +44,8 @@ jobs:
         api_url=$API_URL
         response=$(curl -s $api_url)
         echo "Response: $response"
+        if [ "$response" != "Ok" ]; then
+          exit 1
+        fi
       env:
         API_URL: ${{ secrets.TRIGGER_TEST }}

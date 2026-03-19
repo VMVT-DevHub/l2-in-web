@@ -20,8 +20,16 @@ export const foodRequestColumns = {
 export const animalRequestColumns = {
   no: { show: true, label: 'Prašymo Nr.' },
   reason: { show: true, label: 'Tikslas' },
-  subject: { show: true, label: 'VKO subjektas' },
+  actionPlace: { show: true, label: 'Veiklavietės pavadinimas' },
+  action: { show: true, label: 'Veikla' },
   date: { show: true, label: 'Data' },
   submitter: { show: true, label: 'Pateikė' },
   status: { show: true, label: 'Būsena' },
+};
+
+export const animalDecisionColumns = {
+  no: { show: true, label: 'Prašymo Nr.' },
+  actionId: { show: true, label: 'Veiklos Nr.' },
+  actionTitle: { show: true, label: 'Veikla' },
+  date: { show: true, label: 'Data' },
 };

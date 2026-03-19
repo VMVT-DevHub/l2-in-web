@@ -27,7 +27,7 @@ export const slugs = {
 
 export const routes = [
   {
-    title: 'Sertifikatai',
+    title: 'Eksporto sertifikatai',
     slug: slugs.certificates,
     component: <Certificates />,
     sidebar: true,
