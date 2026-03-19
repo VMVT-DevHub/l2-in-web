@@ -69,7 +69,9 @@ interface TableDataProp {
 }
 
 export const useTableData = ({ endpoint, mapData, dependencyArray, name }: TableDataProp) => {
-  const { isFetching, data } = useQuery([name, ...dependencyArray], () => endpoint(), {
+  const { isFetching, data } = useQuery({
+    queryKey: [name, ...dependencyArray],
+    queryFn: () => endpoint(),
     onError: () => {
       handleError();
     },
@@ -77,7 +79,7 @@ export const useTableData = ({ endpoint, mapData, dependencyArray, name }: Table
 
   return {
     tableData: {
-      data: mapData(data?.rows || []),
+      data: mapData(data?.rows || data || []),
       totalPages: data?.totalPages || 1,
     },
     loading: isFetching,

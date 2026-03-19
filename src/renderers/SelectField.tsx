@@ -25,6 +25,7 @@ export const SelectFieldRenderer = ({
   const clearOnChange = handleClearOnChange({ uischema, path, handleChange });
   const valueKey = uischema?.options?.value;
   const descriptions = (schema as any)['x-info'];
+  const needManualIDs = (schema as any)['x-need-ids'];
   const value = valueKey ? options.find((item) => item[valueKey] === data) : data;
   const [description, setDescription] = useState('');
   const defaultValue = schema?.default;
@@ -41,7 +42,15 @@ export const SelectFieldRenderer = ({
   return (
     <SelectField
       onChange={(value = '') => {
-        handleChange(path, valueKey ? value?.[valueKey] : value);
+        const val = valueKey ? value?.[valueKey] : value;
+        handleChange(path, val);
+        const enumValues = schema?.enum || [];
+        const id = enumValues.indexOf(val) + 1;
+
+        if (needManualIDs) {
+          handleChange(`${path}-id`, id);
+        }
+
         clearOnChange();
         setOnChange(value);
       }}

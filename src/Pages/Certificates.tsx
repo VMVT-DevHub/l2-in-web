@@ -12,7 +12,7 @@ import { Request } from '../types';
 import api from '../utils/api';
 import { certificateColumns } from '../utils/columns';
 import { colorsByStatus, SortFields } from '../utils/constants';
-import { handleError } from '../utils/functions';
+import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
@@ -44,10 +44,8 @@ const Certificates = () => {
   const renderStatusTag = (status) =>
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
   const mapTableData = (item) => {
-    let truncatedProductNames = item?.productNames.join(', ').slice(0, 50);
-    let truncatedAnimalNames = item?.animalNames.join(', ').slice(0, 50);
-    truncatedProductNames += truncatedProductNames.length >= 50 ? '...' : '';
-    truncatedAnimalNames += truncatedAnimalNames.length >= 50 ? '...' : '';
+    const truncatedProductNames = truncateList(item?.productNames);
+    const truncatedAnimalNames = truncateList(item?.animalNames);
     return {
       id: item.id,
       no: `#${item.id}`,
@@ -63,7 +61,7 @@ const Certificates = () => {
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'certificateRequests',
     endpoint: () => api.getCertificateRequests({ query: {}, page, pageSize, sort }),
-    mapData: (list: Request[]) => list.map((item) => mapTableData(item)),
+    mapData: (list: Request[]) => list?.map((item) => mapTableData(item)),
     dependencyArray: [page, pageSize, sort],
     enabled: !isFormLoading,
   });

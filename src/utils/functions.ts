@@ -165,3 +165,10 @@ export const getFilteredOptions = (
     const label = getOptionLabel(option)?.toString().toLowerCase();
     return label?.includes(input.toLowerCase());
   });
+
+export function truncateList(list?: string[] | string, maxLength = 50): string {
+  if (!list) return '';
+  const str = typeof list === 'string' ? list : list.join(', ');
+
+  return str.length > maxLength ? `${str.slice(0, maxLength)}...` : str;
+}
