@@ -32,6 +32,7 @@ export const MultiSelect = ({
   useEffect(() => {
     if (isAnimalField && animal) {
       setFilteredOptions(animalFoodMap[animal]);
+      handleChange(path, []);
     }
   }, [animal]);
 

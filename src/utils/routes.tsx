@@ -1,6 +1,7 @@
 import AnimalRequests from '../Pages/AnimalRequests';
 import AnimalRequestsDecisions from '../Pages/AnimalRequestsDecisions';
 import Certificates from '../Pages/Certificates';
+import Decisions from '../Pages/Decisions';
 import FoodRequests from '../Pages/FoodRequests';
 import Form from '../Pages/Form';
 import JAselection from '../Pages/JAselection';
@@ -23,6 +24,8 @@ export const slugs = {
   profile: '/profilis',
   cantLogin: '/negalima-jungtis',
   login: '/prisijungimas',
+
+  decision: (type: string, decisionId: string) => `/sprendimai/${type}/${decisionId}`,
 };
 
 export const routes = [
@@ -60,13 +63,17 @@ export const routes = [
         },
         {
           slug: slugs.animalRequest(':form', ':requestId'),
-          component: <Form formType={'animal'} copyEnabled={false} />,
+          component: <Form formType={'animal'} copyEnabled={true} />,
         },
         {
           title: 'Veterinarinės kontrolės objektų sprendimai',
           slug: slugs.decisions,
           component: <AnimalRequestsDecisions />,
           decisions: true,
+        },
+        {
+          slug: slugs.decision(':type', ':decisionId'),
+          component: <Decisions />,
         },
       ]
     : []),
