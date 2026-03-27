@@ -26,6 +26,9 @@ export enum StatusTypes {
   REJECTED = 'REJECTED',
   DRAFT = 'DRAFT',
   COMPLETED = 'COMPLETED',
+  TEMP_APPROVED = 'TEMPORARY_APPROVED',
+  ACCEPTED = 'ACCEPTED',
+  DECIDING = 'DECIDING',
 }
 
 export enum FormTypes {
@@ -45,6 +48,9 @@ export const colorsByStatus = {
   [StatusTypes.COMPLETED]: TagColors.GREEN,
   [StatusTypes.RETURNED]: TagColors.ORANGE,
   [StatusTypes.REJECTED]: TagColors.PINK,
+  [StatusTypes.TEMP_APPROVED]: TagColors.ORANGE,
+  [StatusTypes.ACCEPTED]: TagColors.GREEN,
+  [StatusTypes.DECIDING]: TagColors.BLUE,
 };
 
 export const FoodForms = {

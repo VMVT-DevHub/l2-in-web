@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'universal-cookie';
-import { DelegatedUsers, Form, Request, User } from '../types';
+import { Decisions, DelegatedUsers, Form, Request, User } from '../types';
 import { SortFields } from './constants';
 
 type certType = 'ser' | 'vet';
@@ -288,6 +288,13 @@ class Api {
   getDecisions = async (): Promise<DelegatedUsers[]> => {
     return await this.get({
       resource: 'decisions/all',
+    });
+  };
+
+  getDetailedDecision = async (id: string): Promise<Decisions> => {
+    return await this.get({
+      resource: `decisions`,
+      id,
     });
   };
 

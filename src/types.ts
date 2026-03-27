@@ -30,6 +30,54 @@ export interface DelegatedUsers {
   userName: string;
 }
 
+export interface Decisions {
+  id?: number;
+  type?: {
+    id?: number;
+    title?: string;
+  };
+  status?: {
+    id?: number;
+    title?: string;
+  };
+  result?: {
+    id?: number;
+    title?: string;
+  };
+  action?: {
+    id?: number;
+    title?: string;
+    placeTitle?: string;
+    address?: string;
+    adrAob?: string;
+    adrSwg?: string;
+  };
+  parent?: {
+    id?: number;
+    title?: string;
+  };
+  decision?: {
+    title?: string;
+    titleId?: number;
+    date?: Date;
+    docNo?: string;
+    regNo?: string;
+  };
+  creator?: {
+    name?: string;
+    department?: string;
+  };
+  decider?: {
+    name?: string;
+    department?: string;
+  };
+  reqId?: number;
+  vkoId?: number;
+  reason?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  modifUser?: string;
+}
 export interface FormHistory {
   type: HistoryTypes;
   comment: string;

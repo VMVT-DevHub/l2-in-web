@@ -11,7 +11,7 @@ import TableWrapper from '../components/TableWrapper';
 import api from '../utils/api';
 import { animalDecisionColumns, animalRequestColumns } from '../utils/columns';
 import { colorsByStatus } from '../utils/constants';
-import { handleError } from '../utils/functions';
+import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { animalReasonLabels, requestStatusLabels } from '../utils/text';
@@ -30,17 +30,26 @@ const AnimalRequestsDecisions = () => {
     refetchOnWindowFocus: false,
   });
 
+  console.log(data);
+
   const renderStatusTag = (status) =>
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
 
   const mapTableData = (item) => {
+    const truncatedAddress = truncateList(item?.address);
+    const truncatedActionTitle = truncateList(item?.action.title);
+
     return {
       id: item.id,
       no: `#${item.id}`,
+      type: item.type,
+      typeId: item.typeId,
+      actionPlaceTitle: item.actionPlaceTitle,
+      address: truncatedAddress,
+      actionTitle: truncatedActionTitle,
       date: item.date ? format(item.date, 'yyyy MM dd') : '',
-      // status: renderStatusTag(item.status),
-      actionId: item.action.id,
-      actionTitle: item.action.title,
+      decider: item.decider,
+      status: renderStatusTag(item.status),
     };
   };
 
@@ -64,7 +73,7 @@ const AnimalRequestsDecisions = () => {
         data={tableData}
         columns={animalDecisionColumns}
         onClick={(item: any) => {
-          //   navigate(slugs.animalRequest(item.form, item.id));
+          navigate(slugs.decision(item.typeId, item.id));
         }}
         showPageSizeDropdown={true}
       />
