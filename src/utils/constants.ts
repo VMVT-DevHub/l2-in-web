@@ -51,6 +51,14 @@ export const colorsByStatus = {
   [StatusTypes.TEMP_APPROVED]: TagColors.ORANGE,
   [StatusTypes.ACCEPTED]: TagColors.GREEN,
   [StatusTypes.DECIDING]: TagColors.BLUE,
+  '1': TagColors.BLUE,
+  '2': TagColors.BLUE,
+  '3': TagColors.GREEN,
+  '4': TagColors.PINK,
+  '5': TagColors.PINK,
+  '6': TagColors.ORANGE,
+  '7': TagColors.BLUE,
+  '8': TagColors.GREEN,
 };
 
 export const FoodForms = {

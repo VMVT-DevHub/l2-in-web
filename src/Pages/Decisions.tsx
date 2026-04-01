@@ -18,14 +18,17 @@ const Decisions = () => {
     queryFn: () => api.getDetailedDecision(decisionId),
   });
   const type = data?.decision?.titleId || 0;
+  const variant = data?.type?.id || 0;
 
   const titles = {
     0: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto',
     1: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto patvirtinimo / registravimo',
-    2: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto panaikinimo / sustabdymo / sustabdymo panaikinimo',
+    2: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto panaikinimo / sustabdymo',
     3: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto sustabdymo panaikinimo',
     4: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto duomenų keitimo',
   };
+
+  console.log(variant);
 
   if (status == 'loading') return <Loader />;
 
@@ -54,36 +57,34 @@ const Decisions = () => {
         ]}
       />
       <Group
-        title={
-          type == 1
-            ? 'Administracinio sprendimo duomenys'
-            : 'Atsakingojo / įgaliotojo asmens ir prašymo duomenys'
-        }
+        title={type == 1 ? 'Administracinio sprendimo duomenys' : 'Duomenys apie prašymą'}
         questions={[
           'Dokumento data',
           'Dokumento numeris',
-          type == 1 ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
-          type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
-          type == 4 ? 'Veiksmas' : '',
-          type == 4 ? 'Terminas iki' : '',
+          variant == 1 || variant == 2 ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
+          type == 2 || type == 3 || type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
+          type == 2 || type == 3 ? 'Veiksmas' : '',
+          type == 2 || type == 3 ? 'Terminas iki' : '',
+          type == 4 ? 'Duomenų keitimo tipas' : '',
         ]}
         answers={[
           data?.decision?.date ? format(new Date(data.decision.date), 'yyyy-MM-dd') : '-',
           data?.decision?.docNo || '-',
-          type == 1 ? data?.decision?.regNo || '-' : '',
+          variant == 1 || variant == 2 ? data?.decision?.regNo || '-' : '',
           type == 2 || type == 3 || type == 4 ? '-' : '',
-          type == 2 || type == 3 || type == 4 ? '-' : '',
-          type == 2 || type == 3 || type == 4 ? '-' : '',
+          type == 2 || type == 3 ? '-' : '',
+          type == 2 || type == 3 ? '-' : '',
+          type == 4 ? '-' : '',
         ]}
       />
       <GroupParagraph
         title={'Motyvuotas atsisakymas'}
-        display={type == 2 && (data?.result?.id == 1 || data?.result?.id == 2)}
+        display={type == 1 && variant == 3}
         text={'Trūksta'}
       />
       <GroupParagraph
         title={'Administracinio sprendimo teisinis pagrindas'}
-        text={data?.result?.id == 3 ? 'Trūksta' : paragraphs.legalBasis}
+        text={type == 1 && (variant == 1 || variant == 2) ? paragraphs.legalBasis : 'Trūksta'}
       />
       <GroupParagraph title={'Apskundimo tvarka'} text={paragraphs.complaintInfo} />
       <Group
