@@ -25,7 +25,7 @@ export const slugs = {
   cantLogin: '/negalima-jungtis',
   login: '/prisijungimas',
 
-  decision: (type: string, decisionId: string) => `/sprendimai/${type}/${decisionId}`,
+  decision: (decisionId: string) => `/sprendimai/${decisionId}`,
 };
 
 export const routes = [
@@ -72,7 +72,7 @@ export const routes = [
           decisions: true,
         },
         {
-          slug: slugs.decision(':type', ':decisionId'),
+          slug: slugs.decision(':decisionId'),
           component: <Decisions />,
         },
       ]

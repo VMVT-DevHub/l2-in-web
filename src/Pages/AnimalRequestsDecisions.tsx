@@ -14,7 +14,7 @@ import { colorsByStatus } from '../utils/constants';
 import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
-import { animalReasonLabels, requestStatusLabels } from '../utils/text';
+import { animalReasonLabels, decisionsStatusLabels, requestStatusLabels } from '../utils/text';
 
 const AnimalRequestsDecisions = () => {
   const [searchParams] = useSearchParams();
@@ -25,15 +25,13 @@ const AnimalRequestsDecisions = () => {
 
   const { data, isLoading: isFormLoading } = useQuery({
     queryKey: ['decision'],
-    queryFn: () => api.getDecisions(),
+    queryFn: () => api.getDecisions({ page, pageSize }),
     onError: handleError,
     refetchOnWindowFocus: false,
   });
 
-  console.log(data);
-
   const renderStatusTag = (status) =>
-    status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
+    status && <StatusTag label={decisionsStatusLabels[status]} color={colorsByStatus[status]} />;
 
   const mapTableData = (item) => {
     const truncatedAddress = truncateList(item?.address);
@@ -55,8 +53,11 @@ const AnimalRequestsDecisions = () => {
 
   const { tableData, loading: isTableLoading } = useTableData({
     name: 'decision',
-    // endpoint: () => api.getDecisions({ query: {}, page, pageSize }),
-    endpoint: () => api.getDecisions(),
+    endpoint: () =>
+      api.getDecisions({
+        page,
+        pageSize,
+      }),
     mapData: (list: Request[]) => list?.map((item) => mapTableData(item)),
     dependencyArray: [page, pageSize],
     enabled: !isFormLoading,
@@ -73,7 +74,7 @@ const AnimalRequestsDecisions = () => {
         data={tableData}
         columns={animalDecisionColumns}
         onClick={(item: any) => {
-          navigate(slugs.decision(item.typeId, item.id));
+          navigate(slugs.decision(item.id));
         }}
         showPageSizeDropdown={true}
       />

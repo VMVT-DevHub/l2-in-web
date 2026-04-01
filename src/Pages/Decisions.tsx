@@ -12,23 +12,22 @@ import { format, formatDate } from 'date-fns';
 import { formatDateAndTime } from '../utils/format';
 
 const Decisions = () => {
-  const { type = '1', decisionId = '' } = useParams();
+  const { decisionId = '' } = useParams();
   const { status, data, error } = useQuery({
     queryKey: ['detailedDecision'],
     queryFn: () => api.getDetailedDecision(decisionId),
   });
-  // const decision
-  //nenaudojam type is params, naudojam spren_prasymo_pavad_id!!
+  const type = data?.decision?.titleId || 0;
+
   const titles = {
+    0: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto',
     1: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto patvirtinimo / registravimo',
     2: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto panaikinimo / sustabdymo / sustabdymo panaikinimo',
-    3: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto panaikinimo / sustabdymo / sustabdymo panaikinimo',
+    3: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto sustabdymo panaikinimo',
     4: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto duomenų keitimo',
   };
 
   if (status == 'loading') return <Loader />;
-  console.log(data);
-  console.log(error);
 
   return (
     <DecisionsContainer>
@@ -55,21 +54,31 @@ const Decisions = () => {
         ]}
       />
       <Group
-        title={'Administracinio sprendimo duomenys'}
+        title={
+          type == 1
+            ? 'Administracinio sprendimo duomenys'
+            : 'Atsakingojo / įgaliotojo asmens ir prašymo duomenys'
+        }
         questions={[
           'Dokumento data',
           'Dokumento numeris',
-          type == '1' ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
+          type == 1 ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
+          type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
+          type == 4 ? 'Veiksmas' : '',
+          type == 4 ? 'Terminas iki' : '',
         ]}
         answers={[
           data?.decision?.date ? format(new Date(data.decision.date), 'yyyy-MM-dd') : '-',
           data?.decision?.docNo || '-',
-          type == '1' ? data?.decision?.regNo || '-' : '',
+          type == 1 ? data?.decision?.regNo || '-' : '',
+          type == 2 || type == 3 || type == 4 ? '-' : '',
+          type == 2 || type == 3 || type == 4 ? '-' : '',
+          type == 2 || type == 3 || type == 4 ? '-' : '',
         ]}
       />
       <GroupParagraph
         title={'Motyvuotas atsisakymas'}
-        display={type == '2' && (data?.result?.id == 1 || data?.result?.id == 2)}
+        display={type == 2 && (data?.result?.id == 1 || data?.result?.id == 2)}
         text={'Trūksta'}
       />
       <GroupParagraph

@@ -264,6 +264,21 @@ class Api {
     });
   };
 
+  getDecisions = async ({
+    query,
+    page,
+    pageSize,
+    sort = [SortFields.CREATED_AT],
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize' | 'sort'>): Promise<GetAllResponse<Request>> => {
+    return await this.get({
+      resource: 'decisions/all',
+      sort,
+      query,
+      page,
+      pageSize,
+    });
+  };
+
   getRequestHistory = async ({ page, pageSize, id }: any) =>
     await this.get({
       resource: `requests/${id}/history`,
@@ -282,12 +297,6 @@ class Api {
   getDelegatedUsers = async (): Promise<DelegatedUsers[]> => {
     return await this.get({
       resource: 'auth/delegate/org/users',
-    });
-  };
-
-  getDecisions = async (): Promise<DelegatedUsers[]> => {
-    return await this.get({
-      resource: 'decisions/all',
     });
   };
 
