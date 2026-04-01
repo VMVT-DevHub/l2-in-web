@@ -40,14 +40,14 @@ const AnimalRequestsDecisions = () => {
     return {
       id: item.id,
       no: `#${item.id}`,
-      type: item.type,
-      typeId: item.typeId,
+      type: item.decisionTitle,
+      typeId: item.decisionTitleId,
       actionPlaceTitle: item.actionPlaceTitle,
       address: truncatedAddress,
       actionTitle: truncatedActionTitle,
       date: item.date ? format(item.date, 'yyyy MM dd') : '',
       decider: item.decider,
-      status: renderStatusTag(item.status),
+      status: renderStatusTag(item.statusId),
     };
   };
 

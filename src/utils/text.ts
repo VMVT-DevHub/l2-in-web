@@ -21,9 +21,24 @@ export const animalStatusLabels = {
 };
 
 export const decisionsStatusLabels = {
-  [StatusTypes.APPROVED]: 'Suteiktas',
-  [StatusTypes.REJECTED]: 'Atmestas',
-  [StatusTypes.TEMP_APPROVED]: 'Laikinai patvirtintas',
+  '1': 'Pildoma',
+  '2': 'Pateikta',
+  '3': 'Suteikta',
+  '4': 'Atmesta',
+  '5': 'Panaikinta',
+  '6': 'Sustabdyta',
+  '7': 'Pakeista',
+  '8': 'Aktyvus',
+};
+
+export const decisionTypes = {
+  '1': 'Registravimas', //(Kai type 1)
+  '2': 'Patvirtinimas', //(Kai type 1)
+  '3': 'Atmetimas', //(Kai type 1, 3, 4)
+  '4': 'Panaikinimas', //(Kai type 2)
+  '5': 'Sustabdymas', //(Kai type 2)
+  '6': 'Keitimas', //(Kai type 4)
+  '7': 'Aktyvavimas', //(Kai type 4)
 };
 
 export const requestFormHistoryDescriptions = {
