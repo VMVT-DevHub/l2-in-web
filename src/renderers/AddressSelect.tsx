@@ -56,7 +56,7 @@ export const AddressSelect = (props: ControlProps) => {
         name="gyvenviete"
         label="Gyvenvietė *"
         error={cleanError}
-        placeholder="Pradėkite vesti gyvenvietės pavadinimą"
+        placeholder="Pradėkite vesti"
         disabled={!enabled}
         value={current.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}

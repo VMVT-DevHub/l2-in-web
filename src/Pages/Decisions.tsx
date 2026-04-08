@@ -28,8 +28,6 @@ const Decisions = () => {
     4: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto duomenų keitimo',
   };
 
-  console.log(variant);
-
   if (status == 'loading') return <Loader />;
 
   return (
@@ -80,7 +78,7 @@ const Decisions = () => {
       <GroupParagraph
         title={'Motyvuotas atsisakymas'}
         display={type == 1 && variant == 3}
-        text={'Trūksta'}
+        text={data?.reason || ''}
       />
       <GroupParagraph
         title={'Administracinio sprendimo teisinis pagrindas'}
