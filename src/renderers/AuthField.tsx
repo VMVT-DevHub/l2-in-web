@@ -17,7 +17,7 @@ export const CustomAthFieldRenderer = ({
   const { user } = useContext<UserContextType>(UserContext);
   const key = uischema.options?.key;
   const isHidden = uischema.options?.hidden;
-  const value = user?.[key];
+  const value = String(user?.[key]);
 
   const displayValue = typeof data === 'number' ? String(data) : data;
 
