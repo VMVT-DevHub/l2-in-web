@@ -10,9 +10,15 @@ import GroupParagraph from '../components/GroupParagraph';
 import { paragraphs } from '../utils/text';
 import { format, formatDate } from 'date-fns';
 import { formatDateAndTime } from '../utils/format';
+import { useContext } from 'react';
+import { UserContext, UserContextType } from '../components/UserProvider';
 
 const Decisions = () => {
   const { decisionId = '' } = useParams();
+  const { user } = useContext<UserContextType>(UserContext);
+
+  const userName = `${user?.firstName} ${user?.lastName}`;
+
   const { status, data, error } = useQuery({
     queryKey: ['detailedDecision'],
     queryFn: () => api.getDetailedDecision(decisionId),
@@ -48,7 +54,7 @@ const Decisions = () => {
           'Veiklos pavadinimas',
         ]}
         answers={[
-          '-',
+          data?.parent?.title || userName,
           data?.action?.placeTitle || '-',
           data?.action?.address || '-',
           data?.action?.title || '-',
@@ -82,7 +88,7 @@ const Decisions = () => {
       />
       <GroupParagraph
         title={'Administracinio sprendimo teisinis pagrindas'}
-        text={type == 1 && (variant == 1 || variant == 2) ? paragraphs.legalBasis : 'Trūksta'}
+        text={type == 1 && (variant == 1 || variant == 2) ? paragraphs.legalBasis : '-'}
       />
       <GroupParagraph title={'Apskundimo tvarka'} text={paragraphs.complaintInfo} />
       <Group

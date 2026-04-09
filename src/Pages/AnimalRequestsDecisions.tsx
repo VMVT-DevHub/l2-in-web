@@ -70,7 +70,7 @@ const AnimalRequestsDecisions = () => {
       <TableButtonsRow></TableButtonsRow>
       <Table
         loading={isTableLoading}
-        notFoundInfo={{ text: 'Nėra sukurtų prašymų', onClick: () => {} }}
+        notFoundInfo={{ text: 'Nėra sukurtų sprendimų', onClick: () => {} }}
         data={tableData}
         columns={animalDecisionColumns}
         onClick={(item: any) => {
