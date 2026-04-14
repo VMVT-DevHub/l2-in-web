@@ -40,7 +40,7 @@ export interface Decisions {
     id?: number;
     title?: string;
   };
-  result?: {
+  subType?: {
     id?: number;
     title?: string;
   };
@@ -63,17 +63,17 @@ export interface Decisions {
     docNo?: string;
     regNo?: string;
   };
-  creator?: {
-    name?: string;
-    department?: string;
-  };
-  decider?: {
-    name?: string;
-    department?: string;
+  users?: {
+    decider: string;
+    deciderDep: string;
+    manager: string;
+    managerDep: string;
   };
   reqId?: number;
   vkoId?: number;
-  reason?: string;
+  reqDate?: Date;
+  refusal?: string;
+  legal?: string;
   createdAt?: Date;
   updatedAt?: Date;
   modifUser?: string;

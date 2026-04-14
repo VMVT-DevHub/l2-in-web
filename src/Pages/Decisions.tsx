@@ -32,6 +32,7 @@ const Decisions = () => {
     2: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto panaikinimo / sustabdymo',
     3: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto sustabdymo panaikinimo',
     4: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto duomenų keitimo',
+    5: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto atsisakymo patvirtinti / registruoti',
   };
 
   if (status == 'loading') return <Loader />;
@@ -39,11 +40,15 @@ const Decisions = () => {
   return (
     <DecisionsContainer>
       <BackButton />
-      <Title>{titles[type]}</Title>
+      <Title>{variant == 3 ? titles[5] : titles[type]}</Title>
       <Group
         title={'Dokumento duomenys'}
         questions={['Prašymo pateikimo data', 'Prašymo numeris', 'Prašymo pavadinimas']}
-        answers={['-', data?.reqId || '-', data?.decision?.title || '-']}
+        answers={[
+          (data?.reqDate && format(new Date(data.reqDate), 'yyyy-MM-dd')) || '-',
+          data?.reqId || '-',
+          data?.decision?.title || '-',
+        ]}
       />
       <Group
         title={'Ūkio subjekto duomenys'}
@@ -82,13 +87,15 @@ const Decisions = () => {
         ]}
       />
       <GroupParagraph
-        title={'Motyvuotas atsisakymas'}
-        display={type == 1 && variant == 3}
-        text={data?.reason || ''}
+        title={'Administracinio sprendimo teisinis pagrindas'}
+        text={
+          type == 1 && (variant == 1 || variant == 2) ? paragraphs.legalBasis : data?.legal || '-'
+        }
       />
       <GroupParagraph
-        title={'Administracinio sprendimo teisinis pagrindas'}
-        text={type == 1 && (variant == 1 || variant == 2) ? paragraphs.legalBasis : '-'}
+        title={'Motyvuotas atsisakymas'}
+        display={type == 1 && variant == 3}
+        text={data?.refusal || '-'}
       />
       <GroupParagraph title={'Apskundimo tvarka'} text={paragraphs.complaintInfo} />
       <Group
@@ -100,10 +107,10 @@ const Decisions = () => {
           'Sprendimą priėmusio darbuotojo (vadovo) padalinys',
         ]}
         answers={[
-          data?.creator?.name || '-',
-          data?.creator?.department || '-',
-          data?.decider?.name || '-',
-          data?.decider?.department || '-',
+          data?.users?.decider || '-',
+          data?.users?.deciderDep || '-',
+          data?.users?.manager || '-',
+          data?.users?.managerDep || '-',
         ]}
       />
     </DecisionsContainer>
