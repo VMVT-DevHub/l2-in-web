@@ -43,13 +43,14 @@ const AnimalRequests = () => {
 
   const mapTableData = (item) => {
     const truncatedActionPlace = truncateList(item?.actionPlace);
+    const truncatedActionPlaceJA = truncateList(item?.actionPlaceJA);
     const truncatedAction = truncateList(item?.action);
     return {
       id: item.id,
       no: `#${item.id}`,
       reason: animalReasonLabels[item.form],
       date: format(item.createdAt, 'yyyy MM dd'),
-      actionPlace: truncatedActionPlace,
+      actionPlace: truncatedActionPlace || truncatedActionPlaceJA,
       action: truncatedAction,
       submitter: `${item.name || ''} ${item.lastName || ''}`,
       status: renderStatusTag(item.status),
