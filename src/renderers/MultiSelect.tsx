@@ -32,9 +32,9 @@ export const MultiSelect = ({
   useEffect(() => {
     if (isAnimalField && animal) {
       setFilteredOptions(animalFoodMap[animal]);
-      handleChange(path, []);
+      // handleChange(path, []);
     }
-  }, [animal]);
+  }, [animal, isAnimalField]);
 
   const fieldErrors = allErrors
     .filter((e) => e.instancePath === `/${path.replace(/\./g, '/')}` && e.keyword == 'oneOf')
