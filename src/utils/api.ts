@@ -63,6 +63,43 @@ interface AddressSearchItem {
   tipas: string;
 }
 
+export interface SearchNode {
+  data: AnimalNode[];
+  items: number;
+  page: number;
+  total: number;
+}
+
+export interface AnimalNode {
+  code: string;
+  name: string;
+  layer: number;
+  last: boolean;
+  displ?: string;
+  parent?: string;
+  codes?: string[];
+  names?: string[];
+}
+
+interface AnimalGroup {
+  code: 'string';
+  name: 'string';
+  layer: 0;
+  last: 'boolean';
+  displ: 'string';
+  parent: 'string';
+  codes: ['string'];
+  names: ['string'];
+  childs: [
+    {
+      code: 'string';
+      name: 'string';
+      layer: 0;
+      last: true;
+    },
+  ];
+}
+
 class Api {
   private AuthApiAxios: AxiosInstance;
 
@@ -435,6 +472,26 @@ class Api {
     return this.errorWrapper(() =>
       this.AuthApiAxios.get('/api/addresses/find/adr', {
         params: { gyv: gyvId, q: query, top: 10 },
+      }),
+    );
+  };
+
+  getAnimalRoot = async () => {
+    return this.errorWrapper(() => this.AuthApiAxios.get('/api/options/animals/root', {}));
+  };
+
+  getAnimalGroup = async (code: string): Promise<AnimalGroup> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get('/api/options/animals/animal', {
+        params: { code: code },
+      }),
+    );
+  };
+
+  SearchAnimalGroup = async (q: string): Promise<SearchNode> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get('/api/options/animals/search', {
+        params: { q: q },
       }),
     );
   };

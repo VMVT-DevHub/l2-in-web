@@ -56,6 +56,7 @@ import { UploadRenderer } from './Upload';
 import { MultiSelect } from './MultiSelect';
 import { PlainTextRenderer } from './PlainText';
 import { RadioRenderer } from './Radio';
+import { AsyncAnimalTreeSelectRenderer } from './AnimalTreeSelect';
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
@@ -70,6 +71,10 @@ export const customRenderers = [
   {
     tester: rankWith(4, and(isStringControl, optionIs('display', 'authField'))),
     renderer: withJsonFormsControlProps(CustomAthFieldRenderer),
+  },
+  {
+    tester: rankWith(5, and(isObjectControl, optionIs('display', 'animalSelect'))),
+    renderer: withJsonFormsControlProps(AsyncAnimalTreeSelectRenderer),
   },
   { tester: rankWith(5, isBooleanControl), renderer: withJsonFormsControlProps(CheckBoxRenderer) },
   {
