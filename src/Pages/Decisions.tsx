@@ -27,12 +27,12 @@ const Decisions = () => {
   const variant = data?.type?.id || 0;
 
   const titles = {
-    0: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto',
-    1: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto patvirtinimo / registravimo',
-    2: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto panaikinimo / sustabdymo',
-    3: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto sustabdymo panaikinimo',
-    4: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto duomenų keitimo',
-    5: 'Administracinis sprendimas dėl veterinarinės kontrolės objekto atsisakymo patvirtinti / registruoti',
+    0: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto',
+    1: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto patvirtinimo / registravimo',
+    2: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto panaikinimo / sustabdymo',
+    3: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto sustabdymo panaikinimo',
+    4: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto duomenų keitimo',
+    5: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto atsisakymo patvirtinti / registruoti',
   };
 
   if (status == 'loading') return <Loader />;

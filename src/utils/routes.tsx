@@ -56,7 +56,7 @@ export const routes = [
           component: <Form formType={'food'} copyEnabled={false} />,
         },
         {
-          title: 'Veterinarinės kontrolės objektų prašymai',
+          title: 'Veterinarinės kontrolės subjektų prašymai',
           slug: slugs.animalRequests,
           component: <AnimalRequests />,
           sidebar: true,
@@ -66,7 +66,7 @@ export const routes = [
           component: <Form formType={'animal'} copyEnabled={true} />,
         },
         {
-          title: 'Veterinarinės kontrolės objektų sprendimai',
+          title: 'Veterinarinės kontrolės subjektų sprendimai',
           slug: slugs.decisions,
           component: <AnimalRequestsDecisions />,
           decisions: true,

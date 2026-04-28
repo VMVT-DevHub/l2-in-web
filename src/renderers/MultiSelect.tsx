@@ -45,7 +45,9 @@ export const MultiSelect = ({
 
   const handleMouseOver = (option) => {
     if (!descriptions) return;
-    setDescription(option);
+
+    if (typeof option == 'string') setDescription(descriptions[option]);
+    else setDescription(descriptions[option.name]);
   };
 
   if (!visible) return null;

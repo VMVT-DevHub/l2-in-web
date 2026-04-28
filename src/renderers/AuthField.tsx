@@ -12,20 +12,23 @@ export const CustomAthFieldRenderer = ({
   path,
   label,
   enabled,
+  schema,
   uischema,
 }: ControlProps) => {
   const { user } = useContext<UserContextType>(UserContext);
   const key = uischema.options?.key;
   const isHidden = uischema.options?.hidden;
+  const isPhoneOrEmail = (schema as any)['x-isPhoneOrEmail'];
   const value = user?.[key];
-
   const displayValue = typeof data === 'number' ? String(data) : data;
 
   useLayoutEffect(() => {
-    if (data === undefined && value !== undefined) {
+    if (data === undefined && value == null && isPhoneOrEmail) {
+      handleChange(path, '');
+    } else if (data === undefined && value !== undefined) {
       handleChange(path, value);
     }
-  }, [data, value, path, handleChange]);
+  }, [data, value, path, handleChange, isPhoneOrEmail]);
 
   return (
     <StyledTextField
