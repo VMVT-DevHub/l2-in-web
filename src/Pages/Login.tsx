@@ -3,6 +3,7 @@ import { Button, device } from '@aplinkosministerija/design-system';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Icon, { IconName } from '../components/Icons';
+import { apiBasePath, appHost } from '../utils/runtime';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -17,11 +18,11 @@ const Login = () => {
       </InnerContainer>
       <form
         style={{ width: '100%' }}
-        action={`/api/auth/sign`}
+        action={`${apiBasePath}/auth/sign`}
         onSubmit={() => setLoading(true)}
         method="POST"
       >
-        <input type="hidden" name="appHost" value={window.origin} />
+        <input type="hidden" name="appHost" value={appHost} />
         <CustomButton
           width="100%"
           disabled={loading}
