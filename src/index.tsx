@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import App from './App';
 import { UserProvider } from './components/UserProvider';
+import { routerBasename } from './utils/runtime';
 import { GlobalStyle, theme } from './styles/index';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
@@ -15,7 +16,7 @@ root.render(
   <ThemeProvider theme={theme}>
     <GlobalStyle />
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename={routerBasename}>
         <UserProvider>
           <DesignSystemProvider>
             <App />

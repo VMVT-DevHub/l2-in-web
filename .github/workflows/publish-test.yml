@@ -28,11 +28,22 @@ jobs:
           VITE_SHOW_ALL_REQUESTS: true
         run: yarn build
 
-      - name: Archive artifacts
+      - name: Build VKS app
+        env:
+          VITE_SHOW_ALL_REQUESTS: true
+        run: yarn vite build --base=/vks/ --outDir dist-vks
+
+      - name: Archive EXPORT artifact
         uses: actions/upload-artifact@v4
         with:
           name: test-files
           path: dist
+
+      - name: Archive VKS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-files-vks
+          path: dist-vks
 
   deploy:
     name: Deploy to test

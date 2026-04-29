@@ -1,4 +1,5 @@
 import type { ApiRequestOptions } from './ApiRequestOptions';
+import { apiBasePath } from '../../runtime';
 
 type Headers = Record<string, string>;
 type Middleware<T> = (value: T) => T | Promise<T>;
@@ -24,33 +25,33 @@ export class Interceptors<T> {
 }
 
 export type OpenAPIConfig = {
-	BASE: string;
-	CREDENTIALS: 'include' | 'omit' | 'same-origin';
-	ENCODE_PATH?: ((path: string) => string) | undefined;
-	HEADERS?: Headers | Resolver<Headers> | undefined;
-	PASSWORD?: string | Resolver<string> | undefined;
-	TOKEN?: string | Resolver<string> | undefined;
-	USERNAME?: string | Resolver<string> | undefined;
-	VERSION: string;
-	WITH_CREDENTIALS: boolean;
-	interceptors: {
-		request: Interceptors<RequestInit>;
-		response: Interceptors<Response>;
-	};
+  BASE: string;
+  CREDENTIALS: 'include' | 'omit' | 'same-origin';
+  ENCODE_PATH?: ((path: string) => string) | undefined;
+  HEADERS?: Headers | Resolver<Headers> | undefined;
+  PASSWORD?: string | Resolver<string> | undefined;
+  TOKEN?: string | Resolver<string> | undefined;
+  USERNAME?: string | Resolver<string> | undefined;
+  VERSION: string;
+  WITH_CREDENTIALS: boolean;
+  interceptors: {
+    request: Interceptors<RequestInit>;
+    response: Interceptors<Response>;
+  };
 };
 
 export const OpenAPI: OpenAPIConfig = {
-	BASE: '/api/boundaries',
-	CREDENTIALS: 'include',
-	ENCODE_PATH: undefined,
-	HEADERS: undefined,
-	PASSWORD: undefined,
-	TOKEN: undefined,
-	USERNAME: undefined,
-	VERSION: '0.0.1',
-	WITH_CREDENTIALS: false,
-	interceptors: {
-		request: new Interceptors(),
-		response: new Interceptors(),
-	},
+  BASE: `${apiBasePath}/boundaries`,
+  CREDENTIALS: 'include',
+  ENCODE_PATH: undefined,
+  HEADERS: undefined,
+  PASSWORD: undefined,
+  TOKEN: undefined,
+  USERNAME: undefined,
+  VERSION: '0.0.1',
+  WITH_CREDENTIALS: false,
+  interceptors: {
+    request: new Interceptors(),
+    response: new Interceptors(),
+  },
 };
