@@ -1,0 +1,51 @@
+name: Publish VKS to test
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build React app
+        env:
+          VITE_SHOW_ALL_REQUESTS: true
+        run: yarn build
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-vks-files
+          path: dist
+
+  deploy:
+    name: Deploy to test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Finish Deployment
+        run: |
+          api_url=$API_URL
+          response=$(curl -s $api_url)
+          echo "Response: $response"
+          if [ "$response" != "Ok" ]; then
+            exit 1
+          fi
+        env:
+          API_URL: ${{ secrets.TRIGGER_VKS_TEST }}
