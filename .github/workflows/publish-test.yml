@@ -28,6 +28,17 @@ jobs:
           VITE_SHOW_ALL_REQUESTS: true
         run: yarn build
 
+      - name: Build VKS app
+        env:
+          VITE_SHOW_ALL_REQUESTS: true
+        run: yarn vite build --base=/vks/ --outDir dist-vks
+
+      - name: Add VKS output
+        run: |
+          mkdir -p dist/vks
+          cp dist-vks/index.html dist/vks/index.html
+          cp -R dist-vks/assets dist/vks/
+
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
