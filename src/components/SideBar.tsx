@@ -87,8 +87,9 @@ const SideBar = ({ className }: ModuleMenuProps) => {
     return (routes || [])
       .filter((route) => (currentTab == 'prasymai' ? route.sidebar : route.decisions))
       .map((route, index) => {
-        const isActive = currentLocation.pathname.includes(route.slug);
+        if (index == 1 && !showDecisionButton) return <></>;
 
+        const isActive = currentLocation.pathname.includes(route.slug);
         return (
           <StyledTabLink to={route.slug} key={`${index}-route`}>
             <Tab isActive={isActive}>{route.title}</Tab>
