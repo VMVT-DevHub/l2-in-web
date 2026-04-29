@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-files-vks
-          path: dist
+          path: dist-vks
 
   deploy:
     name: Deploy to test
