@@ -16,6 +16,8 @@ import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 
+const showAllRequests = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
+
 const AnimalRequests = () => {
   const [searchParams] = useSearchParams();
   const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
@@ -37,6 +39,8 @@ const AnimalRequests = () => {
     onError: handleError,
     refetchOnWindowFocus: false,
   });
+
+  const formData = data && showAllRequests ? data?.forms : [data?.forms[0]];
 
   const renderStatusTag = (status) =>
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
@@ -103,7 +107,7 @@ const AnimalRequests = () => {
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
-        forms={data?.forms || []}
+        forms={formData || []}
       />
     </TableWrapper>
   );
