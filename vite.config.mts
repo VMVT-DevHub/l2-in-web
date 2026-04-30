@@ -8,8 +8,18 @@ export default () => {
     plugins: [react()],
     server: {
       proxy: {
+        '/vks/api/boundaries': {
+          target: env.VITE_BOUNDARIES_URL ?? env.VITE_PROXY_URL + '/boundaries',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/vks\/api\/boundaries/, ''),
+        },
+        '/vks/api': {
+          target: env.VITE_PROXY_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/vks\/api/, ''),
+        },
         '/api/boundaries': {
-          target: env.VITE_BOUNDARIES_URL ?? env.VITE_PROXY_URL+'/boundaries',
+          target: env.VITE_BOUNDARIES_URL ?? env.VITE_PROXY_URL + '/boundaries',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/boundaries/, ''),
         },

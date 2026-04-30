@@ -1,6 +1,7 @@
 import AnimalRequests from '../Pages/AnimalRequests';
 import AnimalRequestsDecisions from '../Pages/AnimalRequestsDecisions';
 import Certificates from '../Pages/Certificates';
+import Decisions from '../Pages/Decisions';
 import FoodRequests from '../Pages/FoodRequests';
 import Form from '../Pages/Form';
 import JAselection from '../Pages/JAselection';
@@ -16,13 +17,15 @@ export const slugs = {
   foodRequests: `/maisto-tvarkymas`,
   foodRequest: (form: string, requestId: string) => `/maisto-tvarkymas/${form}/${requestId}`,
 
-  animalRequests: `/veterinarines-kontroles-objektai`,
+  animalRequests: `/veterinarines-kontroles-subjektai`,
   animalRequest: (form: string, requestId: string) =>
-    `/veterinarines-kontroles-objektai/${form}/${requestId}`,
+    `/veterinarines-kontroles-subjektai/${form}/${requestId}`,
 
   profile: '/profilis',
   cantLogin: '/negalima-jungtis',
   login: '/prisijungimas',
+
+  decision: (decisionId: string) => `/sprendimai/${decisionId}`,
 };
 
 export const routes = [
@@ -40,34 +43,39 @@ export const routes = [
     slug: slugs.certificateRequest(':form', ':requestId'),
     component: <Form formType={'certificate'} copyEnabled={true} />,
   },
-  ...(showAllRequests
-    ? [
-        {
-          title: 'Maisto tvarkymo subjektų prašymai',
-          slug: slugs.foodRequests,
-          component: <FoodRequests />,
-          sidebar: true,
-        },
-        {
-          slug: slugs.foodRequest(':form', ':requestId'),
-          component: <Form formType={'food'} copyEnabled={false} />,
-        },
-        {
-          title: 'Veterinarinės kontrolės objektų prašymai',
-          slug: slugs.animalRequests,
-          component: <AnimalRequests />,
-          sidebar: true,
-        },
-        {
-          slug: slugs.animalRequest(':form', ':requestId'),
-          component: <Form formType={'animal'} copyEnabled={false} />,
-        },
-        {
-          title: 'Veterinarinės kontrolės objektų sprendimai',
-          slug: slugs.decisions,
-          component: <AnimalRequestsDecisions />,
-          decisions: true,
-        },
-      ]
-    : []),
+  {
+    title: 'Veterinarinės kontrolės subjektų prašymai',
+    slug: slugs.animalRequests,
+    component: <AnimalRequests />,
+    sidebar: true,
+  },
+  {
+    slug: slugs.animalRequest(':form', ':requestId'),
+    component: <Form formType={'animal'} copyEnabled={true} />,
+  },
+  {
+    title: 'Veterinarinės kontrolės subjektų sprendimai',
+    slug: slugs.decisions,
+    component: <AnimalRequestsDecisions />,
+    decisions: true,
+  },
+  {
+    slug: slugs.decision(':decisionId'),
+    component: <Decisions />,
+  },
+  // ...(showAllRequests
+  //   ? [
+  //       {
+  //         title: 'Maisto tvarkymo subjektų prašymai',
+  //         slug: slugs.foodRequests,
+  //         component: <FoodRequests />,
+  //         sidebar: true,
+  //       },
+  //       {
+  //         slug: slugs.foodRequest(':form', ':requestId'),
+  //         component: <Form formType={'food'} copyEnabled={false} />,
+  //       }
+
+  //     ]
+  //   : []),
 ];

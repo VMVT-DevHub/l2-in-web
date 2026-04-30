@@ -32,8 +32,9 @@ export const MultiSelect = ({
   useEffect(() => {
     if (isAnimalField && animal) {
       setFilteredOptions(animalFoodMap[animal]);
+      // handleChange(path, []);
     }
-  }, [animal]);
+  }, [animal, isAnimalField]);
 
   const fieldErrors = allErrors
     .filter((e) => e.instancePath === `/${path.replace(/\./g, '/')}` && e.keyword == 'oneOf')
@@ -44,7 +45,9 @@ export const MultiSelect = ({
 
   const handleMouseOver = (option) => {
     if (!descriptions) return;
-    setDescription(option);
+
+    if (typeof option == 'string') setDescription(descriptions[option]);
+    else setDescription(descriptions[option.name]);
   };
 
   if (!visible) return null;

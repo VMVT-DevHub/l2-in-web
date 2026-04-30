@@ -28,8 +28,12 @@ export const animalRequestColumns = {
 };
 
 export const animalDecisionColumns = {
-  no: { show: true, label: 'Prašymo Nr.' },
-  actionId: { show: true, label: 'Veiklos Nr.' },
-  actionTitle: { show: true, label: 'Veikla' },
-  date: { show: true, label: 'Data' },
+  no: { show: true, label: 'Registracijos/patvirtinimo Nr.' },
+  type: { show: true, label: 'Prašymo pavadinimas' },
+  actionPlaceTitle: { show: true, label: 'Veiklavietės pavadinimas' },
+  address: { show: true, label: 'Veiklavietės adresas' },
+  actionTitle: { show: true, label: 'Veiklos pavadinimas' },
+  date: { show: true, label: 'Suteikimo data' },
+  decider: { show: true, label: 'Pateikė' },
+  status: { show: true, label: 'Statusas' },
 };

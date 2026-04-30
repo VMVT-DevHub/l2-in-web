@@ -16,6 +16,8 @@ import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { animalReasonLabels, requestStatusLabels } from '../utils/text';
 
+const showAllRequests = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
+
 const AnimalRequests = () => {
   const [searchParams] = useSearchParams();
   const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
@@ -38,18 +40,21 @@ const AnimalRequests = () => {
     refetchOnWindowFocus: false,
   });
 
+  const formData = data && showAllRequests ? data?.forms : [data?.forms[0]];
+
   const renderStatusTag = (status) =>
     status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
 
   const mapTableData = (item) => {
     const truncatedActionPlace = truncateList(item?.actionPlace);
+    const truncatedActionPlaceJA = truncateList(item?.actionPlaceJA);
     const truncatedAction = truncateList(item?.action);
     return {
       id: item.id,
       no: `#${item.id}`,
       reason: animalReasonLabels[item.form],
       date: format(item.createdAt, 'yyyy MM dd'),
-      actionPlace: truncatedActionPlace,
+      actionPlace: truncatedActionPlace || truncatedActionPlaceJA,
       action: truncatedAction,
       submitter: `${item.name || ''} ${item.lastName || ''}`,
       status: renderStatusTag(item.status),
@@ -102,7 +107,7 @@ const AnimalRequests = () => {
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
-        forms={data?.forms || []}
+        forms={formData || []}
       />
     </TableWrapper>
   );

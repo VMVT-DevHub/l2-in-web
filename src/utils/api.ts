@@ -1,7 +1,8 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'universal-cookie';
-import { DelegatedUsers, Form, Request, User } from '../types';
+import { Decisions, DelegatedUsers, Form, Request, User } from '../types';
 import { SortFields } from './constants';
+import { apiBasePath, appHost } from './runtime';
 
 type certType = 'ser' | 'vet';
 
@@ -63,6 +64,43 @@ interface AddressSearchItem {
   tipas: string;
 }
 
+export interface SearchNode {
+  data: AnimalNode[];
+  items: number;
+  page: number;
+  total: number;
+}
+
+export interface AnimalNode {
+  code: string;
+  name: string;
+  layer: number;
+  last: boolean;
+  displ?: string;
+  parent?: string;
+  codes?: string[];
+  names?: string[];
+}
+
+interface AnimalGroup {
+  code: 'string';
+  name: 'string';
+  layer: 0;
+  last: 'boolean';
+  displ: 'string';
+  parent: 'string';
+  codes: ['string'];
+  names: ['string'];
+  childs: [
+    {
+      code: 'string';
+      name: 'string';
+      layer: 0;
+      last: true;
+    },
+  ];
+}
+
 class Api {
   private AuthApiAxios: AxiosInstance;
 
@@ -102,7 +140,7 @@ class Api {
       },
     };
     return this.errorWrapper(() =>
-      this.AuthApiAxios.get(`/api/${resource}${id ? `/${id}` : ''}`, config),
+      this.AuthApiAxios.get(`${apiBasePath}/${resource}${id ? `/${id}` : ''}`, config),
     );
   };
   getAR = async <T>({ resource, id, ...rest }: GetAll): Promise<GetAllResponse<T> | any> => {
@@ -113,7 +151,7 @@ class Api {
       },
     };
     return this.errorWrapper(() =>
-      this.AuthApiAxios.get(`/api/${resource}${id ? `/${id}` : ''}`, config),
+      this.AuthApiAxios.get(`${apiBasePath}/${resource}${id ? `/${id}` : ''}`, config),
     );
   };
 
@@ -123,7 +161,7 @@ class Api {
     };
 
     return this.errorWrapper(() =>
-      this.AuthApiAxios.get(`/api/${resource}${id ? `/${id}` : ''}/all`, config),
+      this.AuthApiAxios.get(`${apiBasePath}/${resource}${id ? `/${id}` : ''}/all`, config),
     );
   };
 
@@ -137,42 +175,42 @@ class Api {
     };
 
     return this.errorWrapper(() =>
-      this.AuthApiAxios.get(`/api/${resource}${id ? `/${id}` : ''}`, config),
+      this.AuthApiAxios.get(`${apiBasePath}/${resource}${id ? `/${id}` : ''}`, config),
     );
   };
 
   update = async ({ resource, id, params }: UpdateOne) => {
     return this.errorWrapper(() =>
-      this.AuthApiAxios.patch(`/api/${resource}${id ? `/${id}` : ''}`, params),
+      this.AuthApiAxios.patch(`${apiBasePath}/${resource}${id ? `/${id}` : ''}`, params),
     );
   };
 
   delete = async ({ resource, id }: Delete) => {
-    return this.errorWrapper(() => this.AuthApiAxios.delete(`/api/${resource}/${id}`));
+    return this.errorWrapper(() => this.AuthApiAxios.delete(`${apiBasePath}/${resource}/${id}`));
   };
 
   create = async ({ resource, id, params }: Create) => {
     return this.errorWrapper(() =>
-      this.AuthApiAxios.post(`/api/${resource}${id ? `/${id}` : ''}`, params),
+      this.AuthApiAxios.post(`${apiBasePath}/${resource}${id ? `/${id}` : ''}`, params),
     );
   };
 
   getUserInfo = async (): Promise<User> => {
-    return this.errorWrapper(() => this.AuthApiAxios.get('/api/auth/me'));
+    return this.errorWrapper(() => this.AuthApiAxios.get(`${apiBasePath}/auth/me`));
   };
 
   logout = async () => {
-    return this.errorWrapper(() => this.AuthApiAxios.post('/api/auth/cancel'));
+    return this.errorWrapper(() => this.AuthApiAxios.post(`${apiBasePath}/auth/cancel`));
   };
 
   post = async ({ resource, params = {} }: Create) => {
-    return this.errorWrapper(() => this.AuthApiAxios.post(`/api/${resource}`, params));
+    return this.errorWrapper(() => this.AuthApiAxios.post(`${apiBasePath}/${resource}`, params));
   };
 
   eGatesSign = async () => {
     return this.post({
       resource: 'auth/sign',
-      params: { appHost: window.origin },
+      params: { appHost },
     });
   };
 
@@ -264,6 +302,21 @@ class Api {
     });
   };
 
+  getDecisions = async ({
+    query,
+    page,
+    pageSize,
+    sort = [SortFields.CREATED_AT],
+  }: Pick<GetAll, 'query' | 'page' | 'pageSize' | 'sort'>): Promise<GetAllResponse<Request>> => {
+    return await this.get({
+      resource: 'decisions/all',
+      sort,
+      query,
+      page,
+      pageSize,
+    });
+  };
+
   getRequestHistory = async ({ page, pageSize, id }: any) =>
     await this.get({
       resource: `requests/${id}/history`,
@@ -285,9 +338,10 @@ class Api {
     });
   };
 
-  getDecisions = async (): Promise<DelegatedUsers[]> => {
+  getDetailedDecision = async (id: string): Promise<Decisions> => {
     return await this.get({
-      resource: 'decisions/all',
+      resource: `decisions`,
+      id,
     });
   };
 
@@ -358,7 +412,7 @@ class Api {
           formData.append('file', file);
 
           const { data } = await this.AuthApiAxios.post(
-            `/api/sharePoint/upload/${requestId}`,
+            `${apiBasePath}/sharePoint/upload/${requestId}`,
             formData,
             config,
           );
@@ -383,7 +437,7 @@ class Api {
           const formData = new FormData();
           formData.append('file', file);
           const { data } = await this.AuthApiAxios.post(
-            `/api/sharePoint/createFiles/${requestId}?fileSize=${file.size}&certType=${certType}`,
+            `${apiBasePath}/sharePoint/createFiles/${requestId}?fileSize=${file.size}&certType=${certType}`,
             formData,
             config,
           );
@@ -410,21 +464,43 @@ class Api {
 
   getGyv = async (query: string): Promise<AddressSearchItem[]> => {
     return this.errorWrapper(() =>
-      this.AuthApiAxios.get('/api/addresses/find/gyv', {
+      this.AuthApiAxios.get(`${apiBasePath}/addresses/find/gyv`, {
         params: { q: query, top: 10 },
       }),
     );
   };
   getAdr = async (gyvId: number, query: string): Promise<AddressSearchItem[]> => {
     return this.errorWrapper(() =>
-      this.AuthApiAxios.get('/api/addresses/find/adr', {
+      this.AuthApiAxios.get(`${apiBasePath}/addresses/find/adr`, {
         params: { gyv: gyvId, q: query, top: 10 },
       }),
     );
   };
 
+  getAnimalRoot = async () => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get(`${apiBasePath}/options/animals/root`, {}),
+    );
+  };
+
+  getAnimalGroup = async (code: string): Promise<AnimalGroup> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get(`${apiBasePath}/options/animals/animal`, {
+        params: { code: code },
+      }),
+    );
+  };
+
+  SearchAnimalGroup = async (q: string): Promise<SearchNode> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get(`${apiBasePath}/options/animals/search`, {
+        params: { q: q },
+      }),
+    );
+  };
+
   getActivities = async (): Promise<AddressSearchItem[]> => {
-    return this.errorWrapper(() => this.AuthApiAxios.get('/api/activities/okis'));
+    return this.errorWrapper(() => this.AuthApiAxios.get(`${apiBasePath}/activities/okis`));
   };
 }
 

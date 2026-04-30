@@ -6,9 +6,9 @@ import { useContext } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
 
 export interface AddressValue {
-  gyvId: number | null;
+  gyvId?: number;
   gyvName?: string;
-  adrId: number | null;
+  adrId?: number;
   adrName?: string;
 }
 
@@ -19,7 +19,7 @@ interface AddressPickerProps {
   showError?: boolean;
   disabled?: boolean;
   value?: AddressValue;
-  onChange: (value: AddressValue) => void;
+  onChange: (value?: AddressValue) => void;
 }
 
 interface AddressSearchItem {
@@ -37,17 +37,47 @@ type Option = {
 const formatLabel = (item?: AddressSearchItem): string =>
   item ? `${item.pavad}${item.vietove ? `, ${item.vietove}` : ''}` : '';
 
+const normalizeAddressValue = (value: any): AddressValue | undefined => {
+  if (!value || typeof value !== 'object') return undefined;
+  const normalized: AddressValue = {};
+  if (value.gyvId != null) normalized.gyvId = value.gyvId;
+  if (value.gyvName != null) normalized.gyvName = value.gyvName;
+  if (value.adrId != null) normalized.adrId = value.adrId;
+  if (value.adrName != null) normalized.adrName = value.adrName;
+  return Object.keys(normalized).length ? normalized : undefined;
+};
+
 export const AddressSelect = (props: ControlProps) => {
   const { user } = useContext<UserContextType>(UserContext);
   const { path, enabled, handleChange, data, errors } = props;
-  const cleanError = (typeof errors === 'string' && errors.split('\n')[2]) || '';
+  const current = normalizeAddressValue(data);
+  const cleanError =
+    (typeof errors === 'string' && errors.length > 1 && errors.split('\n')[1]) || undefined;
   const hasAOB = !!user?.aob;
+  const addressError = current?.gyvId && !current?.adrId ? 'Adresas yra privalomas.' : cleanError;
 
-  const current: AddressValue = data ?? {
-    gyvId: null,
-    adrId: null,
+  const isUsingAOB = hasAOB && user.aob && current?.adrId == null;
+
+  const updateValue = (next?: AddressValue) => {
+    if (!next || next.gyvId == null) {
+      handleChange(path, undefined);
+      return;
+    }
+
+    const value: AddressValue = {
+      gyvId: next.gyvId,
+      gyvName: next.gyvName,
+    };
+
+    if (next.adrId != null) {
+      value.adrId = next.adrId;
+    }
+    if (next.adrName != null) {
+      value.adrName = next.adrName;
+    }
+
+    handleChange(path, value);
   };
-  const isUsingAOB = hasAOB && user.aob && current.adrId == null;
 
   return (
     <FieldWrapper>
@@ -56,9 +86,9 @@ export const AddressSelect = (props: ControlProps) => {
         name="gyvenviete"
         label="Gyvenvietė *"
         error={cleanError}
-        placeholder="Pradėkite vesti gyvenvietės pavadinimą"
+        placeholder="Pradėkite vesti"
         disabled={!enabled}
-        value={current.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
+        value={current?.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"
         loadOptions={async (input: string) => {
@@ -76,11 +106,14 @@ export const AddressSelect = (props: ControlProps) => {
           };
         }}
         onChange={(option?: Option) => {
-          handleChange(path, {
-            gyvId: option?.id ?? null,
-            gyvName: option?.name,
-            adrId: null,
-            adrName: undefined,
+          if (!option) {
+            updateValue(undefined);
+            return;
+          }
+
+          updateValue({
+            gyvId: option.id,
+            gyvName: option.name,
           });
         }}
       />
@@ -89,19 +122,19 @@ export const AddressSelect = (props: ControlProps) => {
       <StyledAsyncSelectField
         name="adresas"
         label="Adresas *"
-        error={cleanError}
-        disabled={!enabled || !current.gyvId}
+        error={addressError}
+        disabled={!enabled || !current?.gyvId}
         value={
           isUsingAOB
             ? { id: user.aob, name: user.address ?? '' }
-            : current.adrId
+            : current?.adrId
             ? { id: current.adrId, name: current.adrName ?? '' }
             : undefined
         }
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"
         loadOptions={async (input: string) => {
-          if (!current.gyvId || input.trim().length < 2) {
+          if (!current?.gyvId || input.trim().length < 2) {
             return { items: [] };
           }
 
@@ -115,10 +148,21 @@ export const AddressSelect = (props: ControlProps) => {
           };
         }}
         onChange={(option?: Option) => {
-          handleChange(path, {
-            ...current,
-            adrId: option?.id ?? null,
-            adrName: option?.name,
+          if (!option) {
+            updateValue(undefined);
+            return;
+          }
+
+          if (!current?.gyvId) {
+            updateValue(undefined);
+            return;
+          }
+
+          updateValue({
+            gyvId: current.gyvId,
+            gyvName: current.gyvName,
+            adrId: option.id,
+            adrName: option.name,
           });
         }}
       />
