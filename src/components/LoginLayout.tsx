@@ -11,7 +11,7 @@ const LoginLayout = ({ children }: LoginLayoutProps) => {
     <Div100vh>
       <Container>
         <ImageContainer>
-          <Image src="/vmvtlogin.png" />
+          <Image src={`${import.meta.env.BASE_URL}vmvtlogin.png`} />
         </ImageContainer>
         <Content>{children}</Content>
       </Container>
