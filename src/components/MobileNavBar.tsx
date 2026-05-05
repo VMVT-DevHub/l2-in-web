@@ -6,6 +6,7 @@ import Avatar from './Avatar';
 import Icon, { IconName } from './Icons';
 import Logo from './Logo';
 import { UserContext, UserContextType } from './UserProvider';
+import { isVksPortal } from '../utils/runtime';
 
 interface MobileHeaderInterface {
   className?: string;
@@ -60,12 +61,14 @@ const MobileNavbar = ({ className }: MobileHeaderInterface) => {
               >
                 Prašymai
               </StyledButton>
-              <StyledButton
-                $isCurrent={currentTab == 'sprendimai'}
-                onClick={() => setCurrentTab('sprendimai')}
-              >
-                Sprendimai
-              </StyledButton>
+              {isVksPortal && (
+                <StyledButton
+                  $isCurrent={currentTab == 'sprendimai'}
+                  onClick={() => setCurrentTab('sprendimai')}
+                >
+                  Sprendimai
+                </StyledButton>
+              )}
             </TitleRow>
             <div onClick={() => setShowMenu(false)}>
               <ExitIcon name={IconName.close} />

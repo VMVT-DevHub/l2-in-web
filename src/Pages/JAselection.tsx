@@ -17,6 +17,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { slugs } from '../utils/routes';
 import { ButtonVariants } from '../styles';
 import { FormErrors } from '../types';
+import { isVksPortal } from '../utils/runtime';
 
 const JAselection = () => {
   const { user } = useContext<UserContextType>(UserContext);
@@ -26,7 +27,7 @@ const JAselection = () => {
   const queryClient = useQueryClient();
   const initialValues = { firstName: '', lastName: '', personalCode: '' };
   const isJA = !!user?.companyCode;
-
+  const basePage = isVksPortal ? slugs.animalRequests : slugs.certificates;
   const { mutateAsync: removeDelegatedUsers } = useMutation(
     (uuid: string) => api.removeDelegatedUsers(uuid),
     {
@@ -67,7 +68,7 @@ const JAselection = () => {
       },
       onSuccess: (request) => {
         queryClient.invalidateQueries(['user']);
-        navigate('/sertifikatai');
+        navigate(basePage);
       },
       retry: false,
     },
@@ -131,11 +132,11 @@ const JAselection = () => {
         <PopupContainer width="600px">
           <Title>Pasirinkite atstovaujamą asmenį</Title>
           {user?.companyCode ? (
-            <OrgContainer onClick={() => navigate('/sertifikatai')}>
+            <OrgContainer onClick={() => navigate(basePage)}>
               Pildysiu kaip Juridinis Asmuo
             </OrgContainer>
           ) : (
-            <OrgContainer onClick={() => navigate('/sertifikatai')}>
+            <OrgContainer onClick={() => navigate(basePage)}>
               Noriu pildyti kaip Fizinis Asmuo
             </OrgContainer>
           )}
