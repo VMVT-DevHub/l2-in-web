@@ -6,8 +6,7 @@ import Avatar from './Avatar';
 import Icon, { IconName } from './Icons';
 import Logo from './Logo';
 import { UserContext, UserContextType } from './UserProvider';
-
-const showDecisionButton = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
+import { isVksPortal } from '../utils/runtime';
 
 interface ModuleMenuProps {
   className?: string;
@@ -87,8 +86,6 @@ const SideBar = ({ className }: ModuleMenuProps) => {
     return (routes || [])
       .filter((route) => (currentTab == 'prasymai' ? route.sidebar : route.decisions))
       .map((route, index) => {
-        if (index == 1 && !showDecisionButton) return <></>;
-
         const isActive = currentLocation.pathname.includes(route.slug);
         return (
           <StyledTabLink to={route.slug} key={`${index}-route`}>
@@ -113,7 +110,7 @@ const SideBar = ({ className }: ModuleMenuProps) => {
             >
               Prašymai
             </StyledButton>
-            {showDecisionButton && (
+            {isVksPortal && (
               <StyledButton
                 $isCurrent={currentTab == 'sprendimai'}
                 onClick={() => setCurrentTab('sprendimai')}

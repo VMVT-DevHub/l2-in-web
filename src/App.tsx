@@ -9,17 +9,19 @@ import { UserContext, UserContextType } from './components/UserProvider';
 import Login from './Pages/Login';
 import { routes, slugs } from './utils/routes';
 import { User } from './types';
+import { isVksPortal } from './utils/runtime';
 
 interface RouteProps {
   loggedIn: boolean;
   defaultUrl: string;
   location?: Location;
 }
+const basePage = isVksPortal ? slugs.animalRequests : slugs.certificates;
 
 const getDefaultUrl = ({ loggedIn, user }: { loggedIn: boolean; user: User | null }) => {
   if (!loggedIn) return slugs.login;
   if (user?.companyCode || user?.roles.orgs.length == 0) {
-    return slugs.certificates;
+    return basePage;
   }
   return slugs.selectOrg;
 };

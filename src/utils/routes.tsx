@@ -5,6 +5,7 @@ import Decisions from '../Pages/Decisions';
 import FoodRequests from '../Pages/FoodRequests';
 import Form from '../Pages/Form';
 import JAselection from '../Pages/JAselection';
+import { isVksPortal } from '../utils/runtime';
 
 const showAllRequests = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
 
@@ -30,39 +31,47 @@ export const slugs = {
 
 export const routes = [
   {
-    title: 'Eksporto sertifikatai',
-    slug: slugs.certificates,
-    component: <Certificates />,
-    sidebar: true,
-  },
-  {
     slug: slugs.selectOrg,
     component: <JAselection />,
   },
-  {
-    slug: slugs.certificateRequest(':form', ':requestId'),
-    component: <Form formType={'certificate'} copyEnabled={true} />,
-  },
-  {
-    title: 'Veterinarinės kontrolės subjektų prašymai',
-    slug: slugs.animalRequests,
-    component: <AnimalRequests />,
-    sidebar: true,
-  },
-  {
-    slug: slugs.animalRequest(':form', ':requestId'),
-    component: <Form formType={'animal'} copyEnabled={true} />,
-  },
-  {
-    title: 'Veterinarinės kontrolės subjektų sprendimai',
-    slug: slugs.decisions,
-    component: <AnimalRequestsDecisions />,
-    decisions: true,
-  },
-  {
-    slug: slugs.decision(':decisionId'),
-    component: <Decisions />,
-  },
+  ...(!isVksPortal
+    ? [
+        {
+          title: 'Eksporto sertifikatai',
+          slug: slugs.certificates,
+          component: <Certificates />,
+          sidebar: true,
+        },
+        {
+          slug: slugs.certificateRequest(':form', ':requestId'),
+          component: <Form formType={'certificate'} copyEnabled={true} />,
+        },
+      ]
+    : []),
+  ...(isVksPortal
+    ? [
+        {
+          title: 'Veterinarinės kontrolės subjektų prašymai',
+          slug: slugs.animalRequests,
+          component: <AnimalRequests />,
+          sidebar: true,
+        },
+        {
+          slug: slugs.animalRequest(':form', ':requestId'),
+          component: <Form formType={'animal'} copyEnabled={true} />,
+        },
+        {
+          title: 'Veterinarinės kontrolės subjektų sprendimai',
+          slug: slugs.decisions,
+          component: <AnimalRequestsDecisions />,
+          decisions: true,
+        },
+        {
+          slug: slugs.decision(':decisionId'),
+          component: <Decisions />,
+        },
+      ]
+    : []),
   // ...(showAllRequests
   //   ? [
   //       {
