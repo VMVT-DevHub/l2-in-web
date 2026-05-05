@@ -10,13 +10,15 @@ export const CheckBoxRenderer = ({
   path,
   label,
   enabled,
+  schema,
   description,
 }: ControlProps) => {
   const margin = uischema?.options?.margin;
+  const defaultValue = schema?.default;
 
   return (
     <StyledCheckBox
-      value={data}
+      value={defaultValue ? defaultValue : data}
       onChange={(value) => handleChange(path, value)}
       label={label}
       error={!!errors}
