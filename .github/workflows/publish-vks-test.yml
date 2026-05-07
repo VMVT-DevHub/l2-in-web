@@ -25,7 +25,7 @@ jobs:
 
       - name: Build VKS app
         env:
-          VITE_SHOW_ALL_REQUESTS: false
+          VITE_SHOW_ALL_REQUESTS: true
         run: yarn vite build --base=/vks/ --outDir dist-vks
 
       - name: Archive artifacts
