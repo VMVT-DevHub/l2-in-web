@@ -70,7 +70,7 @@ export interface Decisions {
     managerDep: string;
   };
   reqId?: number;
-  vkoId?: number;
+  vksId?: number;
   reqDate?: Date;
   refusal?: string;
   legal?: string;
