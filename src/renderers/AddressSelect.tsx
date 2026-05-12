@@ -2,7 +2,7 @@ import { AsyncSelectField } from '@aplinkosministerija/design-system';
 import api from '../utils/api';
 import styled from 'styled-components';
 import { ControlProps } from '@jsonforms/core';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
 
 export interface AddressValue {
@@ -79,6 +79,43 @@ export const AddressSelect = (props: ControlProps) => {
     handleChange(path, value);
   };
 
+  function debounce<T extends (...args: any[]) => Promise<any>>(fn: T, delay: number): T {
+    let timer: ReturnType<typeof setTimeout>;
+    return ((...args: any[]) =>
+      new Promise((resolve, reject) => {
+        clearTimeout(timer);
+        timer = setTimeout(
+          () =>
+            fn(...args)
+              .then(resolve)
+              .catch(reject),
+          delay,
+        );
+      })) as T;
+  }
+
+  const loadGyv = debounce(async (input: string) => {
+    if (input.trim().length < 2) return { items: [] };
+    const res = await api.getGyv(input.trim());
+    return {
+      items: res.map((item: AddressSearchItem) => ({
+        id: item.id,
+        name: formatLabel(item),
+      })),
+    };
+  }, 300);
+
+  const loadAdr = debounce(async (input: string) => {
+    if (!current?.gyvId || input.trim().length < 2) return { items: [] };
+    const res = await api.getAdr(current.gyvId, input.trim());
+    return {
+      items: res.map((item: AddressSearchItem) => ({
+        id: item.id,
+        name: formatLabel(item),
+      })),
+    };
+  }, 300);
+
   return (
     <FieldWrapper>
       {/* GYV SELECT */}
@@ -91,20 +128,7 @@ export const AddressSelect = (props: ControlProps) => {
         value={current?.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"
-        loadOptions={async (input: string) => {
-          if (input.trim().length < 2) {
-            return { items: [] };
-          }
-
-          const res = await api.getGyv(input.trim());
-
-          return {
-            items: res.map((item: AddressSearchItem) => ({
-              id: item.id,
-              name: formatLabel(item),
-            })),
-          };
-        }}
+        loadOptions={loadGyv}
         onChange={(option?: Option) => {
           if (!option) {
             updateValue(undefined);
@@ -133,20 +157,7 @@ export const AddressSelect = (props: ControlProps) => {
         }
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"
-        loadOptions={async (input: string) => {
-          if (!current?.gyvId || input.trim().length < 2) {
-            return { items: [] };
-          }
-
-          const res = await api.getAdr(current.gyvId, input.trim());
-
-          return {
-            items: res.map((item: AddressSearchItem) => ({
-              id: item.id,
-              name: formatLabel(item),
-            })),
-          };
-        }}
+        loadOptions={loadAdr}
         onChange={(option?: Option) => {
           if (!option) {
             updateValue(undefined);
