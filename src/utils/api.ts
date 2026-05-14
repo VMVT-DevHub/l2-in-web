@@ -398,6 +398,15 @@ class Api {
     });
   };
 
+  getSharePointDecisionDownloadUrl = async (
+    itemId: string,
+    certType: certType,
+  ): Promise<string> => {
+    return this.get({
+      resource: `sharePoint/downloadDecisionUrl/${itemId}?certType=${certType}`,
+    });
+  };
+
   uploadFiles = async (files: File[] = [], requestId: string): Promise<any> => {
     if (!files.length) return [];
 

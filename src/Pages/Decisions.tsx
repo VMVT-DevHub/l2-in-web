@@ -12,6 +12,8 @@ import { format, formatDate } from 'date-fns';
 import { formatDateAndTime } from '../utils/format';
 import { useContext } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
+import { Button } from '@aplinkosministerija/design-system';
+import { toast } from 'react-toastify';
 
 const Decisions = () => {
   const { decisionId = '' } = useParams();
@@ -25,6 +27,7 @@ const Decisions = () => {
   });
   const type = data?.decision?.titleId || 0;
   const variant = data?.type?.id || 0;
+  const showDownloadButton = data?.status?.id == 1 || data?.status?.id == 3; //show only when Suteikta or Atmesta
 
   const titles = {
     0: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto',
@@ -37,10 +40,31 @@ const Decisions = () => {
 
   if (status == 'loading') return <Loader />;
 
+  const handleDownloadFile = async (fileId: any) => {
+    try {
+      const url = await api.getSharePointDecisionDownloadUrl(fileId, 'vet');
+      window.open(url, '_blank');
+    } catch (error) {
+      toast.error('Nepavyko atsisiųsti. Pabandykite vėliau');
+    }
+  };
+
   return (
     <DecisionsContainer>
       <BackButton />
       <Title>{variant == 3 ? titles[5] : titles[type]}</Title>
+      {showDownloadButton && (
+        <ButtonContainer>
+          <Button
+            onClick={() => {
+              handleDownloadFile(data?.vksId);
+            }}
+          >
+            {'Atsisiųsti'}
+          </Button>
+        </ButtonContainer>
+      )}
+
       <Group
         title={'Dokumento duomenys'}
         questions={['Prašymo pateikimo data', 'Prašymo numeris', 'Prašymo pavadinimas']}
@@ -118,6 +142,12 @@ const Decisions = () => {
 };
 
 export default Decisions;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: end;
+  justify-content: end;
+`;
 
 const DecisionsContainer = styled.div`
   margin: 16px;
