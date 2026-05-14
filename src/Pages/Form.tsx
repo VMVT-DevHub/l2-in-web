@@ -381,8 +381,14 @@ const Form = ({ formType, copyEnabled }) => {
 
   const showCopyButton =
     !isNewRequest &&
-    (!request?.status ||
-      [StatusTypes.APPROVED, StatusTypes.COMPLETED].some((status) => status === request.status)) &&
+    ((formType === 'certificate' &&
+      (!request?.status ||
+        [StatusTypes.APPROVED, StatusTypes.COMPLETED, StatusTypes.DRAFT].some(
+          (s) => s === request.status,
+        ))) ||
+      (formType === 'animal' &&
+        (!request?.status ||
+          [StatusTypes.APPROVED, StatusTypes.COMPLETED].some((s) => s === request.status)))) &&
     copyEnabled;
 
   if (shouldShowLoader) {
