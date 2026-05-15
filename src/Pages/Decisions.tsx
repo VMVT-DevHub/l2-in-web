@@ -27,7 +27,7 @@ const Decisions = () => {
   });
   const type = data?.decision?.titleId || 0;
   const variant = data?.type?.id || 0;
-  const showDownloadButton = data?.status?.id == 1 || data?.status?.id == 3; //show only when Suteikta or Atmesta
+  const showDownloadButton = data?.status?.id == 3 || data?.status?.id == 4; //show only when Suteikta or Atmesta
 
   const titles = {
     0: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto',
