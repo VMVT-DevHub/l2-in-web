@@ -1,14 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'universal-cookie';
-import {
-  AddressDetails,
-  Decisions,
-  DelegatedUsers,
-  Form,
-  Request,
-  ShortDecision,
-  User,
-} from '../types';
+import { AddressDetails, Decisions, DelegatedUsers, Form, Request, User } from '../types';
 import { SortFields } from './constants';
 import { apiBasePath, appHost } from './runtime';
 
