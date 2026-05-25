@@ -30,6 +30,32 @@ export interface DelegatedUsers {
   userName: string;
 }
 
+export interface AddressDetails {
+  apygarda: string;
+  id: number;
+
+  kodai: {
+    adm: number;
+    sav: number;
+    gyv: number;
+    gat: number;
+    aob: number;
+    apg: number;
+  };
+
+  lks: [number, number];
+
+  nr: string;
+  pavad: string;
+  post: string;
+  regData: string;
+
+  tipas: string;
+  vietove: string;
+
+  wgs: [number, number];
+}
+
 export interface Decisions {
   id?: number;
   type?: {

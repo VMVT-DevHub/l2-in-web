@@ -2,8 +2,10 @@ import { AsyncSelectField } from '@aplinkosministerija/design-system';
 import api from '../utils/api';
 import styled from 'styled-components';
 import { ControlProps } from '@jsonforms/core';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
+import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
+import { useQuery } from '@tanstack/react-query';
 
 export interface AddressValue {
   gyvId?: number;
@@ -49,14 +51,32 @@ const normalizeAddressValue = (value: any): AddressValue | undefined => {
 
 export const AddressSelect = (props: ControlProps) => {
   const { user } = useContext<UserContextType>(UserContext);
+  const ctx: JsonFormsStateContext = useJsonForms();
   const { path, enabled, handleChange, data, errors } = props;
   const current = normalizeAddressValue(data);
   const cleanError =
     (typeof errors === 'string' && errors.length > 1 && errors.split('\n')[1]) || undefined;
   const hasAOB = !!user?.aob;
   const addressError = current?.gyvId && !current?.adrId ? 'Adresas yra privalomas.' : cleanError;
-
   const isUsingAOB = hasAOB && user.aob && current?.adrId == null;
+  const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr'] || '';
+  const isEditForm = (props?.schema as any)['x-edit'];
+
+  const { data: decisionData } = useQuery({
+    queryKey: ['decisionAdr', regNo, isEditForm],
+    queryFn: () => api.getDecisionRegNo(regNo),
+    enabled: !!isEditForm && regNo.length > 3,
+  });
+
+  useEffect(() => {
+    if (!isEditForm || !decisionData) return;
+    handleChange(path, {
+      gyvId: decisionData?.kodai?.gyv,
+      gyvName: decisionData?.vietove,
+      adrId: decisionData?.kodai?.aob,
+      adrName: decisionData?.pavad,
+    });
+  }, [decisionData]);
 
   const updateValue = (next?: AddressValue) => {
     if (!next || next.gyvId == null) {
@@ -189,4 +209,5 @@ const StyledAsyncSelectField = styled(AsyncSelectField)`
 const FieldWrapper = styled.div`
   display: flex;
   gap: 16px;
+  margin-bottom: 6px;
 `;
