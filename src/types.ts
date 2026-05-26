@@ -15,6 +15,7 @@ export interface User {
   companyCode: string;
   companyName: string;
   activeOrgCode: string;
+  ak?: string;
   roles: {
     orgs: {
       id: string;

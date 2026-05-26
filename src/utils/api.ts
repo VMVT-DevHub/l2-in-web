@@ -345,10 +345,9 @@ class Api {
     });
   };
 
-  getDecisionRegNo = async (id: string): Promise<AddressDetails> => {
+  getDecisionRegNo = async (id: string, user: string): Promise<AddressDetails> => {
     return await this.get({
-      resource: `decisions/address`,
-      id,
+      resource: `decisions/address?id=${id}&user=${user}`,
     });
   };
 
