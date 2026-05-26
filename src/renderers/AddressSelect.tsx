@@ -61,11 +61,12 @@ export const AddressSelect = (props: ControlProps) => {
   const isUsingAOB = hasAOB && user.aob && current?.adrId == null;
   const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr'] || '';
   const isEditForm = (props?.schema as any)['x-edit'];
+  const activeUserCode = user?.activeOrgCode || user?.ak || '';
 
   const { data: decisionData } = useQuery({
     queryKey: ['decisionAdr', regNo, isEditForm],
-    queryFn: () => api.getDecisionRegNo(regNo),
-    enabled: !!isEditForm && regNo.length > 3,
+    queryFn: () => api.getDecisionRegNo(regNo, activeUserCode),
+    enabled: !!isEditForm && regNo.length > 3 && !!activeUserCode,
   });
 
   useEffect(() => {
