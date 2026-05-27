@@ -65,8 +65,8 @@ export const AddressSelect = (props: ControlProps) => {
 
   const { data: decisionData } = useQuery({
     queryKey: ['decisionAdr', regNo, isEditForm],
-    queryFn: () => api.getDecisionRegNo(regNo, activeUserCode),
-    enabled: !!isEditForm && regNo.length > 3 && !!activeUserCode,
+    queryFn: () => api.getDecisionRegNo(regNo),
+    enabled: !!isEditForm && regNo.length > 3,
   });
 
   useEffect(() => {
