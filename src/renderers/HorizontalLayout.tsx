@@ -8,6 +8,7 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
   const options = uischema?.options;
   const bottomLabel = options?.bottomLabel;
   const margin = uischema?.options?.margin;
+  const gap = uischema?.options?.gap;
 
   if (!visible) {
     return <></>;
@@ -35,7 +36,7 @@ export const HorizontalLayout = ({ uischema, path, schema, renderers, visible, .
 
   return (
     <Container>
-      <HorizontalLayoutContainer $columns={elementsLength} $margin={margin}>
+      <HorizontalLayoutContainer $columns={elementsLength} $margin={margin} $gap={gap}>
         {renderElements()}
       </HorizontalLayoutContainer>
       {bottomLabel && <SubTitle>{bottomLabel}</SubTitle>}
@@ -55,13 +56,12 @@ const SubTitle = styled.div`
   width: inherit;
 `;
 
-const HorizontalLayoutContainer = styled.div<{ $columns: number; $margin?: string }>`
+const HorizontalLayoutContainer = styled.div<{ $columns: number; $margin?: string; $gap?: string }>`
   display: grid;
-  gap: 16px;
+  gap: ${({ $gap }) => ($gap ? `${$gap}` : '16px')};
   margin: ${({ $margin }) => ($margin ? `0px ${$margin}` : '0px')};
   margin-bottom: 16px;
   grid-template-columns: repeat(${({ $columns }) => $columns}, 1fr);
-
   @media ${device.mobileL} {
     grid-template-columns: 1fr;
   }

@@ -66,7 +66,7 @@ const Decisions = () => {
       )}
 
       <Group
-        title={'Dokumento duomenys'}
+        title={'Prašymo, kurį išnagrinėjus priimtas šis administracinis sprendimas, duomenys'}
         questions={['Prašymo pateikimo data', 'Prašymo numeris', 'Prašymo pavadinimas']}
         answers={[
           (data?.reqDate && format(new Date(data.reqDate), 'yyyy-MM-dd')) || '-',
