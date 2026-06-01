@@ -324,6 +324,7 @@ export const AsyncAnimalTreeSelectRenderer = ({
         <StyledTreeSelect
           disabled={!enabled}
           value={displayValue}
+          placeholder={'Pradėkite vesti'}
           error={!!errors}
           treeData={activeTreeData}
           loadData={onLoadData} // always active

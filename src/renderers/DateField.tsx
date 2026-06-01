@@ -16,6 +16,9 @@ export const DateRenderer = ({
 }: ControlProps) => {
   const minDate = uischema?.options?.minDate;
   const maxDate = uischema?.options?.maxDate;
+  const fromToday = uischema?.options?.fromToday;
+
+  const today = new Date();
 
   const minDateValue = minDate && resolveData(config?.rootData, minDate);
   const maxDateValue = maxDate && resolveData(config?.rootData, maxDate);
@@ -30,7 +33,7 @@ export const DateRenderer = ({
       name={label}
       showError={true}
       disabled={!enabled}
-      minDate={minDateValue ? new Date(minDateValue) : undefined}
+      minDate={fromToday ? today : minDateValue ? new Date(minDateValue) : undefined}
       maxDate={maxDateValue ? new Date(maxDateValue) : undefined}
     />
   );
