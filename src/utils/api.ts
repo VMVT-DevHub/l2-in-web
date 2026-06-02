@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Cookies from 'universal-cookie';
-import { AddressDetails, Decisions, DelegatedUsers, Form, Request, User } from '../types';
+import { DecisionAddressResponse, Decisions, DelegatedUsers, Form, Request, User } from '../types';
 import { SortFields } from './constants';
 import { apiBasePath, appHost } from './runtime';
 
@@ -345,7 +345,7 @@ class Api {
     });
   };
 
-  getDecisionRegNo = async (id: string): Promise<AddressDetails> => {
+  getDecisionRegNo = async (id: string): Promise<DecisionAddressResponse> => {
     return await this.get({
       resource: `decisions/address?id=${id}`,
     });

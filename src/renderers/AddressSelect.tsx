@@ -71,12 +71,29 @@ export const AddressSelect = (props: ControlProps) => {
 
   useEffect(() => {
     if (!isEditForm || !decisionData) return;
-    handleChange(path, {
-      gyvId: decisionData?.kodai?.gyv,
-      gyvName: decisionData?.vietove,
-      adrId: decisionData?.kodai?.aob,
-      adrName: decisionData?.pavad,
-    });
+
+    if (decisionData.type == 'coords' && decisionData?.coordX) {
+      handleChange('veiklaviete.koordinates.platuma', decisionData.coordX);
+      handleChange(path, undefined);
+    }
+
+    if (decisionData.type == 'coords' && decisionData?.coordY) {
+      handleChange('veiklaviete.koordinates.ilguma', decisionData.coordY);
+    }
+
+    if (decisionData.type == 'address') {
+      handleChange(path, {
+        gyvId: decisionData?.kodai?.gyv,
+        gyvName: decisionData?.vietove,
+        adrId: decisionData?.kodai?.aob,
+        adrName: decisionData?.pavad,
+      });
+
+      handleChange('veiklaviete.koordinates', {
+        platuma: decisionData.wgs[0].toString(),
+        ilguma: decisionData.wgs[1].toString(),
+      });
+    }
   }, [decisionData]);
 
   const updateValue = (next?: AddressValue) => {

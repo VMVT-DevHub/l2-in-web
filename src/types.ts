@@ -31,7 +31,14 @@ export interface DelegatedUsers {
   userName: string;
 }
 
+export interface CoordDetails {
+  type: 'coords';
+  coordX: string;
+  coordY: string;
+}
+
 export interface AddressDetails {
+  type: 'address';
   apygarda: string;
   id: number;
 
@@ -137,5 +144,7 @@ export interface Request {
   tenant: any;
   data: any;
 }
+
+export type DecisionAddressResponse = AddressDetails | CoordDetails;
 
 export type ProfileId = 'freelancer' | number;
