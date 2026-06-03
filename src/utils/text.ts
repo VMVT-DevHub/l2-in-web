@@ -32,6 +32,7 @@ export const decisionsStatusLabels = {
 };
 
 export const decisionTypes = {
+  //variant
   '1': 'Registravimas', //(Kai type 1)
   '2': 'Patvirtinimas', //(Kai type 1)
   '3': 'Atmetimas', //(Kai type 1, 3, 4)
