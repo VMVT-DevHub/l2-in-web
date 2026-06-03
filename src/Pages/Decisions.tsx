@@ -97,7 +97,7 @@ const Decisions = () => {
           data?.action?.title || '-',
           EVRK || '',
           variant == 1 || variant == 2 ? data?.decision?.regNo || '-' : '',
-          type == 2 || type == 3 || type == 4 ? data?.decision?.regNo || '-' : '',
+          type == 2 || type == 3 || type == 4 ? data?.parent?.parentRegNo || '-' : '',
         ]}
       />
       <Group

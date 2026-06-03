@@ -89,6 +89,7 @@ export interface Decisions {
   parent?: {
     id?: number;
     title?: string;
+    parentRegNo?: string;
   };
   decision?: {
     title?: string;
