@@ -15,6 +15,7 @@ export interface User {
   companyCode: string;
   companyName: string;
   activeOrgCode: string;
+  ak?: string;
   roles: {
     orgs: {
       id: string;
@@ -28,6 +29,39 @@ export interface DelegatedUsers {
   roles: string[];
   userId: string;
   userName: string;
+}
+
+export interface CoordDetails {
+  type: 'coords';
+  coordX: string;
+  coordY: string;
+}
+
+export interface AddressDetails {
+  type: 'address';
+  apygarda: string;
+  id: number;
+
+  kodai: {
+    adm: number;
+    sav: number;
+    gyv: number;
+    gat: number;
+    aob: number;
+    apg: number;
+  };
+
+  lks: [number, number];
+
+  nr: string;
+  pavad: string;
+  post: string;
+  regData: string;
+
+  tipas: string;
+  vietove: string;
+
+  wgs: [number, number];
 }
 
 export interface Decisions {
@@ -55,6 +89,7 @@ export interface Decisions {
   parent?: {
     id?: number;
     title?: string;
+    parentRegNo?: string;
   };
   decision?: {
     title?: string;
@@ -110,5 +145,7 @@ export interface Request {
   tenant: any;
   data: any;
 }
+
+export type DecisionAddressResponse = AddressDetails | CoordDetails;
 
 export type ProfileId = 'freelancer' | number;

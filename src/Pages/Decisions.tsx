@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import { Button } from '@aplinkosministerija/design-system';
 import { toast } from 'react-toastify';
+import { actionToEVRK } from '../utils/constants';
 
 const Decisions = () => {
   const { decisionId = '' } = useParams();
@@ -25,9 +26,13 @@ const Decisions = () => {
     queryKey: ['detailedDecision'],
     queryFn: () => api.getDetailedDecision(decisionId),
   });
-  const type = data?.decision?.titleId || 0;
-  const variant = data?.type?.id || 0;
-  const showDownloadButton = data?.status?.id == 3 || data?.status?.id == 4; //show only when Suteikta or Atmesta
+  const action = data?.action?.title?.split(' -')[0] || '';
+  const EVRK = actionToEVRK[action] || '-';
+
+  const type = data?.decision?.titleId || 0; //prasymo tipas (1-4)
+  const variant = data?.type?.id || 0; //decisionTypes, tikslus tipas
+  const showDownloadButton =
+    data?.status?.id == 3 || data?.status?.id == 4 || data?.status?.id == 7; //show only when Suteikta or Atmesta or Pakeista
 
   const titles = {
     0: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto',
@@ -66,7 +71,7 @@ const Decisions = () => {
       )}
 
       <Group
-        title={'Dokumento duomenys'}
+        title={'Prašymo, kurį išnagrinėjus priimtas šis administracinis sprendimas, duomenys'}
         questions={['Prašymo pateikimo data', 'Prašymo numeris', 'Prašymo pavadinimas']}
         answers={[
           (data?.reqDate && format(new Date(data.reqDate), 'yyyy-MM-dd')) || '-',
@@ -80,13 +85,19 @@ const Decisions = () => {
           'Vardas, pavardė / Juridinio asmens pavadinimas',
           'Veiklavietės pavadinimas',
           'Veiklavietės adresas',
-          'Veiklos pavadinimas',
+          'Pagrindinė veikla',
+          'Ekonominės veiklos kodas pagal EVRK',
+          variant == 1 || variant == 2 ? 'Patvirtinimo / registravimo numeris' : '',
+          type == 2 || type == 3 || type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
         ]}
         answers={[
           data?.parent?.title || userName,
           data?.action?.placeTitle || '-',
           data?.action?.address || '-',
           data?.action?.title || '-',
+          EVRK || '',
+          variant == 1 || variant == 2 ? data?.decision?.regNo || '-' : '',
+          type == 2 || type == 3 || type == 4 ? data?.parent?.parentRegNo || '-' : '',
         ]}
       />
       <Group
@@ -94,20 +105,18 @@ const Decisions = () => {
         questions={[
           'Dokumento data',
           'Dokumento numeris',
-          variant == 1 || variant == 2 ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
-          type == 2 || type == 3 || type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
+          // variant == 1 || variant == 2 ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
+          // type == 2 || type == 3 || type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
           type == 2 || type == 3 ? 'Veiksmas' : '',
           type == 2 || type == 3 ? 'Terminas iki' : '',
-          type == 4 ? 'Duomenų keitimo tipas' : '',
+          type == 4 ? 'Priimtas sprendimas' : '',
         ]}
         answers={[
           data?.decision?.date ? format(new Date(data.decision.date), 'yyyy-MM-dd') : '-',
           data?.decision?.docNo || '-',
-          variant == 1 || variant == 2 ? data?.decision?.regNo || '-' : '',
-          type == 2 || type == 3 || type == 4 ? '-' : '',
           type == 2 || type == 3 ? '-' : '',
           type == 2 || type == 3 ? '-' : '',
-          type == 4 ? '-' : '',
+          type == 4 ? (variant == 6 ? 'Pakeisti duomenys' : 'Nepakeisti duomenys') : '',
         ]}
       />
       <GroupParagraph
