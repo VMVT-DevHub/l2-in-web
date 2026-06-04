@@ -58,7 +58,7 @@ export const routes = [
         },
         {
           slug: slugs.animalRequest(':form', ':requestId'),
-          component: <Form formType={'animal'} copyEnabled={true} />,
+          component: <Form formType={'animal'} copyEnabled={false} />,
         },
         {
           title: 'Veterinarinės kontrolės subjektų sprendimai',
