@@ -22,12 +22,14 @@ const Certificates = () => {
   const params = useMemo(() => Object.fromEntries([...searchParams]), [searchParams]);
 
   const { page, pageSize } = params;
+  const selectedForm = params.form === 'goods' || params.form === 'animals' ? params.form : '';
 
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
 
   const [draft, setDraft] = useState({
+    form: selectedForm,
     requestId: params.requestId ?? '',
     importer: params.importer ?? '',
     manufacturerName: params.manufacturerName ?? '',
@@ -37,6 +39,7 @@ const Certificates = () => {
 
   useEffect(() => {
     setDraft({
+      form: selectedForm,
       requestId: params.requestId ?? '',
       importer: params.importer ?? '',
       manufacturerName: params.manufacturerName ?? '',
@@ -44,6 +47,7 @@ const Certificates = () => {
       productName: params.productName ?? '',
     });
   }, [
+    selectedForm,
     params.requestId,
     params.importer,
     params.manufacturerName,
@@ -65,25 +69,29 @@ const Certificates = () => {
   const applyFilters = () => {
     const sp = new URLSearchParams(searchParams);
 
+    const form = draft.form.trim();
     const requestId = draft.requestId.trim();
     const importer = draft.importer.trim();
     const manufacturerName = draft.manufacturerName.trim();
     const kpnCode = draft.kpnCode.trim();
     const productName = draft.productName.trim();
 
+    if (form) sp.set('form', form);
+    else sp.delete('form');
+
     if (requestId) sp.set('requestId', requestId);
     else sp.delete('requestId');
 
-    if (importer) sp.set('importer', importer);
+    if (form && importer) sp.set('importer', importer);
     else sp.delete('importer');
 
-    if (manufacturerName) sp.set('manufacturerName', manufacturerName);
+    if (form && manufacturerName) sp.set('manufacturerName', manufacturerName);
     else sp.delete('manufacturerName');
 
-    if (kpnCode) sp.set('kpnCode', kpnCode);
+    if (form && kpnCode) sp.set('kpnCode', kpnCode);
     else sp.delete('kpnCode');
 
-    if (productName) sp.set('productName', productName);
+    if (form && productName) sp.set('productName', productName);
     else sp.delete('productName');
 
     sp.set('page', '1');
@@ -93,6 +101,7 @@ const Certificates = () => {
   const clearFilters = () => {
     const sp = new URLSearchParams(searchParams);
 
+    sp.delete('form');
     sp.delete('requestId');
     sp.delete('importer');
     sp.delete('manufacturerName');
@@ -103,6 +112,7 @@ const Certificates = () => {
     setSearchParams(sp);
 
     setDraft({
+      form: '',
       requestId: '',
       importer: '',
       manufacturerName: '',
@@ -112,11 +122,17 @@ const Certificates = () => {
   };
 
   const anyFilter =
+    !!selectedForm ||
     !!(params.requestId ?? '').trim() ||
     !!(params.importer ?? '').trim() ||
     !!(params.manufacturerName ?? '').trim() ||
     !!(params.kpnCode ?? '').trim() ||
     !!(params.productName ?? '').trim();
+
+  const hasSelectedForm = draft.form === 'goods' || draft.form === 'animals';
+  const isGoodsForm = draft.form === 'goods';
+  const productNamePlaceholder =
+    draft.form === 'animals' ? 'Gyvūno pavadinimas' : 'Pavadinimas (teksto dalis)';
 
   const onEnterApply = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') applyFilters();
@@ -154,9 +170,10 @@ const Certificates = () => {
     endpoint: () =>
       api.getCertificateRequests({
         query: {
+          form: selectedForm || undefined,
           requestId: params.requestId,
           importer: params.importer,
-          manufacturerName: params.manufacturerName,
+          manufacturerName: selectedForm === 'goods' ? params.manufacturerName : undefined,
           kpnCode: params.kpnCode,
           productName: params.productName,
         },
@@ -169,6 +186,7 @@ const Certificates = () => {
       page,
       pageSize,
       sort,
+      selectedForm,
       params.requestId,
       params.importer,
       params.manufacturerName,
@@ -189,6 +207,24 @@ const Certificates = () => {
     <TableWrapper title={'Sertifikatai'}>
       <TableButtonsRow>
         <TableButtonsInnerRow>
+          <SearchSelect
+            value={draft.form}
+            onChange={(e) =>
+              setDraft((d) => ({
+                ...d,
+                form: e.target.value,
+                importer: '',
+                manufacturerName: '',
+                kpnCode: '',
+                productName: '',
+              }))
+            }
+          >
+            <option value="">Pasirinkite rūšį</option>
+            <option value="goods">Prekių siunta</option>
+            <option value="animals">Gyvūnų siunta</option>
+          </SearchSelect>
+
           <SearchInput
             placeholder="Prašymo ID"
             inputMode="numeric"
@@ -196,31 +232,37 @@ const Certificates = () => {
             onChange={(e) => setDraft((d) => ({ ...d, requestId: e.target.value }))}
             onKeyDown={onEnterApply}
           />
-          <SearchInput
-            placeholder="Importuotojas"
-            value={draft.importer}
-            onChange={(e) => setDraft((d) => ({ ...d, importer: e.target.value }))}
-            onKeyDown={onEnterApply}
-          />
-          <SearchInput
-            placeholder="Gamintojas"
-            value={draft.manufacturerName}
-            onChange={(e) => setDraft((d) => ({ ...d, manufacturerName: e.target.value }))}
-            onKeyDown={onEnterApply}
-          />
-          <SearchInput
-            placeholder="KPN kodas"
-            inputMode="numeric"
-            value={draft.kpnCode}
-            onChange={(e) => setDraft((d) => ({ ...d, kpnCode: e.target.value }))}
-            onKeyDown={onEnterApply}
-          />
-          <SearchInput
-            placeholder="Pavadinimas (teksto dalis)"
-            value={draft.productName}
-            onChange={(e) => setDraft((d) => ({ ...d, productName: e.target.value }))}
-            onKeyDown={onEnterApply}
-          />
+          {hasSelectedForm && (
+            <>
+              <SearchInput
+                placeholder="Importuotojas"
+                value={draft.importer}
+                onChange={(e) => setDraft((d) => ({ ...d, importer: e.target.value }))}
+                onKeyDown={onEnterApply}
+              />
+              {isGoodsForm && (
+                <SearchInput
+                  placeholder="Gamintojas"
+                  value={draft.manufacturerName}
+                  onChange={(e) => setDraft((d) => ({ ...d, manufacturerName: e.target.value }))}
+                  onKeyDown={onEnterApply}
+                />
+              )}
+              <SearchInput
+                placeholder="KPN kodas"
+                inputMode="numeric"
+                value={draft.kpnCode}
+                onChange={(e) => setDraft((d) => ({ ...d, kpnCode: e.target.value }))}
+                onKeyDown={onEnterApply}
+              />
+              <SearchInput
+                placeholder={productNamePlaceholder}
+                value={draft.productName}
+                onChange={(e) => setDraft((d) => ({ ...d, productName: e.target.value }))}
+                onKeyDown={onEnterApply}
+              />
+            </>
+          )}
 
           <ApplyButton type="button" onClick={applyFilters}>
             Ieškoti
@@ -292,6 +334,20 @@ const SearchInput = styled.input`
   border: 1px solid #d0d5dd;
   border-radius: 8px;
   outline: none;
+
+  &:focus {
+    border-color: #98a2b3;
+  }
+`;
+
+const SearchSelect = styled.select`
+  height: 40px;
+  min-width: 180px;
+  padding: 0 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
 
   &:focus {
     border-color: #98a2b3;
