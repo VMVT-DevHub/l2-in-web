@@ -53,6 +53,10 @@ export const ModalArrayLayout = ({
     setShowModal(true);
   };
 
+  const handleCopyItem = (index: number) => {
+    addItem(path, formData[index])();
+  };
+
   const handleRemoveItem = (index: number) => {
     if (removeItems) {
       removeItems(path, [index])();
@@ -162,9 +166,14 @@ export const ModalArrayLayout = ({
                   )}
                 </Card>
                 {enabled ? (
-                  <IconContainer onClick={() => handleRemoveItem(i)}>
-                    <StyledIcon name={IconName.deleteItem} />
-                  </IconContainer>
+                  <IconsContainer>
+                    <IconContainer onClick={() => handleCopyItem(i)}>
+                      <StyledIcon $color={'primary'} name={IconName.copy} />
+                    </IconContainer>
+                    <IconContainer onClick={() => handleRemoveItem(i)}>
+                      <StyledIcon $color={'danger'} name={IconName.deleteItem} />
+                    </IconContainer>
+                  </IconsContainer>
                 ) : (
                   <div />
                 )}
@@ -374,10 +383,16 @@ const CardCode = styled.span`
   color: #636a7a;
 `;
 
-const IconContainer = styled.div`
-  margin: auto 0 10px 0px;
-  height: 40px;
+const IconsContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const IconContainer = styled.div`
+  margin: 0 0 10px 0px;
+  display: flex;
+  justify-content: space-between;
   cursor: pointer;
 `;
 
@@ -405,7 +420,7 @@ const Card = styled.div`
 
 const CardRow = styled.div`
   display: grid;
-  grid-template-columns: repeat(1, 1fr) 20px;
+  grid-template-columns: repeat(1, 2fr) 50px;
   gap: 8px;
 `;
 
@@ -421,10 +436,9 @@ const MainContainer = styled.div`
   gap: 16px;
 `;
 
-const StyledIcon = styled(Icon)`
-  color: ${({ theme }) => theme.colors.danger};
+const StyledIcon = styled(Icon)<{ $color: string }>`
+  color: ${({ theme, $color }) => theme.colors[$color]};
   font-size: 2rem;
-  margin-top: auto;
 `;
 
 export default ModalArrayLayout;

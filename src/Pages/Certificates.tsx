@@ -152,6 +152,10 @@ const Certificates = () => {
   const mapTableData = (item) => {
     const truncatedProductNames = truncateList(item?.productNames);
     const truncatedAnimalNames = truncateList(item?.animalNames);
+    const filteredAnimalAmounts = truncateList(item?.animalAmount.join?.(', '));
+    const filteredProductAmounts = truncateList(
+      item?.productAmount.filter((i) => i.length > 3).join?.(', '),
+    );
     return {
       id: item.id,
       no: `#${item.id}`,
@@ -160,7 +164,7 @@ const Certificates = () => {
       date: format(item.createdAt, 'yyyy MM dd'),
       productNames: truncatedProductNames || truncatedAnimalNames,
       importingCountry: item?.importingCountry,
-      productAmount: item?.productAmount?.join?.(', '),
+      productAmount: filteredProductAmounts || filteredAnimalAmounts,
       status: renderStatusTag(item.status),
     };
   };

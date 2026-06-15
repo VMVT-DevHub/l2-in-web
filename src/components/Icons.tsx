@@ -5,6 +5,7 @@ import { FiDownload, FiUpload } from 'react-icons/fi';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { HiOutlineArrowNarrowLeft } from 'react-icons/hi';
 import { IoCloseOutline } from 'react-icons/io5';
+import { FaRegCopy } from 'react-icons/fa';
 import {
   MdArrowBack,
   MdArrowForwardIos,
@@ -30,6 +31,7 @@ export enum IconName {
   logout = 'logout',
   arrowDown = 'arrowDown',
   unfoldMore = 'unfoldMore',
+  copy = 'copy',
   burger = 'burger',
   calendar = 'calendar',
   close = 'close',
@@ -471,6 +473,37 @@ const Icon = ({ name, className }: IconProps) => {
               <rect width="176.724" height="40" fill="white" />
             </clipPath>
           </defs>
+        </svg>
+      );
+    case IconName.copy:
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="5 5 21 24"
+          className={className}
+        >
+          <rect
+            x="13"
+            y="13"
+            width="11"
+            height="14"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <rect
+            x="7"
+            y="7"
+            width="11"
+            height="14"
+            rx="2"
+            fill="white"
+            stroke="currentColor"
+            stroke-width="2"
+          />
         </svg>
       );
     case IconName.logoWhite:
