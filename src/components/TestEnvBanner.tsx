@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const TestEnvBanner = () => {
   const isShownInTestOnly = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
 
-  if (!isShownInTestOnly) return;
+  if (!isShownInTestOnly) return <></>;
 
   return (
     <Container>
