@@ -55,7 +55,7 @@ const toTreeNode = (animal: AnimalNode, highlight?: string): TreeNode => ({
   value: animal.code,
   title: highlight ? highlightText(animal.name, highlight) : animal.name,
   isLeaf: animal.last,
-  selectable: true,
+  selectable: animal.layer !== 1,
   displ: animal.displ,
   rawData: animal,
   children: animal.last ? undefined : [],

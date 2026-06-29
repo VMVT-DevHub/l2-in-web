@@ -1,6 +1,7 @@
 import { device } from '@aplinkosministerija/design-system';
 import Div100vh from 'react-div-100vh';
 import styled from 'styled-components';
+import { TestEnvBanner } from './TestEnvBanner';
 
 export interface LoginLayoutProps {
   children?: React.ReactNode;
@@ -9,6 +10,7 @@ export interface LoginLayoutProps {
 const LoginLayout = ({ children }: LoginLayoutProps) => {
   return (
     <Div100vh>
+      <TestEnvBanner />
       <Container>
         <ImageContainer>
           <Image src={`${import.meta.env.BASE_URL}vmvtlogin.png`} />

@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import MobileNavbar from './MobileNavBar';
 import SideBar from './SideBar';
+import { TestEnvBanner } from './TestEnvBanner';
 
 export interface DefaultLayoutProps {
   children?: any;
@@ -13,12 +14,18 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
 
   return (
     <Container>
+      <TestEnvBanner />
       {isTablet ? <MobileNavbar /> : <SideBar />}
 
       <Content>{children}</Content>
     </Container>
   );
 };
+
+const LayoutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Container = styled.div`
   display: flex;
