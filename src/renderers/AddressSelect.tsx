@@ -133,8 +133,9 @@ export const AddressSelect = (props: ControlProps) => {
   }
 
   const loadGyv = debounce(async (input: string) => {
-    if (input.trim().length < 2) return { items: [] };
-    const res = await api.getGyv(input.trim());
+    // if (input.trim().length < 2) return { items: [] };
+    const query = input.trim() || 'Viln';
+    const res = await api.getGyv(query);
     return {
       items: res.map((item: AddressSearchItem) => ({
         id: item.id,
@@ -144,7 +145,7 @@ export const AddressSelect = (props: ControlProps) => {
   }, 300);
 
   const loadAdr = debounce(async (input: string) => {
-    if (!current?.gyvId || input.trim().length < 2) return { items: [] };
+    if (!current?.gyvId) return { items: [] };
     const res = await api.getAdr(current.gyvId, input.trim());
     return {
       items: res.map((item: AddressSearchItem) => ({
