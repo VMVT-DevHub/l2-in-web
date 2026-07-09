@@ -49,13 +49,14 @@ const AnimalRequests = () => {
     const truncatedActionPlace = truncateList(item?.actionPlace);
     const truncatedActionPlaceJA = truncateList(item?.actionPlaceJA);
     const truncatedAction = truncateList(item?.action);
+    const truncatedActionEdit = truncateList(item?.actionEdit);
     return {
       id: item.id,
       no: `#${item.id}`,
       reason: animalReasonLabels[item.form],
       date: format(item.createdAt, 'yyyy MM dd'),
       actionPlace: truncatedActionPlace || truncatedActionPlaceJA,
-      action: truncatedAction,
+      action: truncatedAction || truncatedActionEdit,
       submitter: `${item.name || ''} ${item.lastName || ''}`,
       status: renderStatusTag(item.status),
       form: item.form,
