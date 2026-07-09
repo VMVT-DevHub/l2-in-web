@@ -351,6 +351,12 @@ class Api {
     });
   };
 
+  getDecisionAction = async (id: string): Promise<DecisionAddressResponse> => {
+    return await this.get({
+      resource: `decisions/action?id=${id}`,
+    });
+  };
+
   addDelegatedUsers = async (params: {
     ak: string;
     firstName: string;
