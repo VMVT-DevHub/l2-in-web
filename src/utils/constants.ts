@@ -1,6 +1,7 @@
 export enum HistoryTypes {
   CREATED = 'CREATED',
   SUBMITTED = 'SUBMITTED',
+  REVIEW = 'REVIEW',
   REJECTED = 'REJECTED',
   RETURNED = 'RETURNED',
   APPROVED = 'APPROVED',
@@ -21,6 +22,7 @@ export enum TagColors {
 export enum StatusTypes {
   CREATED = 'CREATED',
   SUBMITTED = 'SUBMITTED',
+  REVIEW = 'REVIEW',
   APPROVED = 'APPROVED',
   RETURNED = 'RETURNED',
   REJECTED = 'REJECTED',
@@ -44,6 +46,7 @@ export enum SortFields {
 export const colorsByStatus = {
   [StatusTypes.CREATED]: TagColors.BLUE,
   [StatusTypes.SUBMITTED]: TagColors.BLUE,
+  [StatusTypes.REVIEW]: TagColors.BLUE,
   [StatusTypes.APPROVED]: TagColors.GREEN,
   [StatusTypes.COMPLETED]: TagColors.GREEN,
   [StatusTypes.RETURNED]: TagColors.ORANGE,

@@ -3,6 +3,7 @@ import { AnimalForms, FoodForms, FormTypes, HistoryTypes, StatusTypes } from './
 export const requestStatusLabels = {
   [StatusTypes.CREATED]: 'Pateiktas',
   [StatusTypes.SUBMITTED]: 'Pateiktas pakartotinai ',
+  [StatusTypes.REVIEW]: 'Vertinamas',
   [StatusTypes.RETURNED]: 'Grąžintas taisymui',
   [StatusTypes.REJECTED]: 'Atmestas',
   [StatusTypes.APPROVED]: 'Patvirtintas',
@@ -45,6 +46,7 @@ export const decisionTypes = {
 export const requestFormHistoryDescriptions = {
   [HistoryTypes.CREATED]: 'pateikė prašymą',
   [HistoryTypes.SUBMITTED]: 'pateikė pakartotinai prašymą',
+  [HistoryTypes.REVIEW]: 'vertina prašymą',
   [HistoryTypes.RETURNED]: 'grąžino taisyti pateiktą prašymą',
   [HistoryTypes.REJECTED]: 'atmetė pateiktą prašymą',
   [HistoryTypes.APPROVED]: 'patvirtino prašymą',

@@ -159,6 +159,7 @@ const Certificates = () => {
     return {
       id: item.id,
       no: `#${item.id}`,
+      exportCertificateNo: item?.exportCertificateNo || '',
       form: item?.form,
       formTitle: item?.formConfig?.title,
       date: format(item.createdAt, 'yyyy MM dd'),
