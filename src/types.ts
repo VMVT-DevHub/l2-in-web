@@ -140,6 +140,7 @@ export interface Form {
 export interface Request {
   id: number;
   status: StatusTypes;
+  exportCertificateNo?: string;
   canEdit: boolean;
   form: Form;
   tenant: any;

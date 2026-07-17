@@ -1,5 +1,6 @@
 export const certificateColumns = {
   no: { show: true, label: 'Prašymo Nr.' },
+  exportCertificateNo: { show: true, label: 'Sertifikato Nr.' },
   formTitle: { show: true, label: 'Rūšis' },
   productNames: { show: true, label: 'Prekės pavadinimas' },
   importingCountry: { show: true, label: 'Šalis importuotoja' },
