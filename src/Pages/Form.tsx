@@ -429,12 +429,13 @@ const Form = ({ formType, copyEnabled }) => {
 
   const handleConfimForm = async () => {
     await createOrUpdateRequest.mutateAsync(
-      // request?.status === StatusTypes.RETURNED ? StatusTypes.SUBMITTED : StatusTypes.CREATED,
       request?.status === StatusTypes.RETURNED
         ? StatusTypes.SUBMITTED
         : request?.status === StatusTypes.CREATED
         ? StatusTypes.SUBMITTED
         : request?.status === StatusTypes.SUBMITTED
+        ? StatusTypes.SUBMITTED
+        : request?.status === StatusTypes.REVIEW
         ? StatusTypes.SUBMITTED
         : StatusTypes.CREATED,
     );
