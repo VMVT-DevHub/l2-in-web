@@ -60,6 +60,7 @@ const Certificates = () => {
     formTitle: 'form',
     date: 'createdAt',
     status: 'status',
+    exportCertificateNo: 'exportCertificateNo',
     productNames: 'productNames',
     animalNames: 'animalNames',
     importingCountry: 'importCountry',
