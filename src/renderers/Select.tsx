@@ -27,6 +27,7 @@ export interface SelectFieldProps {
   refreshOptions?: (dependantId?: string) => any;
   ariaLabelRemove?: string;
   ariaLabelDropDownIcon?: string;
+  inputFontSize?: string;
 }
 
 const SelectField = ({
@@ -51,6 +52,7 @@ const SelectField = ({
   refreshOptions,
   ariaLabelRemove = 'Pašalinti',
   ariaLabelDropDownIcon = 'Išskleidimo ikonėlė',
+  inputFontSize = '1.6rem',
 }: SelectFieldProps) => {
   const {
     suggestions,
@@ -84,9 +86,10 @@ const SelectField = ({
       error={error}
       showError={showError}
     >
-      <TextFieldInput
+      <StyledTextFieldInput
         label={label}
         value={input}
+        $inputFontSize={inputFontSize}
         name={name}
         error={error}
         left={left}
@@ -144,6 +147,7 @@ const SelectField = ({
       />
       <OptionsContainer
         options={suggestions}
+        inputFontSize={inputFontSize}
         handleMouseOver={handleMouseOver}
         description={description}
         getOptionLabel={getOptionComponent || getOptionLabel}
@@ -158,6 +162,10 @@ const SelectField = ({
 const RightContainer = styled.div`
   display: flex;
   gap: 8px;
+`;
+
+const StyledTextFieldInput = styled(TextFieldInput)<{ $inputFontSize }>`
+  font-size: ${({ $inputFontSize }) => $inputFontSize};
 `;
 
 const IconButton = styled.button`
