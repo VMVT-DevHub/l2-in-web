@@ -48,7 +48,6 @@ export const SelectFieldRenderer = ({
     if (!isEditForm || !decisionData) return;
 
     if (isVeikla) {
-      console.log(path);
       handleChange(path, decisionData);
     }
   }, [decisionData, isVeikla, isEditForm]);

@@ -1,7 +1,7 @@
 import { Button, SortedColumnsProps, Table } from '@aplinkosministerija/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
+import { JSX, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import FormSelectModal from '../components/FormSelectModal';
@@ -16,6 +16,7 @@ import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
+import SelectField from '../renderers/Select';
 
 const Certificates = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -209,30 +210,36 @@ const Certificates = () => {
 
   if (isFormLoading || isTableLoading) return <FullscreenLoader />;
 
+  const options = [
+    { value: 'goods', label: 'Prekių siunta' },
+    { value: 'animals', label: 'Gyvūnų siunta' },
+  ];
+
   return (
     <TableWrapper title={'Sertifikatai'}>
       <TableButtonsRow>
         <TableButtonsInnerRow>
-          <SearchSelect
-            value={draft.form}
-            onChange={(e) =>
+          <SelectField
+            value={options.find((o) => o.value === draft.form)}
+            onChange={(option) =>
               setDraft((d) => ({
                 ...d,
-                form: e.target.value,
+                form: option?.value ?? '',
                 importer: '',
                 manufacturerName: '',
                 kpnCode: '',
                 productName: '',
               }))
             }
-          >
-            <option value="">Pasirinkite rūšį</option>
-            <option value="goods">Prekių siunta</option>
-            <option value="animals">Gyvūnų siunta</option>
-          </SearchSelect>
-
+            options={options}
+            getOptionLabel={(option) => option.label}
+            handleMouseOver={() => {}}
+            clearable={true}
+            placeholder="Pasirinkite rūšį"
+            inputFontSize="1.4rem"
+          />
           <SearchInput
-            placeholder="Prašymo ID"
+            placeholder="Prašymo Nr."
             inputMode="numeric"
             value={draft.requestId}
             onChange={(e) => setDraft((d) => ({ ...d, requestId: e.target.value }))}
@@ -323,7 +330,7 @@ const TableButtonsRow = styled.div`
   justify-content: space-between;
   width: 100%;
   gap: 16px;
-  margin: 16px 0;
+  margin: 16px 0 32px 0;
 `;
 
 const TableButtonsInnerRow = styled.div`
@@ -338,8 +345,9 @@ const SearchInput = styled.input`
   min-width: 160px;
   padding: 0 12px;
   border: 1px solid #d0d5dd;
-  border-radius: 8px;
+  border-radius: 4px;
   outline: none;
+  font-size: 14px;
 
   &:focus {
     border-color: #98a2b3;
@@ -351,10 +359,9 @@ const SearchSelect = styled.select`
   min-width: 180px;
   padding: 0 12px;
   border: 1px solid #d0d5dd;
-  border-radius: 8px;
+  border-radius: 4px;
   outline: none;
   background: #ffffff;
-
   &:focus {
     border-color: #98a2b3;
   }
@@ -365,7 +372,8 @@ const ApplyButton = styled.button`
   padding: 0 12px;
   border: 1px solid #98a2b3;
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: 30px;
+  font-size: 1.4rem;
   cursor: pointer;
 
   &:hover {
@@ -378,7 +386,8 @@ const ClearButton = styled.button`
   padding: 0 12px;
   border: 1px solid #d0d5dd;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 30px;
+  font-size: 1.4rem;
   cursor: pointer;
 
   &:hover:not(:disabled) {
