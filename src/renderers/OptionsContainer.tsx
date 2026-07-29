@@ -31,6 +31,7 @@ export interface OptionsContainerProps {
   name?: string;
   getOptionId?: (option: any) => string | number;
   activeOptionId?: string;
+  inputFontSize?: string;
 }
 
 const OptionsContainer = ({
@@ -49,6 +50,7 @@ const OptionsContainer = ({
   },
   className,
   name = '',
+  inputFontSize = '1.6rem',
   getOptionId = (option) => option?.id ?? option,
   activeOptionId,
 }: OptionsContainerProps) => {
@@ -61,7 +63,7 @@ const OptionsContainer = ({
       return loading ? (
         <LoaderComponent />
       ) : (
-        <Option key="no-options" role="option" aria-disabled="true">
+        <Option key="no-options" role="option" aria-disabled="true" $inputFontSize={inputFontSize}>
           {texts?.noOptions}
         </Option>
       );
@@ -101,6 +103,7 @@ const OptionsContainer = ({
             >
               <Option
                 id={optionId}
+                $inputFontSize={inputFontSize}
                 key={JSON.stringify(option) + index}
                 role="option"
                 tabIndex={0}
@@ -179,9 +182,9 @@ const OptionContainer = styled.div`
   }
 `;
 
-const Option = styled.div`
+const Option = styled.div<{ $inputFontSize }>`
   cursor: pointer;
-  font-size: 1.6rem;
+  font-size: ${({ $inputFontSize }) => $inputFontSize};
   line-height: 20px;
   padding: 8px 12px;
   color: ${({ theme }) => theme.colors.dropDown?.label || '#101010'};
