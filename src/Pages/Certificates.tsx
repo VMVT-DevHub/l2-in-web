@@ -36,6 +36,7 @@ const Certificates = () => {
     manufacturerName: params.manufacturerName ?? '',
     kpnCode: params.kpnCode ?? '',
     productName: params.productName ?? '',
+    status: params.status ?? '',
   });
 
   useEffect(() => {
@@ -46,6 +47,7 @@ const Certificates = () => {
       manufacturerName: params.manufacturerName ?? '',
       kpnCode: params.kpnCode ?? '',
       productName: params.productName ?? '',
+      status: params.status ?? '',
     });
   }, [
     selectedForm,
@@ -54,6 +56,7 @@ const Certificates = () => {
     params.manufacturerName,
     params.kpnCode,
     params.productName,
+    params.status,
   ]);
 
   const sortingFields = {
@@ -76,6 +79,7 @@ const Certificates = () => {
     const importer = draft.importer.trim();
     const manufacturerName = draft.manufacturerName.trim();
     const kpnCode = draft.kpnCode.trim();
+    const status = draft.status.trim();
     const productName = draft.productName.trim();
 
     if (form) sp.set('form', form);
@@ -89,6 +93,9 @@ const Certificates = () => {
 
     if (form && manufacturerName) sp.set('manufacturerName', manufacturerName);
     else sp.delete('manufacturerName');
+
+    if (form && status) sp.set('status', status);
+    else sp.delete('status');
 
     if (form && kpnCode) sp.set('kpnCode', kpnCode);
     else sp.delete('kpnCode');
@@ -106,6 +113,7 @@ const Certificates = () => {
     sp.delete('form');
     sp.delete('requestId');
     sp.delete('importer');
+    sp.delete('status');
     sp.delete('manufacturerName');
     sp.delete('kpnCode');
     sp.delete('productName');
@@ -120,6 +128,7 @@ const Certificates = () => {
       manufacturerName: '',
       kpnCode: '',
       productName: '',
+      status: '',
     });
   };
 
@@ -127,6 +136,7 @@ const Certificates = () => {
     !!selectedForm ||
     !!(params.requestId ?? '').trim() ||
     !!(params.importer ?? '').trim() ||
+    !!(params.status ?? '').trim() ||
     !!(params.manufacturerName ?? '').trim() ||
     !!(params.kpnCode ?? '').trim() ||
     !!(params.productName ?? '').trim();
@@ -183,6 +193,7 @@ const Certificates = () => {
           manufacturerName: selectedForm === 'goods' ? params.manufacturerName : undefined,
           kpnCode: params.kpnCode,
           productName: params.productName,
+          status: params.status,
         },
         page,
         pageSize,
@@ -198,6 +209,7 @@ const Certificates = () => {
       params.importer,
       params.manufacturerName,
       params.kpnCode,
+      params.status,
       params.productName,
     ],
     enabled: !isFormLoading,
@@ -215,6 +227,17 @@ const Certificates = () => {
     { value: 'animals', label: 'Gyvūnų siunta' },
   ];
 
+  const statusOptions = [
+    { value: 'CREATED', label: 'Pateiktas' },
+    { value: 'SUBMITTED', label: 'Pateiktas pakartotinai' },
+    { value: 'REVIEW', label: 'Vertinamas' },
+    { value: 'RETURNED', label: 'Grąžintas taisymui' },
+    { value: 'REJECTED', label: 'Atmestas' },
+    { value: 'APPROVED', label: 'Patvirtintas' },
+    { value: 'COMPLETED', label: 'Sertifikatas išduotas' },
+    { value: 'DRAFT', label: 'Juodraštis' },
+  ];
+
   return (
     <TableWrapper title={'Sertifikatai'}>
       <TableButtonsRow>
@@ -229,13 +252,14 @@ const Certificates = () => {
                 manufacturerName: '',
                 kpnCode: '',
                 productName: '',
+                status: '',
               }))
             }
             options={options}
             getOptionLabel={(option) => option.label}
             handleMouseOver={() => {}}
             clearable={true}
-            placeholder="Pasirinkite rūšį"
+            placeholder="Pasirinkite prašymo rūšį"
             inputFontSize="1.4rem"
           />
           <SearchInput
@@ -252,6 +276,21 @@ const Certificates = () => {
                 value={draft.importer}
                 onChange={(e) => setDraft((d) => ({ ...d, importer: e.target.value }))}
                 onKeyDown={onEnterApply}
+              />
+              <SelectField
+                value={statusOptions.find((o) => o.value === draft.status)}
+                onChange={(option) =>
+                  setDraft((d) => ({
+                    ...d,
+                    status: option?.value ?? '',
+                  }))
+                }
+                options={statusOptions}
+                getOptionLabel={(option) => option.label}
+                handleMouseOver={() => {}}
+                clearable={true}
+                placeholder="Statusas"
+                inputFontSize="1.4rem"
               />
               {isGoodsForm && (
                 <SearchInput
@@ -277,9 +316,9 @@ const Certificates = () => {
             </>
           )}
 
-          <ApplyButton type="button" onClick={applyFilters}>
+          <Button variant={'transparent'} type="button" onClick={applyFilters}>
             Ieškoti
-          </ApplyButton>
+          </Button>
 
           <ClearButton type="button" disabled={!anyFilter} onClick={clearFilters}>
             Išvalyti
@@ -329,7 +368,7 @@ const TableButtonsRow = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 16px;
+  gap: 48px;
   margin: 16px 0 32px 0;
 `;
 
