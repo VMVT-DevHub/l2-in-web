@@ -12,7 +12,7 @@ import { Request } from '../types';
 import api from '../utils/api';
 import { certificateColumns } from '../utils/columns';
 import { colorsByStatus, SortFields } from '../utils/constants';
-import { handleError, truncateList } from '../utils/functions';
+import { certTypeCheck, handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
@@ -69,6 +69,7 @@ const Certificates = () => {
     animalNames: 'animalNames',
     importingCountry: 'importCountry',
     productAmount: 'importAmount',
+    certType: 'id',
   };
 
   const applyFilters = () => {
@@ -179,6 +180,7 @@ const Certificates = () => {
       importingCountry: item?.importingCountry,
       productAmount: filteredProductAmounts || filteredAnimalAmounts,
       status: renderStatusTag(item.status),
+      certType: certTypeCheck(item?.certType),
     };
   };
 

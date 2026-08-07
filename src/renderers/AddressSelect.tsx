@@ -69,6 +69,12 @@ export const AddressSelect = (props: ControlProps) => {
     enabled: !!isEditForm && regNo.length > 3,
   });
 
+  const { data: aobData } = useQuery({
+    queryKey: ['aobAdr', user?.aob],
+    queryFn: () => api.getAdrFromAob(user?.aob || ''),
+    enabled: !!isUsingAOB,
+  });
+
   useEffect(() => {
     if (!isEditForm || !decisionData) return;
 
@@ -154,7 +160,6 @@ export const AddressSelect = (props: ControlProps) => {
       })),
     };
   }, 300);
-  //temp
 
   return (
     <FieldWrapper>
@@ -163,7 +168,7 @@ export const AddressSelect = (props: ControlProps) => {
         name="gyvenviete"
         label="Gyvenvietė *"
         error={cleanError}
-        placeholder="Pradėkite vesti"
+        placeholder={isUsingAOB ? aobData?.vietove : 'Pradėkite vesti'}
         disabled={!enabled}
         value={current?.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
@@ -188,13 +193,8 @@ export const AddressSelect = (props: ControlProps) => {
         label="Adresas *"
         error={addressError}
         disabled={!enabled || !current?.gyvId}
-        value={
-          isUsingAOB
-            ? { id: user.aob, name: user.address ?? '' }
-            : current?.adrId
-            ? { id: current.adrId, name: current.adrName ?? '' }
-            : undefined
-        }
+        placeholder={isUsingAOB ? aobData?.pavad : ''}
+        value={current?.adrId ? { id: current.adrId, name: current.adrName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"
         loadOptions={loadAdr}
