@@ -67,7 +67,7 @@ export const animalReasonLabels = {
   [AnimalForms.CREATE]: 'Registravimas',
   [AnimalForms.EDIT]: 'Tikslinimas',
   [AnimalForms.REMOVE]: 'Panaikinimas',
-  [AnimalForms.RESUME]: 'Atšaukimas',
+  [AnimalForms.RESUME]: 'Pratęsimas',
 };
 
 export const buttonLabels = {

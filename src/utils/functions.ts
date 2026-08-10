@@ -172,3 +172,13 @@ export function truncateList(list?: string[] | string, maxLength = 50): string {
 
   return str.length > maxLength ? `${str.slice(0, maxLength)}...` : str;
 }
+
+export function certTypeCheck(type: boolean | null): string {
+  if (typeof type == 'boolean') {
+    if (type) {
+      return 'Fizinis';
+    }
+    return 'Nuotolinis';
+  }
+  return '-';
+}

@@ -17,6 +17,7 @@ export const DateRenderer = ({
   const minDate = uischema?.options?.minDate;
   const maxDate = uischema?.options?.maxDate;
   const fromToday = uischema?.options?.fromToday;
+  const untilToday = uischema?.options?.untilToday;
 
   const today = new Date();
 
@@ -34,7 +35,7 @@ export const DateRenderer = ({
       showError={true}
       disabled={!enabled}
       minDate={fromToday ? today : minDateValue ? new Date(minDateValue) : undefined}
-      maxDate={maxDateValue ? new Date(maxDateValue) : undefined}
+      maxDate={untilToday ? today : maxDateValue ? new Date(maxDateValue) : undefined}
     />
   );
 };

@@ -64,6 +64,16 @@ interface AddressSearchItem {
   tipas: string;
 }
 
+interface AddressAobItem {
+  aob: number;
+  pavad: string;
+  vietove: string;
+  tipas: string;
+  gyv: {
+    id: number;
+  };
+}
+
 export interface SearchNode {
   data: AnimalNode[];
   items: number;
@@ -494,6 +504,14 @@ class Api {
     return this.errorWrapper(() =>
       this.AuthApiAxios.get(`${apiBasePath}/addresses/find/adr`, {
         params: { gyv: gyvId, q: query, top: 10 },
+      }),
+    );
+  };
+
+  getAdrFromAob = async (aob: string): Promise<AddressAobItem> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get(`${apiBasePath}/addresses/find/dst`, {
+        params: { id: aob, full: true, details: true },
       }),
     );
   };
