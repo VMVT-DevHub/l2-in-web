@@ -31,8 +31,9 @@ const Decisions = () => {
 
   const type = data?.decision?.titleId || 0; //prasymo tipas (1-4)
   const variant = data?.type?.id || 0; //decisionTypes, tikslus tipas
-  const showDownloadButton =
-    data?.status?.id == 3 || data?.status?.id == 4 || data?.status?.id == 7; //show only when Suteikta or Atmesta or Pakeista
+
+  const showDownloadButton = [3, 4, 5, 6, 7].includes(data?.status?.id || -1);
+  //show only when Suteikta or Atmesta or Pakeista or Panaikinta or Sustabdyta
 
   const titles = {
     0: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto',
