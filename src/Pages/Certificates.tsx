@@ -33,6 +33,7 @@ const Certificates = () => {
     form: selectedForm,
     requestId: params.requestId ?? '',
     importer: params.importer ?? '',
+    createdBy: params.createdBy ?? '',
     manufacturerName: params.manufacturerName ?? '',
     kpnCode: params.kpnCode ?? '',
     productName: params.productName ?? '',
@@ -44,6 +45,7 @@ const Certificates = () => {
       form: selectedForm,
       requestId: params.requestId ?? '',
       importer: params.importer ?? '',
+      createdBy: params.createdBy ?? '',
       manufacturerName: params.manufacturerName ?? '',
       kpnCode: params.kpnCode ?? '',
       productName: params.productName ?? '',
@@ -53,6 +55,7 @@ const Certificates = () => {
     selectedForm,
     params.requestId,
     params.importer,
+    params.createdBy,
     params.manufacturerName,
     params.kpnCode,
     params.productName,
@@ -61,7 +64,7 @@ const Certificates = () => {
 
   const sortingFields = {
     no: 'id',
-    formTitle: 'form',
+    createdBy: 'createdBy',
     date: 'createdAt',
     status: 'status',
     exportCertificateNo: 'exportCertificateNo',
@@ -78,6 +81,7 @@ const Certificates = () => {
     const form = draft.form.trim();
     const requestId = draft.requestId.trim();
     const importer = draft.importer.trim();
+    const createdBy = draft.createdBy.trim();
     const manufacturerName = draft.manufacturerName.trim();
     const kpnCode = draft.kpnCode.trim();
     const status = draft.status.trim();
@@ -91,6 +95,9 @@ const Certificates = () => {
 
     if (form && importer) sp.set('importer', importer);
     else sp.delete('importer');
+
+    if (form && createdBy) sp.set('createdBy', createdBy);
+    else sp.delete('createdBy');
 
     if (form && manufacturerName) sp.set('manufacturerName', manufacturerName);
     else sp.delete('manufacturerName');
@@ -114,6 +121,7 @@ const Certificates = () => {
     sp.delete('form');
     sp.delete('requestId');
     sp.delete('importer');
+    sp.delete('createdBy');
     sp.delete('status');
     sp.delete('manufacturerName');
     sp.delete('kpnCode');
@@ -125,6 +133,7 @@ const Certificates = () => {
     setDraft({
       form: '',
       requestId: '',
+      createdBy: '',
       importer: '',
       manufacturerName: '',
       kpnCode: '',
@@ -137,6 +146,7 @@ const Certificates = () => {
     !!selectedForm ||
     !!(params.requestId ?? '').trim() ||
     !!(params.importer ?? '').trim() ||
+    !!(params.createdBy ?? '').trim() ||
     !!(params.status ?? '').trim() ||
     !!(params.manufacturerName ?? '').trim() ||
     !!(params.kpnCode ?? '').trim() ||
@@ -169,12 +179,13 @@ const Certificates = () => {
     const filteredProductAmounts = truncateList(
       item?.productAmount.filter((i) => i.length > 3).join?.(', '),
     );
+    console.log(item.createdBy);
     return {
       id: item.id,
       no: `#${item.id}`,
       exportCertificateNo: item?.exportCertificateNo || '',
       form: item?.form,
-      formTitle: item?.formConfig?.title,
+      createdBy: item?.createdBy,
       date: format(item.createdAt, 'yyyy MM dd'),
       productNames: truncatedProductNames || truncatedAnimalNames,
       importingCountry: item?.importingCountry,
@@ -192,6 +203,7 @@ const Certificates = () => {
           form: selectedForm || undefined,
           requestId: params.requestId,
           importer: params.importer,
+          createdBy: params.createdBy,
           manufacturerName: selectedForm === 'goods' ? params.manufacturerName : undefined,
           kpnCode: params.kpnCode,
           productName: params.productName,
@@ -209,6 +221,7 @@ const Certificates = () => {
       selectedForm,
       params.requestId,
       params.importer,
+      params.createdBy,
       params.manufacturerName,
       params.kpnCode,
       params.status,
@@ -251,6 +264,7 @@ const Certificates = () => {
                 ...d,
                 form: option?.value ?? '',
                 importer: '',
+                createdBy: '',
                 manufacturerName: '',
                 kpnCode: '',
                 productName: '',
@@ -273,6 +287,12 @@ const Certificates = () => {
           />
           {hasSelectedForm && (
             <>
+              <SearchInput
+                placeholder="Pateikėjas"
+                value={draft.createdBy}
+                onChange={(e) => setDraft((d) => ({ ...d, createdBy: e.target.value }))}
+                onKeyDown={onEnterApply}
+              />
               <SearchInput
                 placeholder="Importuotojas"
                 value={draft.importer}
