@@ -14,10 +14,11 @@ export const requestStatusLabels = {
 export const animalStatusLabels = {
   [StatusTypes.DRAFT]: 'Juodraštis',
   [StatusTypes.CREATED]: 'Pateiktas',
-  [StatusTypes.DECIDING]: 'Vertinamas',
+  [StatusTypes.REVIEW]: 'Vertinamas',
   [StatusTypes.SUBMITTED]: 'Pateiktas pakartotinai',
   [StatusTypes.RETURNED]: 'Grąžintas taisymui',
   [StatusTypes.REJECTED]: 'Atmestas',
+  [StatusTypes.COMPLETED]: 'Prašymas išduotas',
   [StatusTypes.ACCEPTED]: 'Priimtas',
 };
 

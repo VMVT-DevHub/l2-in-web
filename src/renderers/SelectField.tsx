@@ -35,7 +35,7 @@ export const SelectFieldRenderer = ({
   const value = valueKey ? options.find((item) => item[valueKey] === data) : data;
   const [description, setDescription] = useState('');
   const defaultValue = schema?.default;
-  const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr'] || '';
+  const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr']?.trim() || '';
   const isEditForm = (schema as any)['x-edit'];
 
   const { data: decisionData } = useQuery({
