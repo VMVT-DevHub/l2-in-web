@@ -59,7 +59,7 @@ export const AddressSelect = (props: ControlProps) => {
   const hasAOB = !!user?.aob;
   const addressError = current?.gyvId && !current?.adrId ? 'Adresas yra privalomas.' : cleanError;
   const isUsingAOB = hasAOB && user.aob && current?.adrId == null;
-  const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr'] || '';
+  const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr']?.trim() || '';
   const isEditForm = (props?.schema as any)['x-edit'];
   const activeUserCode = user?.activeOrgCode || user?.ak || '';
 

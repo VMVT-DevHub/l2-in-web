@@ -14,7 +14,7 @@ import { colorsByStatus, SortFields } from '../utils/constants';
 import { handleError, truncateList } from '../utils/functions';
 import { useTableData } from '../utils/hooks';
 import { slugs } from '../utils/routes';
-import { animalReasonLabels, requestStatusLabels } from '../utils/text';
+import { animalReasonLabels, animalStatusLabels } from '../utils/text';
 
 const showAllRequests = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
 
@@ -43,7 +43,7 @@ const AnimalRequests = () => {
   const formData = data && showAllRequests ? data?.forms : [data?.forms[0], data?.forms[3]];
 
   const renderStatusTag = (status) =>
-    status && <StatusTag label={requestStatusLabels[status]} color={colorsByStatus[status]} />;
+    status && <StatusTag label={animalStatusLabels[status]} color={colorsByStatus[status]} />;
 
   const mapTableData = (item) => {
     const truncatedActionPlace = truncateList(item?.actionPlace);
