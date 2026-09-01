@@ -361,7 +361,7 @@ class Api {
     });
   };
 
-  getDecisionAction = async (id: string): Promise<DecisionAddressResponse> => {
+  getDecisionAction = async (id: string): Promise<any> => {
     return await this.get({
       resource: `decisions/action?id=${id}`,
     });
