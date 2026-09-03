@@ -18,8 +18,8 @@ export const animalStatusLabels = {
   [StatusTypes.SUBMITTED]: 'Pateiktas pakartotinai',
   [StatusTypes.RETURNED]: 'Grąžintas taisymui',
   [StatusTypes.REJECTED]: 'Atmestas',
-  [StatusTypes.COMPLETED]: 'Prašymas išduotas',
-  [StatusTypes.ACCEPTED]: 'Priimtas',
+  [StatusTypes.COMPLETED]: 'Atliktas',
+  [StatusTypes.APPROVED]: 'Patvirtintas',
 };
 
 export const decisionsStatusLabels = {

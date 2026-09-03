@@ -106,14 +106,20 @@ const SideBar = ({ className }: ModuleMenuProps) => {
           <TitleRow>
             <StyledButton
               $isCurrent={currentTab == 'prasymai'}
-              onClick={() => setCurrentTab('prasymai')}
+              onClick={() => {
+                setCurrentTab('prasymai');
+                navigate('/veterinarines-kontroles-subjektai');
+              }}
             >
               Prašymai
             </StyledButton>
             {isVksPortal && (
               <StyledButton
                 $isCurrent={currentTab == 'sprendimai'}
-                onClick={() => setCurrentTab('sprendimai')}
+                onClick={() => {
+                  setCurrentTab('sprendimai');
+                  navigate('/sprendimai');
+                }}
               >
                 Sprendimai
               </StyledButton>
