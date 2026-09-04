@@ -40,7 +40,7 @@ const AnimalRequests = () => {
     refetchOnWindowFocus: false,
   });
 
-  const formData = data && showAllRequests ? data?.forms : [data?.forms[0], data?.forms[3]];
+  const formData = data?.forms;
 
   const renderStatusTag = (status) =>
     status && <StatusTag label={animalStatusLabels[status]} color={colorsByStatus[status]} />;
