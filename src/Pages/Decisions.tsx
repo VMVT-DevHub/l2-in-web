@@ -31,8 +31,17 @@ const Decisions = () => {
 
   const type = data?.decision?.titleId || 0; //prasymo tipas (1-4)
   const variant = data?.type?.id || 0; //decisionTypes, tikslus tipas
-  const showDownloadButton =
-    data?.status?.id == 3 || data?.status?.id == 4 || data?.status?.id == 7; //show only when Suteikta or Atmesta or Pakeista
+
+  const showDownloadButton = [3, 4, 5, 6, 7, 8].includes(data?.status?.id || -1);
+  //show only when Suteikta or Atmesta, Pakeista, Panaikinta, Sustabdyta, Active
+
+  const removalActions = {
+    4: 'Atmetimas',
+    5: 'Panaikinimas',
+    6: 'Sustabdymas',
+    8: 'Aktyvavimas',
+  };
+  const removalAction = removalActions[data?.status?.id || -1] ?? '-';
 
   const titles = {
     0: 'Administracinis sprendimas dėl veterinarinės kontrolės subjekto',
@@ -88,7 +97,7 @@ const Decisions = () => {
           'Pagrindinė veikla',
           'Ekonominės veiklos kodas pagal EVRK',
           variant == 1 || variant == 2 ? 'Patvirtinimo / registravimo numeris' : '',
-          type == 2 || type == 3 || type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
+          type == 2 || type == 3 || type == 4 ? 'Susijęs patvirtinimo / registravimo numeris' : '',
         ]}
         answers={[
           data?.parent?.title || userName,
@@ -105,17 +114,13 @@ const Decisions = () => {
         questions={[
           'Dokumento data',
           'Dokumento numeris',
-          // variant == 1 || variant == 2 ? 'Suteiktas patvirtinimo / registravimo numeris' : '',
-          // type == 2 || type == 3 || type == 4 ? 'Patvirtinimo / Registravimo numeris' : '',
           type == 2 || type == 3 ? 'Veiksmas' : '',
-          type == 2 || type == 3 ? 'Terminas iki' : '',
           type == 4 ? 'Priimtas sprendimas' : '',
         ]}
         answers={[
           data?.decision?.date ? format(new Date(data.decision.date), 'yyyy-MM-dd') : '-',
           data?.decision?.docNo || '-',
-          type == 2 || type == 3 ? '-' : '',
-          type == 2 || type == 3 ? '-' : '',
+          type == 2 || type == 3 ? removalAction : '',
           type == 4 ? (variant == 6 ? 'Pakeisti duomenys' : 'Nepakeisti duomenys') : '',
         ]}
       />
