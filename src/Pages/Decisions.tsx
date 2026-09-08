@@ -117,7 +117,7 @@ const Decisions = () => {
           type == 2 || type == 3 ? 'Veiksmas' : '',
           type == 4 ? 'Priimtas sprendimas' : '',
           type == 2 && data?.status?.id == 6 ? 'Sustabdyta iki' : '',
-          type == 2 && data?.subType?.id == 1 ? 'Laikinai patvirtinta iki' : '',
+          type == 1 && data?.subType?.id == 1 ? 'Laikinai patvirtinta iki' : '',
         ]}
         answers={[
           data?.decision?.date ? format(new Date(data.decision.date), 'yyyy-MM-dd') : '-',
@@ -127,7 +127,7 @@ const Decisions = () => {
           type == 2 && data?.status?.id == 6 && data?.decision?.dateUntil
             ? format(new Date(data.decision.dateUntil), 'yyyy-MM-dd')
             : '',
-          type == 2 && data?.subType?.id == 1 && data?.decision?.dateUntil
+          type == 1 && data?.subType?.id == 1 && data?.decision?.dateUntil
             ? format(new Date(data.decision.dateUntil), 'yyyy-MM-dd')
             : '',
         ]}
