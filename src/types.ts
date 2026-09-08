@@ -97,6 +97,7 @@ export interface Decisions {
     date?: Date;
     docNo?: string;
     regNo?: string;
+    dateUntil?: Date;
   };
   users?: {
     decider: string;
