@@ -116,12 +116,20 @@ const Decisions = () => {
           'Dokumento numeris',
           type == 2 || type == 3 ? 'Veiksmas' : '',
           type == 4 ? 'Priimtas sprendimas' : '',
+          type == 2 && data?.status?.id == 6 ? 'Sustabdyta iki' : '',
+          type == 1 && data?.subType?.id == 1 ? 'Laikinai patvirtinta iki' : '',
         ]}
         answers={[
           data?.decision?.date ? format(new Date(data.decision.date), 'yyyy-MM-dd') : '-',
           data?.decision?.docNo || '-',
           type == 2 || type == 3 ? removalAction : '',
           type == 4 ? (variant == 6 ? 'Pakeisti duomenys' : 'Nepakeisti duomenys') : '',
+          type == 2 && data?.status?.id == 6 && data?.decision?.dateUntil
+            ? format(new Date(data.decision.dateUntil), 'yyyy-MM-dd')
+            : '',
+          type == 1 && data?.subType?.id == 1 && data?.decision?.dateUntil
+            ? format(new Date(data.decision.dateUntil), 'yyyy-MM-dd')
+            : '',
         ]}
       />
       <GroupParagraph
