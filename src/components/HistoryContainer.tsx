@@ -86,8 +86,8 @@ const HistoryContainer = ({
                 <React.Fragment key={`history-${pageIndex}`}>
                   {page?.data.map((history, index) => {
                     const createdBy = history?.createdBy
-                      ? `${history?.createdBy?.firstName?.[0]}. ${history?.createdBy?.lastName}`
-                      : 'SPECIALISTAS';
+                      ? `${history?.createdBy?.firstName?.[0]}. ${history?.createdBy?.lastName} `
+                      : 'SPECIALISTAS ';
                     return (
                       <Column key={`inner-history-${index}`}>
                         <HistoryRow>
