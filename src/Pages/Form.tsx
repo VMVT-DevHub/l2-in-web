@@ -9,7 +9,7 @@ import addErrors from 'ajv-errors';
 import addFormats from 'ajv-formats';
 import { cloneDeep, unset } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ConfirmPopup from '../components/ConfirmPopup';
 import FullscreenLoader from '../components/FullscreenLoader';
@@ -176,6 +176,8 @@ const Form = ({ formType, copyEnabled }) => {
     animal: slugs.animalRequests,
   };
 
+  const location = useLocation().state;
+
   const { form = '', requestId = '' } = useParams();
   const [values, setValues] = useState<any>({});
   const [popUpVisible, setPopUpVisible] = useState(false);
@@ -211,7 +213,14 @@ const Form = ({ formType, copyEnabled }) => {
   );
 
   const createInitialDraft = useMutation(
-    () => api.createRequest({ data: {}, form, status: StatusTypes.DRAFT, formType }),
+    () =>
+      api.createRequest({
+        data: {},
+        form,
+        status: StatusTypes.DRAFT,
+        formType,
+        formSubtype: location?.formSubtype || null,
+      }),
     {
       onError: handleAlert,
       onSuccess: (request) => {
