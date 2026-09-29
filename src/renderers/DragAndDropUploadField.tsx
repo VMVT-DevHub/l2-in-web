@@ -244,6 +244,7 @@ const LowerRow = styled.div``;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
 `;
 
 const IconContainer = styled.button`
