@@ -18,6 +18,8 @@ import { slugs } from '../utils/routes';
 import { requestStatusLabels } from '../utils/text';
 import SelectField from '../renderers/Select';
 
+const showAllForms = import.meta.env.VITE_SHOW_ALL_REQUESTS === 'true';
+
 const Certificates = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useMemo(() => Object.fromEntries([...searchParams]), [searchParams]);
@@ -27,7 +29,21 @@ const Certificates = () => {
 
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [showSecondaryModal, setShowSecondaryModal] = useState(false);
+  const [isWhichForm, setIsWhichForm] = useState('');
   const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
+  const nonAnimalForms = [
+    {
+      form: 'non-animal_sert',
+      formType: 'certificate',
+      title: 'Eksportuojamų negyvūninių maisto produktų sertifikatas',
+    },
+    {
+      form: 'non-animal_health',
+      formType: 'certificate',
+      title: 'Į trečiąsias šalis eksportuojamų maisto produktų sveikumo sertifikatas',
+    },
+  ];
 
   const [draft, setDraft] = useState({
     form: selectedForm,
@@ -151,13 +167,27 @@ const Certificates = () => {
     if (e.key === 'Enter') applyFilters();
   };
 
-  const { data, isLoading: isFormLoading } = useQuery(
-    ['certificates'],
-    () => api.getCertificateForm(),
-    {
-      onError: handleError,
-      refetchOnWindowFocus: false,
-    },
+  const { data, isLoading: isFormLoading } = useQuery({
+    queryFn: api.getCertificateForm,
+    queryKey: ['certificates'],
+    onError: handleError,
+  });
+
+  const alteredFormData =
+    !isFormLoading &&
+    [
+      ...data.forms.filter((item) => !['trade-feed', 'trade-food'].includes(item.form)),
+      {
+        form: 'trade',
+        formType: 'certificate',
+        title: 'Prašymas išduoti laisvosios prekybos maistu arba pašarais pažymėjimą',
+        description:
+          'Užpildykite ir pateikite prašymą laisvosios prekybos maistu arba pašarais pažymėjimui gauti.',
+      },
+    ].filter((item) => (showAllForms ? item : ['animals', 'goods'].includes(item.form)));
+
+  const tradeForms = data?.forms.filter(
+    (item) => item.form == 'trade-feed' || item.form == 'trade-food',
   );
 
   const renderStatusTag = (status: any) =>
@@ -351,11 +381,30 @@ const Certificates = () => {
       <FormSelectModal
         title="Naujas sertifikato prašymas"
         onClick={(form) => {
-          navigate(slugs.certificateRequest(form, 'naujas'));
+          if (form == 'trade' || form == 'non-animal') {
+            setShowSecondaryModal(true);
+            setIsWhichForm(form);
+          } else {
+            navigate(slugs.certificateRequest(form, 'naujas'));
+          }
         }}
         onClose={() => setShowModal(false)}
         isVisible={showModal}
-        forms={data?.forms || []}
+        forms={alteredFormData || []}
+      />
+
+      <FormSelectModal
+        title="Pažymėkite, kurio dokumento išdavimo pageidaujate"
+        onClick={(form) => {
+          const formTitle = form.split('_')[0];
+          const formSubtype = form.split('_')[1];
+          navigate(slugs.certificateRequest(formTitle, 'naujas'), {
+            state: { formSubtype: formSubtype },
+          });
+        }}
+        onClose={() => setShowSecondaryModal(false)}
+        isVisible={showSecondaryModal}
+        forms={isWhichForm == 'trade' ? tradeForms : nonAnimalForms || []}
       />
     </TableWrapper>
   );

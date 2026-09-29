@@ -76,6 +76,17 @@ export const AddressSelect = (props: ControlProps) => {
   });
 
   useEffect(() => {
+    if (aobData) {
+      handleChange(path, {
+        gyvId: aobData?.gyv.id,
+        gyvName: aobData?.vietove,
+        adrId: aobData?.gat.id,
+        adrName: aobData?.pavad,
+      });
+    }
+  }, [aobData]);
+
+  useEffect(() => {
     if (!isEditForm || !decisionData) return;
 
     if (decisionData.type == 'coords' && decisionData?.coordX) {
@@ -168,7 +179,7 @@ export const AddressSelect = (props: ControlProps) => {
         name="gyvenviete"
         label="Gyvenvietė *"
         error={cleanError}
-        placeholder={isUsingAOB ? aobData?.vietove : 'Pradėkite vesti'}
+        placeholder={'Pradėkite vesti'}
         disabled={!enabled}
         value={current?.gyvId ? { id: current.gyvId, name: current.gyvName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
@@ -193,7 +204,7 @@ export const AddressSelect = (props: ControlProps) => {
         label="Adresas *"
         error={addressError}
         disabled={!enabled || !current?.gyvId}
-        placeholder={isUsingAOB ? aobData?.pavad : ''}
+        placeholder={''}
         value={current?.adrId ? { id: current.adrId, name: current.adrName ?? '' } : undefined}
         getOptionLabel={(o: Option) => o.name}
         optionsKey="items"

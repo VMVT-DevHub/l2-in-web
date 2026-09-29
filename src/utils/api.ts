@@ -63,15 +63,62 @@ interface AddressSearchItem {
   vietove: string;
   tipas: string;
 }
+interface AdministrativeUnit {
+  id: number;
+  vardas: string;
+  tipas?: string;
+  trump?: string;
+  chc?: number;
+  chm?: number;
+}
+
+interface GyvenamojiVietove {
+  id: number;
+  vardas: string;
+  pavad: string;
+  tipas: string;
+  trump: string;
+  chc: number;
+}
+
+interface Gatve {
+  id: number;
+  vardas: string;
+  tipas: string;
+  trump: string;
+  chc: number;
+}
+
+interface Aob {
+  id: number;
+  vardas: string;
+  chc: number;
+}
+
+interface Apygarda {
+  id: number;
+  vardas: string;
+}
 
 interface AddressAobItem {
-  aob: number;
+  id: number;
   pavad: string;
   vietove: string;
   tipas: string;
-  gyv: {
-    id: number;
-  };
+  nr: string;
+  pat?: string;
+  post: string;
+  dydis: number;
+  regData: string;
+  lks: [number, number];
+  wgs: [number, number];
+  adm: AdministrativeUnit;
+  sav: AdministrativeUnit;
+  gyv: GyvenamojiVietove;
+  gat: Gatve;
+  aob: Aob;
+  apg: Apygarda;
+  type: 'address';
 }
 
 export interface SearchNode {
