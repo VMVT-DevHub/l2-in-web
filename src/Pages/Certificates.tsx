@@ -36,7 +36,7 @@ const Certificates = () => {
     {
       form: 'non-animal_sert',
       formType: 'certificate',
-      title: 'Nnegyvūninių maisto produktų sertifikatas',
+      title: 'Negyvūninių maisto produktų sertifikatas',
     },
     {
       form: 'non-animal_health',
