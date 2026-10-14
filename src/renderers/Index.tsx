@@ -57,6 +57,7 @@ import { MultiSelect } from './MultiSelect';
 import { PlainTextRenderer } from './PlainText';
 import { RadioRenderer } from './Radio';
 import { AsyncAnimalTreeSelectRenderer } from './AnimalTreeSelect';
+import { MultiSelectCardDisplay } from './MultiSelectCardDisplay';
 
 export const customRenderers = [
   { tester: rankWith(2, isStringControl), renderer: withJsonFormsControlProps(CustomTextRenderer) },
@@ -207,6 +208,13 @@ export const customRenderers = [
   {
     tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'multiSelect'))),
     renderer: withJsonFormsArrayLayoutProps(MultiSelect),
+  },
+  {
+    tester: rankWith(
+      3,
+      and(isPrimitiveArrayControl, optionIs('display', 'multiSelectCardDisplay')),
+    ),
+    renderer: withJsonFormsArrayLayoutProps(MultiSelectCardDisplay),
   },
   {
     tester: rankWith(2, and(isPrimitiveArrayControl, optionIs('display', 'buttonMultiSelect'))),
