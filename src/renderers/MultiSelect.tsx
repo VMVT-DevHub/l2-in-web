@@ -52,6 +52,7 @@ export const MultiSelect = ({
     }
 
     if (isAnimalField && animal) {
+      handleChange(path, []);
       return animalFoodMap[animal] ?? [];
     }
 
