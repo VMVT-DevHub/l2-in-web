@@ -146,7 +146,7 @@ export const filterSelectedOptions = (
   values: any[],
   getOptionValue: (value: string) => string,
 ) =>
-  suggestions.filter(
+  suggestions?.filter(
     (opt) => !values?.some((value) => getOptionValue(value) === getOptionValue(opt)),
   );
 

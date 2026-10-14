@@ -20,6 +20,7 @@ import {
   MdUnfoldMore,
 } from 'react-icons/md';
 import { RiArrowDownSFill, RiArrowUpSFill } from 'react-icons/ri';
+import { TiDelete } from 'react-icons/ti';
 
 export interface IconProps {
   name: IconName | string;
@@ -35,6 +36,7 @@ export enum IconName {
   burger = 'burger',
   calendar = 'calendar',
   close = 'close',
+  delete = 'delete',
   dropdownArrow = 'dropdownArrow',
   deleteItem = 'deleteItem',
   returnArrow = 'returnArrow',
@@ -555,7 +557,8 @@ const Icon = ({ name, className }: IconProps) => {
       return <MdOutlineVisibility className={className} />;
     case IconName.visibleOff:
       return <MdOutlineVisibilityOff className={className} />;
-
+    case IconName.delete:
+      return <TiDelete className={className} />;
     case IconName.dropdownArrow:
       return <MdKeyboardArrowDown className={className} />;
     case IconName.deleteItem:

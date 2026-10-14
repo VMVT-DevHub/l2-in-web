@@ -2,9 +2,9 @@ import MultiSelectField from './MultiSelectField';
 import { ArrayLayoutProps, resolveData } from '@jsonforms/core';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
 import { useOptions } from '../utils/hooks';
-import { formatError, handleClearOnChange, handleSetOnChange } from '../utils/functions';
-import { useEffect, useState } from 'react';
-import { animalFoodMap } from '../utils/constants';
+import { formatError } from '../utils/functions';
+import { useMemo, useState } from 'react';
+import { activitySubactivityMap, animalFoodMap } from '../utils/constants';
 
 export const MultiSelect = ({
   schema,
@@ -14,40 +14,73 @@ export const MultiSelect = ({
   enabled,
   visible,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-expect-error
+  // @ts-expect-error
   handleChange,
   label,
 }: ArrayLayoutProps) => {
   const ctx: JsonFormsStateContext = useJsonForms();
   const formData = resolveData(ctx.core?.data, path) || [];
-  const [description, setDescription] = useState();
+  const [description, setDescription] = useState<string>();
+
   const descriptions = (schema as any)['x-info'];
-  const isAnimalField = (schema as any)['x-animal'];
+  const isAnimalField = (schema as any)['x-animal'] || false;
+  const isSubactivityField = (schema as any)['x-subactivity'] || false;
+  const isCategoryField = (schema as any)['x-category'] || false;
   const options = useOptions({ schema, uischema });
   const props = uischema.options?.props;
   const allErrors = ctx.core?.errors || [];
-  const [filteredOptions, setFilteredOptions] = useState(options);
-  const animal = ctx?.core?.data?.veiklos['pasaru-detalizacija-79']?.gyvunai;
+  const veiklos = ctx.core?.data?.veiklos;
+  const animal = veiklos?.['pasaru-detalizacija-79']?.gyvunai;
+  const veikla = veiklos?.veikla;
+  const subveikla = veiklos?.detalizacija;
 
-  useEffect(() => {
-    if (isAnimalField && animal) {
-      setFilteredOptions(animalFoodMap[animal]);
-      handleChange(path, []);
+  const arrayIndex = Number(path.split('.')[2]);
+  const currentSubactivity = subveikla?.[arrayIndex];
+
+  const filteredOptions = useMemo(() => {
+    if (isCategoryField) {
+      const allowedCategories = String(currentSubactivity?.allowedCategories ?? '')
+        .split(',')
+        .map((category) => category.trim())
+        .filter(Boolean);
+
+      return options.filter((option) => allowedCategories.includes(String(option)));
     }
-  }, [animal, isAnimalField]);
+
+    if (isSubactivityField && veikla) {
+      return activitySubactivityMap[veikla] ?? [];
+    }
+
+    if (isAnimalField && animal) {
+      return animalFoodMap[animal] ?? [];
+    }
+
+    return options;
+  }, [
+    options,
+    isCategoryField,
+    isSubactivityField,
+    isAnimalField,
+    currentSubactivity?.allowedCategories,
+    veikla,
+    animal,
+  ]);
 
   const fieldErrors = allErrors
-    .filter((e) => e.instancePath === `/${path.replace(/\./g, '/')}` && e.keyword == 'oneOf')
-    .map((e) => e.parentSchema?.errorMessage?.oneOf)
+    .filter(
+      (error) => error.instancePath === `/${path.replace(/\./g, '/')}` && error.keyword === 'oneOf',
+    )
+    .map((error) => error.parentSchema?.errorMessage?.oneOf)
     .join(', ');
 
   const combinedErrors = [errors, fieldErrors].filter(Boolean).join(', ');
 
-  const handleMouseOver = (option) => {
+  const handleMouseOver = (option: any) => {
     if (!descriptions) return;
 
-    if (typeof option == 'string') setDescription(descriptions[option]);
-    else setDescription(descriptions[option.name]);
+    const key = typeof option === 'string' ? option : option?.name;
+
+    setDescription(descriptions[key] ?? '');
   };
 
   if (!visible) return null;
@@ -58,11 +91,9 @@ export const MultiSelect = ({
       disabled={!enabled}
       error={combinedErrors ? formatError(combinedErrors) : formatError(errors)}
       options={filteredOptions}
-      handleMouseOver={(options) => {
-        handleMouseOver(options);
-      }}
+      handleMouseOver={handleMouseOver}
       description={description}
-      values={formData || []}
+      values={formData}
       onChange={(values) => handleChange(path, values)}
       getOptionLabel={(option) => option}
       getOptionValue={(option) => option}

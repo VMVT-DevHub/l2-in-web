@@ -7,11 +7,12 @@ import {
   handleSetOnChange,
 } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../utils/api';
+import { activityCategoryMap, activitySubactivityMap } from '../utils/constants';
 
 export const SelectFieldRenderer = ({
   data,
@@ -37,6 +38,30 @@ export const SelectFieldRenderer = ({
   const defaultValue = schema?.default;
   const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr']?.trim() || '';
   const isEditForm = (schema as any)['x-edit'];
+  const isSubactivityField = (schema as any)['x-subactivity'] || false;
+  const veikla = ctx?.core?.data?.veiklos?.veikla;
+  const isCategoryField = (schema as any)['x-category'] || false;
+  const previousVeikla = useRef(veikla);
+
+  useEffect(() => {
+    if (previousVeikla.current !== veikla) {
+      previousVeikla.current = veikla;
+
+      if (veikla !== undefined) {
+        handleChange('veiklos.detalizacija', undefined);
+      }
+    }
+  }, [veikla, handleChange]);
+
+  const filteredOptions = useMemo(() => {
+    if (isSubactivityField && veikla) {
+      return options.filter((option) => activitySubactivityMap[veikla].includes(option.code));
+    }
+    if (isCategoryField && veikla) {
+      return activityCategoryMap[veikla] ?? [];
+    }
+    return options;
+  }, [options, isSubactivityField, veikla, isCategoryField]);
 
   const { data: decisionData } = useQuery({
     queryKey: ['decisionAction', regNo, isEditForm],
@@ -84,7 +109,7 @@ export const SelectFieldRenderer = ({
       getOptionLabel={(val) => {
         return formatLabel(val, uischema?.options?.labelFormat);
       }}
-      options={options}
+      options={filteredOptions}
       value={defaultValue ? defaultValue : value}
       error={formatError(errors)}
       disabled={!enabled}
