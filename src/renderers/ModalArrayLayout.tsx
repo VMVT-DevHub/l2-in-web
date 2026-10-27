@@ -13,6 +13,7 @@ import Ajv from 'ajv';
 const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false });
 const formAjv = createAjv({ useDefaults: true, coerceTypes: 'array' });
 addErrors(ajv, { keepErrors: true });
+addErrors(formAjv, { keepErrors: true });
 
 export const ModalArrayLayout = ({
   uischema,
