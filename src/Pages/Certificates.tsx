@@ -34,7 +34,7 @@ const Certificates = () => {
   const [sort, setSort] = useState<string[]>([SortFields.CREATED_AT]);
   const nonAnimalForms = [
     {
-      form: 'non-animal_sert',
+      form: 'non-animal_cert',
       formType: 'certificate',
       title: 'Negyvūninių maisto produktų sertifikatas',
     },
