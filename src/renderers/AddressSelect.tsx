@@ -6,6 +6,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import { JsonFormsStateContext, useJsonForms } from '@jsonforms/react';
 import { useQuery } from '@tanstack/react-query';
+import { formatError } from '../utils/functions';
 
 export interface AddressValue {
   gyvId?: number;
@@ -54,11 +55,11 @@ export const AddressSelect = (props: ControlProps) => {
   const ctx: JsonFormsStateContext = useJsonForms();
   const { path, enabled, handleChange, data, errors } = props;
   const current = normalizeAddressValue(data);
-  const cleanError =
-    (typeof errors === 'string' && errors.length > 1 && errors.split('\n')[1]) || undefined;
+  const cleanError = formatError(errors);
   const hasAOB = !!user?.aob;
   const addressError = current?.gyvId && !current?.adrId ? 'Adresas yra privalomas.' : cleanError;
-  const isUsingAOB = hasAOB && user.aob && current?.adrId == null;
+  const isAutofill = (props?.schema as any)['x-autoFill'] ?? true;
+  const isUsingAOB = isAutofill && hasAOB && user.aob && current?.adrId == null;
   const regNo = ctx?.core?.data?.veiklaviete?.['registracijos-nr']?.trim() || '';
   const isEditForm = (props?.schema as any)['x-edit'];
   const activeUserCode = user?.activeOrgCode || user?.ak || '';
@@ -76,7 +77,7 @@ export const AddressSelect = (props: ControlProps) => {
   });
 
   useEffect(() => {
-    if (aobData) {
+    if (isAutofill && aobData) {
       handleChange(path, {
         gyvId: aobData?.gyv.id,
         gyvName: aobData?.vietove,
@@ -84,7 +85,7 @@ export const AddressSelect = (props: ControlProps) => {
         adrName: aobData?.pavad,
       });
     }
-  }, [aobData]);
+  }, [aobData, isAutofill]);
 
   useEffect(() => {
     if (!isEditForm || !decisionData) return;

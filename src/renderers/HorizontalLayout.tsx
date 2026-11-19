@@ -71,7 +71,7 @@ const HorizontalLayoutContainer = styled.div<{
   display: grid;
   gap: ${({ $gap }) => ($gap ? `${$gap}` : '16px')};
   margin: ${({ $margin }) => ($margin ? `0px ${$margin}` : '0px')};
-  margin-bottom: ${({ $margin_bottom }) => ($margin_bottom ? `${$margin_bottom}` : '16px')};
+  margin-bottom: ${({ $margin_bottom }) => ($margin_bottom ? `${$margin_bottom}` : '8px')};
   grid-template-columns: repeat(${({ $columns }) => $columns}, 1fr);
   @media ${device.mobileL} {
     grid-template-columns: 1fr;

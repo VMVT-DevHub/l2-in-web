@@ -1,8 +1,8 @@
-import { SelectField } from '@aplinkosministerija/design-system';
 import { ControlProps } from '@jsonforms/core';
 import styled from 'styled-components';
 import { formatError, formatLabel, handleClearOnChange } from '../utils/functions';
 import { useOptions } from '../utils/hooks';
+import SelectField from './Select';
 
 export const CountryFieldRenderer = ({
   data,
@@ -43,6 +43,7 @@ export const CountryFieldRenderer = ({
           </OptionRow>
         );
       }}
+      handleMouseOver={() => {}}
       options={options}
       value={value}
       error={formatError(errors)}

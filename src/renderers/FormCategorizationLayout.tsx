@@ -21,7 +21,15 @@ export const FormCategorizationLayout = ({
 
   const {
     core,
-    config: { submitForm, copyForm, showDraftButton, showDeleteButton, showCopyButton, deleteForm, backRoute },
+    config: {
+      submitForm,
+      copyForm,
+      showDraftButton,
+      showDeleteButton,
+      showCopyButton,
+      deleteForm,
+      backRoute,
+    },
   }: JsonFormsStateContext = useJsonForms();
 
   const handleSubmitDraft = useMutation(() => submitForm({ isDraft: true }), {
@@ -68,7 +76,10 @@ export const FormCategorizationLayout = ({
     ));
 
   const disabledLoading =
-    handleSubmit.isLoading || handleSubmitDraft.isLoading || handleDelete.isLoading || copyForm.isLoading;
+    handleSubmit.isLoading ||
+    handleSubmitDraft.isLoading ||
+    handleDelete.isLoading ||
+    copyForm.isLoading;
 
   const renderNavigationButtons = () => (
     <ButtonRow>
@@ -139,7 +150,7 @@ export const FormCategorizationLayout = ({
                 </Button>
               </InnerRow>
             )}
-            {showCopyButton && (
+            {/* {showCopyButton && (
                 <InnerRow>
                   <Button
                       loading={copyForm.isLoading}
@@ -149,7 +160,7 @@ export const FormCategorizationLayout = ({
                     Kopijuoti prašymą
                   </Button>
                 </InnerRow>
-            )}
+            )} */}
             {enabled && (
               <InnerRow>
                 <Button

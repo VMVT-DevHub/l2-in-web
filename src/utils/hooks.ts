@@ -1,7 +1,7 @@
 import { TableRow } from '@aplinkosministerija/design-system';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { UserContext, UserContextType } from '../components/UserProvider';
 import api from './api';
@@ -140,8 +140,11 @@ export const useSelectData = ({
 }) => {
   const [input, setInputValue] = useState<any>(null);
   const [showSelect, setShowSelect] = useState(false);
-  const [suggestions, setSuggestions] = useState(options);
   const [loading, setLoading] = useState(false);
+  const suggestions = useMemo(
+    () => getFilteredOptions(options, input ?? '', getOptionLabel),
+    [options, input, getOptionLabel],
+  );
 
   const handleBlur = (event: any) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -174,8 +177,6 @@ export const useSelectData = ({
     if (canClearValue) {
       onChange(null);
     }
-
-    setSuggestions(options);
   }, [options]);
 
   const handleClick = (option: any) => {
@@ -194,7 +195,6 @@ export const useSelectData = ({
       setShowSelect(true);
     }
     setInputValue(input);
-    setSuggestions(getFilteredOptions(options, input, getOptionLabel));
   };
 
   const handleToggleSelect = () => {
